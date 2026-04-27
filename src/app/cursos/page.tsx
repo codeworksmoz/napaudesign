@@ -9,25 +9,32 @@ import { CheckCircle2, MapPin, Users, Calendar, Wallet, GraduationCap, ArrowRigh
 import { Button } from '@/components/ui/button';
 
 export default function CursosPage() {
+  // Nota: Estes dados virão do Firestore no futuro. 
+  // Por agora, usamos os dados reais do flyer fornecido.
+  const cursoData = {
+    preco: "4.500 MT",
+    data: "14 DE DEZEMBRO",
+    local: "AV. ACORDOS DE LUSAKA, PARAGEM BALTAZAR",
+    contactos: "+258 84 761 5871 | 86 791 5871",
+    listaEsquerda: [
+      "Bolo de Aniversário com Foto",
+      "Bolo de Casamento",
+      "Bolo Gelado",
+      "Bolo Temático",
+      "Bolachinhas Sortidas"
+    ],
+    listaDireita: [
+      "Cup-cakes Personalizados",
+      "Drip-cakes",
+      "Floresta Negra",
+      "Orelhudos de Custarde",
+      "Sobremesas"
+    ]
+  };
+
   const waNumber = "258847615871";
   const waMsg = encodeURIComponent("Olá! Vim pelo site da Napau Design & Arte e gostaria de saber mais sobre o Curso de Confeitaria.");
   const waUrl = `https://wa.me/${waNumber}?text=${waMsg}`;
-
-  const listaEsquerda = [
-    "Bolo de Aniversário com Foto",
-    "Bolo de Casamento",
-    "Bolo Gelado",
-    "Bolo Temático",
-    "Bolachinhas Sortidas"
-  ];
-
-  const listaDireita = [
-    "Cup-cakes Personalizados",
-    "Drip-cakes",
-    "Floresta Negra",
-    "Orelhudos de Custarde",
-    "Sobremesas"
-  ];
 
   return (
     <div className="flex flex-col min-h-screen bg-secondary/5">
@@ -36,7 +43,6 @@ export default function CursosPage() {
       <main className="flex-grow pt-24 md:pt-32 pb-16 md:pb-24 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto space-y-12 md:space-y-24">
           
-          {/* Hero Section do Curso */}
           <div className="text-center space-y-6 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest border border-primary/20">
               <GraduationCap size={16} />
@@ -48,11 +54,10 @@ export default function CursosPage() {
             </p>
           </div>
 
-          {/* Flyer Digital */}
           <div className="bg-white rounded-[2.5rem] overflow-hidden shadow-2xl border border-primary/10 grid grid-cols-1 lg:grid-cols-2">
             <div className="relative aspect-square lg:aspect-auto">
               <Image 
-                src="https://picsum.photos/seed/pastry-chef/1000/1200"
+                src="https://picsum.photos/seed/pastry-class/1000/1200"
                 alt="Curso de Confeitaria"
                 fill
                 className="object-cover"
@@ -71,7 +76,7 @@ export default function CursosPage() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
                   <div className="space-y-4">
-                    {listaEsquerda.map((item, idx) => (
+                    {cursoData.listaEsquerda.map((item, idx) => (
                       <div key={idx} className="flex items-center gap-3 text-sm text-muted-foreground">
                         <CheckCircle2 size={18} className="text-primary shrink-0" />
                         <span className="uppercase font-medium">{item}</span>
@@ -79,7 +84,7 @@ export default function CursosPage() {
                     ))}
                   </div>
                   <div className="space-y-4">
-                    {listaDireita.map((item, idx) => (
+                    {cursoData.listaDireita.map((item, idx) => (
                       <div key={idx} className="flex items-center gap-3 text-sm text-muted-foreground">
                         <CheckCircle2 size={18} className="text-primary shrink-0" />
                         <span className="uppercase font-medium">{item}</span>
@@ -96,7 +101,7 @@ export default function CursosPage() {
                   </div>
                   <div>
                     <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Investimento</p>
-                    <p className="text-2xl font-headline font-bold text-primary">4.500 MT</p>
+                    <p className="text-2xl font-headline font-bold text-primary">{cursoData.preco}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -105,7 +110,7 @@ export default function CursosPage() {
                   </div>
                   <div>
                     <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Próxima Turma</p>
-                    <p className="text-2xl font-headline font-bold">14 DE DEZEMBRO</p>
+                    <p className="text-2xl font-headline font-bold">{cursoData.data}</p>
                   </div>
                 </div>
               </div>
@@ -114,11 +119,11 @@ export default function CursosPage() {
                 <div className="flex flex-col gap-4">
                   <div className="flex items-start gap-3 text-sm text-muted-foreground">
                     <MapPin size={20} className="text-primary shrink-0" />
-                    <span className="font-medium">AV. ACORDOS DE LUSAKA, PARAGEM BALTAZAR</span>
+                    <span className="font-medium uppercase">{cursoData.local}</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm text-muted-foreground">
                     <Users size={20} className="text-primary shrink-0" />
-                    <span className="font-medium">+258 84 761 5871 | 86 791 5871</span>
+                    <span className="font-medium">{cursoData.contactos}</span>
                   </div>
                 </div>
                 
@@ -131,32 +136,6 @@ export default function CursosPage() {
               </div>
             </div>
           </div>
-
-          {/* Porquê escolher a Napau */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-8 bg-white rounded-3xl border border-border/50 text-center space-y-4">
-              <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto">
-                <Sparkles size={28} />
-              </div>
-              <h4 className="font-headline font-bold text-xl">100% Prático</h4>
-              <p className="text-sm text-muted-foreground font-light">Mãos na massa desde o primeiro minuto. Aprenda fazendo.</p>
-            </div>
-            <div className="p-8 bg-white rounded-3xl border border-border/50 text-center space-y-4">
-              <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto">
-                <Users size={28} />
-              </div>
-              <h4 className="font-headline font-bold text-xl">Turmas Reduzidas</h4>
-              <p className="text-sm text-muted-foreground font-light">Atenção personalizada para garantir que domina cada detalhe.</p>
-            </div>
-            <div className="p-8 bg-white rounded-3xl border border-border/50 text-center space-y-4">
-              <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto">
-                <GraduationCap size={28} />
-              </div>
-              <h4 className="font-headline font-bold text-xl">Certificado</h4>
-              <p className="text-sm text-muted-foreground font-light">Reconhecimento da sua nova competência profissional.</p>
-            </div>
-          </div>
-
         </div>
       </main>
 

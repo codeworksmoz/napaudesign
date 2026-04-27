@@ -1,6 +1,4 @@
 
-import { PlaceHolderImages } from './placeholder-images';
-
 export type Category = 'Todos' | 'Tipos de Bolo' | 'Camisetas' | 'Design Personalizado' | 'Kits Revenda';
 
 export interface Project {
@@ -10,39 +8,43 @@ export interface Project {
   description: string;
   imageUrl: string;
   year: string;
+  active: boolean;
 }
+
+export const CATEGORIES: { label: string; value: Category }[] = [
+  { label: 'Todos', value: 'Todos' },
+  { label: 'Tipos de Bolo', value: 'Tipos de Bolo' },
+  { label: 'Camisetas', value: 'Camisetas' },
+  { label: 'Design Personalizado', value: 'Design Personalizado' },
+  { label: 'Kits Revenda', value: 'Kits Revenda' }
+];
 
 export const PORTFOLIO_PROJECTS: Project[] = [
   {
     id: '1',
-    title: 'Design de Tipos de Bolo Aniversário',
+    title: 'Bolo de Casamento Gold',
     category: 'Tipos de Bolo',
-    description: 'Personalização exclusiva para celebrações de 15 anos com acabamentos premium.',
-    imageUrl: PlaceHolderImages.find(img => img.id === 'cake-topper-1')?.imageUrl || 'https://picsum.photos/seed/1/800/600',
+    description: 'Bolo artístico com detalhes em folha de ouro e acabamento premium para casamentos.',
+    imageUrl: 'https://picsum.photos/seed/cake1/800/600',
     year: '2024',
+    active: true
   },
   {
     id: '2',
-    title: 'Coleção Camisetas Criativas',
+    title: 'Camiseta Napau Brand',
     category: 'Camisetas',
-    description: 'Estampas personalizadas para o dia-a-dia com foco em mensagens inspiradoras.',
-    imageUrl: PlaceHolderImages.find(img => img.id === 'tshirt-1')?.imageUrl || 'https://picsum.photos/seed/2/800/600',
+    description: 'Personalização têxtil de alta qualidade com a marca Napau Design & Arte.',
+    imageUrl: 'https://picsum.photos/seed/tshirt1/800/600',
     year: '2024',
+    active: true
   },
   {
     id: '3',
-    title: 'Kit Noivado Elegante',
+    title: 'Bolo Temático Floral',
     category: 'Tipos de Bolo',
-    description: 'Criações personalizadas para bolos de noivado em acrílico e materiais nobres.',
-    imageUrl: PlaceHolderImages.find(img => img.id === 'cake-topper-2')?.imageUrl || 'https://picsum.photos/seed/3/800/600',
-    year: '2023',
-  },
-  {
-    id: '4',
-    title: 'Uniformes Corporativos Artísticos',
-    category: 'Camisetas',
-    description: 'Camisetas personalizadas para empresas que buscam um toque criativo na sua marca.',
-    imageUrl: PlaceHolderImages.find(img => img.id === 'tshirt-2')?.imageUrl || 'https://picsum.photos/seed/4/800/600',
-    year: '2023',
-  },
+    description: 'Design exclusivo com flores em açúcar para celebrações especiais.',
+    imageUrl: 'https://picsum.photos/seed/cake2/800/600',
+    year: '2024',
+    active: true
+  }
 ];
