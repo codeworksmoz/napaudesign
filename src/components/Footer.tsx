@@ -15,7 +15,7 @@ export const Footer: React.FC = () => {
               <p className="text-xs text-muted-foreground uppercase tracking-widest">Design & Arte</p>
             </div>
           </div>
-          <p className="text-muted-foreground max-w-sm leading-relaxed">
+          <p className="text-muted-foreground max-sm leading-relaxed">
             Crafting minimalist and artistic visual narratives that elevate brands. Based in the heart of creativity, dedicated to elegance and detail.
           </p>
           <div className="flex gap-4">
@@ -36,8 +36,8 @@ export const Footer: React.FC = () => {
           <ul className="space-y-3 text-muted-foreground">
             <li><a href="/" className="hover:text-primary transition-colors">Home</a></li>
             <li><a href="/portfolio" className="hover:text-primary transition-colors">Portfolio</a></li>
-            <li><a href="/mood-board" className="hover:text-primary transition-colors">Mood Board Generator</a></li>
             <li><a href="/#about" className="hover:text-primary transition-colors">Philosophy</a></li>
+            <li><a href="/#contact" className="hover:text-primary transition-colors">Contact</a></li>
           </ul>
         </div>
 

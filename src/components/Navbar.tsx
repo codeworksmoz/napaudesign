@@ -11,7 +11,6 @@ import { Menu, X } from 'lucide-react';
 const NAV_LINKS = [
   { name: 'Home', href: '/' },
   { name: 'Portfolio', href: '/portfolio' },
-  { name: 'Mood Board', href: '/mood-board' },
   { name: 'About', href: '/#about' },
   { name: 'Contact', href: '/#contact' },
 ];
@@ -59,10 +58,10 @@ export const Navbar: React.FC = () => {
             </Link>
           ))}
           <Link 
-            href="/mood-board"
+            href="/#contact"
             className="bg-primary text-primary-foreground px-5 py-2 rounded-full text-sm font-medium gold-shimmer transition-all shadow-md hover:shadow-lg"
           >
-            Start Project
+            Work With Us
           </Link>
         </div>
 
@@ -102,11 +101,11 @@ export const Navbar: React.FC = () => {
           </Link>
         ))}
         <Link 
-          href="/mood-board"
+          href="/#contact"
           onClick={() => setIsOpen(false)}
           className="mt-4 bg-primary text-primary-foreground px-8 py-3 rounded-full text-lg font-medium shadow-lg"
         >
-          Start Project
+          Work With Us
         </Link>
       </div>
     </nav>

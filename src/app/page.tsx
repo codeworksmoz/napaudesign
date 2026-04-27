@@ -52,15 +52,14 @@ export default function Home() {
                 href="/portfolio" 
                 className="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-full font-medium text-lg gold-shimmer shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group"
               >
-                View Our Work
+                Explore Our Portfolio
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link 
-                href="/mood-board" 
+                href="/#contact" 
                 className="w-full sm:w-auto px-8 py-4 bg-white border border-border text-foreground rounded-full font-medium text-lg hover:bg-secondary transition-all flex items-center justify-center gap-2"
               >
-                AI Mood Board
-                <Sparkles size={18} className="text-primary" />
+                Start Your Journey
               </Link>
             </div>
           </div>
