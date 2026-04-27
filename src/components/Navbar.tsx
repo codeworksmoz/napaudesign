@@ -10,8 +10,8 @@ import { Menu, X } from 'lucide-react';
 
 const NAV_LINKS = [
   { name: 'Início', href: '/' },
+  { name: 'Cursos', href: '/cursos' },
   { name: 'Portfólio', href: '/portfolio' },
-  { name: 'Sobre', href: '/#about' },
   { name: 'Contacto', href: '/#contact' },
 ];
 
