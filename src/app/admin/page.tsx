@@ -1,125 +1,244 @@
 
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PORTFOLIO_PROJECTS } from '@/lib/portfolio-data';
-import { Plus, Edit, Trash2, LayoutDashboard, Image as ImageIcon, MessageSquare, Settings } from 'lucide-react';
+import { Plus, Edit, Trash2, LayoutDashboard, Image as ImageIcon, MessageSquare, Settings, GraduationCap, Phone } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminPage() {
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+
+  const handleSave = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      toast({
+        title: "Dados guardados!",
+        description: "As alterações foram publicadas com sucesso.",
+      });
+    }, 1000);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-secondary/10">
       <Navbar />
       
       <main className="flex-grow pt-24 md:pt-32 pb-16 md:pb-24 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
-          {/* Admin Sidebar - Hidden on small screens or stacked */}
-          <div className="lg:col-span-3 space-y-4">
-            <Card className="border-none shadow-sm rounded-2xl overflow-hidden">
-              <CardContent className="p-2">
-                <nav className="flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible gap-1 no-scrollbar">
-                  <button className="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary font-medium rounded-xl text-left whitespace-nowrap lg:whitespace-normal">
-                    <LayoutDashboard size={20} />
-                    <span className="text-xs md:text-sm">Visão Geral</span>
-                  </button>
-                  <button className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:bg-secondary/50 rounded-xl text-left transition-colors whitespace-nowrap lg:whitespace-normal">
-                    <ImageIcon size={20} />
-                    <span className="text-xs md:text-sm">Projetos</span>
-                  </button>
-                  <button className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:bg-secondary/50 rounded-xl text-left transition-colors whitespace-nowrap lg:whitespace-normal">
-                    <MessageSquare size={20} />
-                    <span className="text-xs md:text-sm">Mensagens</span>
-                  </button>
-                  <button className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:bg-secondary/50 rounded-xl text-left transition-colors whitespace-nowrap lg:whitespace-normal">
-                    <Settings size={20} />
-                    <span className="text-xs md:text-sm">Definições</span>
-                  </button>
-                </nav>
-              </CardContent>
-            </Card>
+        <div className="max-w-7xl mx-auto space-y-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-2xl md:text-4xl font-headline font-bold">Painel de Controlo</h1>
+              <p className="text-sm md:text-base text-muted-foreground">Administre o conteúdo da Napau Design & Arte.</p>
+            </div>
+            <Button onClick={handleSave} disabled={loading} className="w-full sm:w-auto bg-primary text-white gold-shimmer rounded-xl h-12 px-8 shadow-lg">
+              {loading ? "A guardar..." : "Publicar Alterações"}
+            </Button>
           </div>
 
-          {/* Main Content Area */}
-          <div className="lg:col-span-9 space-y-6 md:space-y-8">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-headline font-bold">Gestão do Portfólio</h1>
-                <p className="text-sm md:text-base text-muted-foreground">Gerencie seus trabalhos criativos e vitrines de clientes.</p>
+          <Tabs defaultValue="geral" className="space-y-8">
+            <TabsList className="bg-white p-1 rounded-2xl shadow-sm border h-auto flex flex-wrap gap-1">
+              <TabsTrigger value="geral" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white flex gap-2">
+                <LayoutDashboard size={18} /> Geral
+              </TabsTrigger>
+              <TabsTrigger value="projetos" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white flex gap-2">
+                <ImageIcon size={18} /> Projetos
+              </TabsTrigger>
+              <TabsTrigger value="curso" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white flex gap-2">
+                <GraduationCap size={18} /> Curso
+              </TabsTrigger>
+              <TabsTrigger value="contactos" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white flex gap-2">
+                <Phone size={18} /> Contactos
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="geral">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card className="border-none shadow-sm rounded-2xl bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Site Status</CardTitle>
+                    <CardDescription>Informação em tempo real.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex justify-between items-center py-2 border-b">
+                      <span className="text-sm text-muted-foreground">Projetos Ativos</span>
+                      <span className="font-bold">{PORTFOLIO_PROJECTS.length}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b">
+                      <span className="text-sm text-muted-foreground">Mensagens Hoje</span>
+                      <span className="font-bold">12</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-sm text-muted-foreground">Última atualização</span>
+                      <span className="font-bold text-xs uppercase">Hoje, 10:45</span>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="md:col-span-2 border-none shadow-sm rounded-2xl bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Configuração da Marca</CardTitle>
+                    <CardDescription>Nome e Slogan do site.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Nome do Negócio</label>
+                        <Input defaultValue="Napau Design & Arte" className="rounded-xl" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Slogan Principal</label>
+                        <Input defaultValue="Qualidade e criatividade em cada detalhe" className="rounded-xl" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">Breve Descrição (Sobre)</label>
+                      <Textarea 
+                        defaultValue="A Napau Design & Arte nasceu em Moçambique com o propósito de criar memórias inesquecíveis..."
+                        className="rounded-xl min-h-[120px]" 
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
-              <Button className="w-full sm:w-auto bg-primary text-white flex gap-2 items-center rounded-xl gold-shimmer h-12 px-6 shadow-md">
-                <Plus size={20} />
-                Novo Projeto
-              </Button>
-            </div>
+            </TabsContent>
 
-            <Card className="border-none shadow-sm rounded-2xl overflow-hidden bg-white">
-              <CardHeader className="border-b border-border/50 p-4 md:p-6">
-                <CardTitle className="text-lg md:text-xl">Projetos Existentes</CardTitle>
-                <CardDescription className="text-xs md:text-sm">Total de {PORTFOLIO_PROJECTS.length} projetos exibidos no site.</CardDescription>
-              </CardHeader>
-              <CardContent className="p-0 overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="hover:bg-transparent bg-secondary/20">
-                      <TableHead className="font-semibold uppercase tracking-widest text-[10px] md:text-xs px-4 md:px-6">Projeto</TableHead>
-                      <TableHead className="font-semibold uppercase tracking-widest text-[10px] md:text-xs">Categoria</TableHead>
-                      <TableHead className="font-semibold uppercase tracking-widest text-[10px] md:text-xs hidden sm:table-cell">Ano</TableHead>
-                      <TableHead className="font-semibold uppercase tracking-widest text-[10px] md:text-xs text-right px-4 md:px-6">Ações</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {PORTFOLIO_PROJECTS.map((project) => (
-                      <TableRow key={project.id} className="hover:bg-secondary/10 transition-colors">
-                        <TableCell className="px-4 md:px-6 font-medium text-xs md:text-sm">{project.title}</TableCell>
-                        <TableCell>
-                          <span className="bg-primary/10 text-primary px-2 py-1 rounded-md text-[9px] md:text-[10px] uppercase font-bold tracking-tighter">
-                            {project.category}
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-muted-foreground text-xs md:text-sm hidden sm:table-cell">{project.year}</TableCell>
-                        <TableCell className="text-right px-4 md:px-6">
-                          <div className="flex justify-end gap-1 md:gap-2">
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-500 hover:text-blue-600 hover:bg-blue-50">
-                              <Edit size={16} />
-                            </Button>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50">
-                              <Trash2 size={16} />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-              <Card className="border-none shadow-sm rounded-2xl bg-primary text-white">
-                <CardContent className="p-5 md:p-6">
-                  <p className="text-primary-foreground/70 uppercase tracking-widest text-[10px] font-semibold">Total de Projetos</p>
-                  <h3 className="text-3xl md:text-4xl font-headline font-bold mt-1">24</h3>
-                </CardContent>
-              </Card>
-              <Card className="border-none shadow-sm rounded-2xl bg-accent text-white">
-                <CardContent className="p-5 md:p-6">
-                  <p className="text-white/70 uppercase tracking-widest text-[10px] font-semibold">Mensagens Pendentes</p>
-                  <h3 className="text-3xl md:text-4xl font-headline font-bold mt-1">12</h3>
-                </CardContent>
-              </Card>
+            <TabsContent value="curso">
               <Card className="border-none shadow-sm rounded-2xl bg-white">
-                <CardContent className="p-5 md:p-6">
-                  <p className="text-muted-foreground uppercase tracking-widest text-[10px] font-semibold">Visitantes Hoje</p>
-                  <h3 className="text-3xl md:text-4xl font-headline font-bold mt-1 text-primary">156</h3>
+                <CardHeader>
+                  <CardTitle className="text-xl">Gestão do Curso de Confeitaria</CardTitle>
+                  <CardDescription>Edite as informações exibidas no flyer virtual do site.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Preço do Curso (MT)</label>
+                        <Input defaultValue="4.500Mt" className="rounded-xl" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Data de Início</label>
+                        <Input defaultValue="14 DE DEZEMBRO" className="rounded-xl" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Localização</label>
+                        <Input defaultValue="Av. Acordos de Lusaka, Paragem Baltazar" className="rounded-xl" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">Lista de Conteúdos (Um por linha)</label>
+                      <Textarea 
+                        defaultValue={"Bolo de Aniversário com Foto\nBolo de Casamento\nBolo Gelado\nBolo Temático\nBolachinhas Sortidas\nCup-cakes Personalizados\nDrip-cakes\nFloresta Negra\nOrelhudos de Custarde\nSobreimesas"}
+                        className="rounded-xl min-h-[200px]" 
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase text-muted-foreground">Texto de Apresentação</label>
+                    <Textarea 
+                      defaultValue="AULAS PRATICAS E MUITO PRODUTIVAS COM TODOS OS SEGREDOS QUE VOCÊ PRECISA PARA FAZER UM BOLO ESPETACULAR."
+                      className="rounded-xl"
+                    />
+                  </div>
                 </CardContent>
               </Card>
-            </div>
-          </div>
+            </TabsContent>
+
+            <TabsContent value="contactos">
+              <Card className="border-none shadow-sm rounded-2xl bg-white">
+                <CardHeader>
+                  <CardTitle className="text-xl">Canais de Atendimento</CardTitle>
+                  <CardDescription>Configure como os clientes o contactam.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">WhatsApp Primário</label>
+                      <Input defaultValue="+258 84 761 5871" className="rounded-xl" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">WhatsApp Secundário</label>
+                      <Input defaultValue="86 791 5871" className="rounded-xl" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase text-muted-foreground">Mensagem Padrão (WhatsApp)</label>
+                    <Textarea 
+                      defaultValue="Olá! Vim pelo site da Napau Design & Arte e gostaria de saber mais sobre os vossos serviços e cursos."
+                      className="rounded-xl h-24"
+                    />
+                    <p className="text-[10px] text-muted-foreground italic">Esta mensagem será enviada automaticamente quando o cliente clicar no botão do WhatsApp.</p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">Instagram (URL)</label>
+                      <Input defaultValue="https://instagram.com/napau_design" className="rounded-xl" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">TikTok (URL)</label>
+                      <Input defaultValue="https://tiktok.com/@napau_design" className="rounded-xl" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="projetos">
+              <Card className="border-none shadow-sm rounded-2xl overflow-hidden bg-white">
+                <CardHeader className="flex flex-row items-center justify-between border-b p-6">
+                  <div>
+                    <CardTitle className="text-xl">Gestão de Portfólio</CardTitle>
+                    <CardDescription>Adicione ou remova trabalhos da galeria.</CardDescription>
+                  </div>
+                  <Button className="bg-primary text-white rounded-xl flex gap-2">
+                    <Plus size={18} /> Adicionar
+                  </Button>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="hover:bg-transparent bg-secondary/10">
+                        <TableHead className="px-6">Projeto</TableHead>
+                        <TableHead>Categoria</TableHead>
+                        <TableHead className="text-right px-6">Ações</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {PORTFOLIO_PROJECTS.map((project) => (
+                        <TableRow key={project.id} className="hover:bg-secondary/5 transition-colors">
+                          <TableCell className="px-6 font-medium">{project.title}</TableCell>
+                          <TableCell>
+                            <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] uppercase font-bold">
+                              {project.category}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-right px-6">
+                            <div className="flex justify-end gap-2">
+                              <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-500">
+                                <Edit size={16} />
+                              </Button>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500">
+                                <Trash2 size={16} />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
 

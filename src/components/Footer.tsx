@@ -16,14 +16,14 @@ export const Footer: React.FC = () => {
             </div>
           </div>
           <p className="text-sm md:text-base text-muted-foreground max-w-sm leading-relaxed font-light">
-            Especialistas em tipos de bolo e camisetas personalizadas. Qualidade e criatividade em cada detalhe para celebrar seus momentos especiais em Moçambique.
+            Especialistas em tipos de bolo e camisetas personalizadas em Moçambique. Qualidade e criatividade em cada detalhe para celebrar os seus momentos especiais.
           </p>
           <div className="flex gap-3 md:gap-4">
             <a 
               href="https://instagram.com/napau_design" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="p-2 rounded-full bg-secondary text-primary hover:bg-primary hover:text-white transition-all"
+              className="p-2.5 rounded-full bg-secondary text-primary hover:bg-primary hover:text-white transition-all shadow-sm"
               aria-label="Instagram"
             >
               <Instagram size={20} />
@@ -32,7 +32,7 @@ export const Footer: React.FC = () => {
               href="https://facebook.com/napaudesign" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="p-2 rounded-full bg-secondary text-primary hover:bg-primary hover:text-white transition-all"
+              className="p-2.5 rounded-full bg-secondary text-primary hover:bg-primary hover:text-white transition-all shadow-sm"
               aria-label="Facebook"
             >
               <Facebook size={20} />
@@ -41,7 +41,7 @@ export const Footer: React.FC = () => {
               href="https://tiktok.com/@napau_design" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="p-2 rounded-full bg-secondary text-primary hover:bg-primary hover:text-white transition-all"
+              className="p-2.5 rounded-full bg-secondary text-primary hover:bg-primary hover:text-white transition-all shadow-sm"
               aria-label="TikTok"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -50,7 +50,7 @@ export const Footer: React.FC = () => {
             </a>
             <a 
               href="mailto:napau.culinaria@gmail.com" 
-              className="p-2 rounded-full bg-secondary text-primary hover:bg-primary hover:text-white transition-all"
+              className="p-2.5 rounded-full bg-secondary text-primary hover:bg-primary hover:text-white transition-all shadow-sm"
               aria-label="Email"
             >
               <Mail size={20} />
@@ -59,11 +59,11 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="space-y-4 md:space-y-6">
-          <h4 className="font-headline font-semibold text-lg">Links Úteis</h4>
+          <h4 className="font-headline font-semibold text-lg">Menu</h4>
           <ul className="space-y-2 md:space-y-3 text-sm text-muted-foreground font-light">
             <li><a href="/" className="hover:text-primary transition-colors">Início</a></li>
             <li><a href="/portfolio" className="hover:text-primary transition-colors">Portfólio</a></li>
-            <li><a href="/#about" className="hover:text-primary transition-colors">Sobre Nós</a></li>
+            <li><a href="/#cursos" className="hover:text-primary transition-colors">Cursos</a></li>
             <li><a href="/#contact" className="hover:text-primary transition-colors">Orçamento</a></li>
           </ul>
         </div>
@@ -73,15 +73,15 @@ export const Footer: React.FC = () => {
           <ul className="space-y-2 md:space-y-3 text-sm text-muted-foreground font-light">
             <li className="flex items-start gap-2">
               <MapPin size={18} className="text-primary shrink-0 mt-1" />
-              <span>Moçambique</span>
+              <span>Av. Acordos de Lusaka, Paragem Baltazar, Moçambique</span>
             </li>
             <li className="flex items-center gap-2">
               <Phone size={18} className="text-primary shrink-0" />
               <span>+258 84 761 5871</span>
             </li>
             <li className="flex items-center gap-2">
-              <Mail size={18} className="text-primary shrink-0" />
-              <span>napau.culinaria@gmail.com</span>
+              <Phone size={18} className="text-primary shrink-0" />
+              <span>+258 86 791 5871</span>
             </li>
           </ul>
         </div>
