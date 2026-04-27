@@ -5,20 +5,20 @@ import { Instagram, Facebook, Mail, MapPin, Phone } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-white border-t border-border pt-16 pb-8 px-6">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-        <div className="col-span-1 md:col-span-2 space-y-6">
+    <footer className="bg-white border-t border-border pt-12 md:pt-16 pb-8 px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-12">
+        <div className="col-span-1 sm:col-span-2 space-y-6">
           <div className="flex items-center gap-3">
-            <Logo size={60} />
+            <Logo size={50} />
             <div>
-              <h3 className="font-headline font-bold text-xl text-primary tracking-tight">NAPAU</h3>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em]">Design & Arte</p>
+              <h3 className="font-headline font-bold text-lg md:text-xl text-primary tracking-tight">NAPAU</h3>
+              <p className="text-[8px] text-muted-foreground uppercase tracking-[0.3em]">Design & Arte</p>
             </div>
           </div>
-          <p className="text-muted-foreground max-w-sm leading-relaxed font-light">
-            Especialistas em topos de bolo e camisetas personalizadas. Qualidade e criatividade em cada detalhe para celebrar seus momentos especiais em Moçambique.
+          <p className="text-sm md:text-base text-muted-foreground max-w-sm leading-relaxed font-light">
+            Especialistas em tipos de bolo e camisetas personalizadas. Qualidade e criatividade em cada detalhe para celebrar seus momentos especiais em Moçambique.
           </p>
-          <div className="flex gap-4">
+          <div className="flex gap-3 md:gap-4">
             <a 
               href="https://instagram.com/napau_design" 
               target="_blank" 
@@ -58,9 +58,9 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           <h4 className="font-headline font-semibold text-lg">Links Úteis</h4>
-          <ul className="space-y-3 text-sm text-muted-foreground font-light">
+          <ul className="space-y-2 md:space-y-3 text-sm text-muted-foreground font-light">
             <li><a href="/" className="hover:text-primary transition-colors">Início</a></li>
             <li><a href="/portfolio" className="hover:text-primary transition-colors">Portfólio</a></li>
             <li><a href="/#about" className="hover:text-primary transition-colors">Sobre Nós</a></li>
@@ -68,9 +68,9 @@ export const Footer: React.FC = () => {
           </ul>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           <h4 className="font-headline font-semibold text-lg">Contacto</h4>
-          <ul className="space-y-3 text-sm text-muted-foreground font-light">
+          <ul className="space-y-2 md:space-y-3 text-sm text-muted-foreground font-light">
             <li className="flex items-start gap-2">
               <MapPin size={18} className="text-primary shrink-0 mt-1" />
               <span>Moçambique</span>
@@ -87,7 +87,7 @@ export const Footer: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+      <div className="max-w-7xl mx-auto mt-12 md:mt-16 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-[0.2em] text-center md:text-left">
         <p>© {new Date().getFullYear()} Napau Design & Arte. Todos os direitos reservados.</p>
         <p>Desenvolvido com criatividade em Moçambique.</p>
       </div>

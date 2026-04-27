@@ -1,7 +1,7 @@
 
 import { PlaceHolderImages } from './placeholder-images';
 
-export type Category = 'Todos' | 'Topos de Bolo' | 'Camisetas' | 'Design Personalizado' | 'Kits Revenda';
+export type Category = 'Todos' | 'Tipos de Bolo' | 'Camisetas' | 'Design Personalizado' | 'Kits Revenda';
 
 export interface Project {
   id: string;
@@ -15,9 +15,9 @@ export interface Project {
 export const PORTFOLIO_PROJECTS: Project[] = [
   {
     id: '1',
-    title: 'Topo de Bolo Aniversário Real',
-    category: 'Topos de Bolo',
-    description: 'Design exclusivo em papel laminado dourado para celebração de 15 anos.',
+    title: 'Design de Tipos de Bolo Aniversário',
+    category: 'Tipos de Bolo',
+    description: 'Personalização exclusiva para celebrações de 15 anos com acabamentos premium.',
     imageUrl: PlaceHolderImages.find(img => img.id === 'cake-topper-1')?.imageUrl || 'https://picsum.photos/seed/1/800/600',
     year: '2024',
   },
@@ -32,8 +32,8 @@ export const PORTFOLIO_PROJECTS: Project[] = [
   {
     id: '3',
     title: 'Kit Noivado Elegante',
-    category: 'Topos de Bolo',
-    description: 'Topo de bolo em acrílico rose gold com nomes personalizados para noivado.',
+    category: 'Tipos de Bolo',
+    description: 'Criações personalizadas para bolos de noivado em acrílico e materiais nobres.',
     imageUrl: PlaceHolderImages.find(img => img.id === 'cake-topper-2')?.imageUrl || 'https://picsum.photos/seed/3/800/600',
     year: '2023',
   },
