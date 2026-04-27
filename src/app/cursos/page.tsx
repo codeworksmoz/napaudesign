@@ -5,9 +5,11 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import Image from 'next/image';
-import { CheckCircle2, MapPin, Users, Calendar, Wallet, GraduationCap, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Calendar, Wallet, GraduationCap, ArrowRight, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Flyer, DEFAULT_FLYERS } from '@/lib/portfolio-data';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
+import { RegistrationForm } from '@/components/RegistrationForm';
 
 export default function CursosPage() {
   const [flyers, setFlyers] = useState<Flyer[]>([]);
@@ -50,7 +52,6 @@ export default function CursosPage() {
                     alt={flyer.titulo}
                     fill
                     className="object-cover"
-                    data-ai-hint="pastry class"
                   />
                 </div>
 
@@ -101,23 +102,26 @@ export default function CursosPage() {
                   </div>
 
                   <div className="space-y-6">
-                    <div className="flex flex-col gap-4">
-                      <div className="flex items-start gap-3 text-sm text-muted-foreground">
-                        <MapPin size={20} className="text-primary shrink-0" />
-                        <span className="font-medium uppercase">{flyer.local}</span>
-                      </div>
-                      <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                        <Users size={20} className="text-primary shrink-0" />
-                        <span className="font-medium">{flyer.contactos}</span>
-                      </div>
-                    </div>
-                    
-                    <Button asChild className="w-full py-8 rounded-2xl text-lg font-bold gold-shimmer shadow-xl">
-                      <a href={`https://wa.me/258847615871?text=${encodeURIComponent(`Olá! Gostaria de me inscrever no ${flyer.titulo}.`)}`} className="flex items-center justify-center gap-3">
-                        Reservar Minha Vaga
-                        <ArrowRight size={20} />
-                      </a>
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button className="w-full py-8 rounded-2xl text-lg font-bold gold-shimmer shadow-xl">
+                          <span className="flex items-center justify-center gap-3">
+                            Reservar Minha Vaga
+                            <ArrowRight size={20} />
+                          </span>
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[600px] rounded-3xl">
+                        <DialogHeader>
+                          <DialogTitle className="text-2xl font-headline text-primary">Inscrição no Curso</DialogTitle>
+                          <DialogDescription>
+                            Preencha os seus dados para gerar o seu número de inscrição (ID). 
+                            O preenchimento é guardado automaticamente se precisar de recarregar a página.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <RegistrationForm course={flyer} />
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </div>
               </div>

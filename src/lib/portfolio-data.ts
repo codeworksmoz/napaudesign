@@ -33,6 +33,24 @@ export interface HomeContent {
   serviceFormacaoDesc: string;
 }
 
+export type DocumentType = 'BI' | 'Passaporte' | 'Carta de Condução' | 'NUIT' | 'Cartão de Eleitor';
+
+export interface Registration {
+  id: string; // NP[YYYYMMDD]/[index]
+  studentName: string;
+  studentEmail: string;
+  studentPhone: string;
+  courseId: string;
+  courseTitle: string;
+  docType: DocumentType;
+  docNumber: string;
+  docIssueDate?: string;
+  docExpiryDate?: string;
+  docIssuePlace?: string;
+  registrationDate: string;
+  status: 'Pendente' | 'Confirmada' | 'Cancelada';
+}
+
 export const DEFAULT_HOME_CONTENT: HomeContent = {
   heroTitle: 'A Arte de Personalizar Momentos',
   heroSubtitle: 'Especialistas em tipos de bolo artísticos e camisetas exclusivas. Criamos o que você imagina com perfeição.',
