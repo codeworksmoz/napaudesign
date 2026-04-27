@@ -12,7 +12,7 @@ const NAV_LINKS = [
   { name: 'Início', href: '/' },
   { name: 'Portfólio', href: '/portfolio' },
   { name: 'Sobre', href: '/#about' },
-  { name: 'Contato', href: '/#contact' },
+  { name: 'Contacto', href: '/#contact' },
 ];
 
 export const Navbar: React.FC = () => {
@@ -32,37 +32,43 @@ export const Navbar: React.FC = () => {
     <nav 
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4",
-        scrolled ? "bg-background/80 backdrop-blur-md shadow-sm" : "bg-transparent"
+        scrolled ? "bg-background/90 backdrop-blur-md shadow-sm" : "bg-transparent"
       )}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
           <Logo size={50} className="transition-transform duration-300 group-hover:scale-110" />
-          <span className="text-primary font-headline font-semibold text-xl tracking-tight hidden sm:block">
-            NAPAU
-          </span>
+          <div className="flex flex-col leading-none">
+            <span className="text-primary font-headline font-bold text-lg tracking-tight hidden sm:block">
+              NAPAU
+            </span>
+            <span className="text-[8px] text-muted-foreground uppercase tracking-[0.3em] hidden sm:block">
+              Design & Arte
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-10">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.name}
               href={link.href}
               className={cn(
-                "text-sm font-medium tracking-wide transition-colors hover:text-primary",
+                "text-xs font-medium uppercase tracking-widest transition-colors hover:text-primary",
                 pathname === link.href ? "text-primary" : "text-muted-foreground"
               )}
             >
               {link.name}
             </Link>
           ))}
-          <Link 
-            href="/#contact"
-            className="bg-primary text-primary-foreground px-5 py-2 rounded-full text-sm font-medium gold-shimmer transition-all shadow-md hover:shadow-lg"
+          <a 
+            href="https://wa.me/258847615871"
+            target="_blank"
+            className="bg-primary text-white px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-widest gold-shimmer transition-all shadow-md hover:shadow-lg"
           >
-            Trabalhe Conosco
-          </Link>
+            Orçamento
+          </a>
         </div>
 
         {/* Mobile Menu Trigger */}
@@ -77,7 +83,7 @@ export const Navbar: React.FC = () => {
       {/* Mobile Menu */}
       <div 
         className={cn(
-          "md:hidden fixed inset-0 bg-background z-40 flex flex-col items-center justify-center gap-8 transition-transform duration-300 ease-in-out",
+          "md:hidden fixed inset-0 bg-background z-40 flex flex-col items-center justify-center gap-8 transition-transform duration-500 ease-in-out",
           isOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
@@ -93,20 +99,21 @@ export const Navbar: React.FC = () => {
             href={link.href}
             onClick={() => setIsOpen(false)}
             className={cn(
-              "text-2xl font-headline transition-colors hover:text-primary",
+              "text-3xl font-headline transition-colors hover:text-primary",
               pathname === link.href ? "text-primary" : "text-muted-foreground"
             )}
           >
             {link.name}
           </Link>
         ))}
-        <Link 
-          href="/#contact"
+        <a 
+          href="https://wa.me/258847615871"
+          target="_blank"
           onClick={() => setIsOpen(false)}
-          className="mt-4 bg-primary text-primary-foreground px-8 py-3 rounded-full text-lg font-medium shadow-lg"
+          className="mt-4 bg-primary text-white px-10 py-4 rounded-full text-lg font-headline shadow-lg"
         >
-          Trabalhe Conosco
-        </Link>
+          WhatsApp
+        </a>
       </div>
     </nav>
   );

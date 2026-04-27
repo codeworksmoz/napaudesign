@@ -5,46 +5,47 @@
 
 @layer base {
   :root {
-    --background: 38 30% 97%;
-    --foreground: 20 20% 12%;
+    /* Paleta Napau: Off-white, Dourado suave e Terracota */
+    --background: 30 25% 97%; /* #FAF7F4 */
+    --foreground: 6 18% 20%;   /* #3D2C2A */
     --card: 0 0% 100%;
-    --card-foreground: 20 20% 12%;
+    --card-foreground: 6 18% 20%;
     --popover: 0 0% 100%;
-    --popover-foreground: 20 20% 12%;
-    --primary: 38 70% 50%;
+    --popover-foreground: 6 18% 20%;
+    --primary: 31 52% 65%;    /* #D4A574 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 38 30% 92%;
-    --secondary-foreground: 38 70% 30%;
-    --muted: 38 20% 90%;
-    --muted-foreground: 20 10% 45%;
-    --accent: 19 76% 32%;
+    --secondary: 28 43% 84%;  /* #E8D5C4 */
+    --secondary-foreground: 31 52% 30%;
+    --muted: 28 20% 92%;
+    --muted-foreground: 6 10% 45%;
+    --accent: 21 46% 59%;     /* #C48B6B */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 38 20% 88%;
-    --input: 38 20% 88%;
-    --ring: 38 70% 50%;
-    --radius: 0.75rem;
+    --border: 31 20% 88%;
+    --input: 31 20% 88%;
+    --ring: 31 52% 65%;
+    --radius: 1rem;
   }
 
   .dark {
-    --background: 20 20% 8%;
-    --foreground: 38 30% 97%;
-    --card: 20 20% 10%;
-    --card-foreground: 38 30% 97%;
-    --popover: 20 20% 10%;
-    --popover-foreground: 38 30% 97%;
-    --primary: 38 70% 55%;
-    --primary-foreground: 20 20% 10%;
-    --secondary: 20 20% 15%;
-    --secondary-foreground: 38 70% 55%;
-    --muted: 20 20% 15%;
-    --muted-foreground: 38 10% 65%;
-    --accent: 19 76% 40%;
-    --accent-foreground: 38 30% 97%;
-    --border: 20 20% 18%;
-    --input: 20 20% 18%;
-    --ring: 38 70% 55%;
+    --background: 6 18% 10%;
+    --foreground: 30 25% 97%;
+    --card: 6 18% 12%;
+    --card-foreground: 30 25% 97%;
+    --popover: 6 18% 12%;
+    --popover-foreground: 30 25% 97%;
+    --primary: 31 52% 65%;
+    --primary-foreground: 6 18% 10%;
+    --secondary: 6 18% 15%;
+    --secondary-foreground: 31 52% 65%;
+    --muted: 6 18% 15%;
+    --muted-foreground: 30 10% 65%;
+    --accent: 21 46% 59%;
+    --accent-foreground: 30 25% 97%;
+    --border: 6 18% 18%;
+    --input: 6 18% 18%;
+    --ring: 31 52% 65%;
   }
 }
 
@@ -61,7 +62,7 @@
 }
 
 .gold-shimmer:hover {
-  background: linear-gradient(110deg, #D89926 8%, #F2C94C 18%, #D89926 33%);
+  background: linear-gradient(110deg, #D4A574 8%, #E8D5C4 18%, #D4A574 33%);
   background-size: 200% 100%;
   animation: shimmer 1.5s linear infinite;
 }

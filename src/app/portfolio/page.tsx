@@ -9,17 +9,17 @@ import { PORTFOLIO_PROJECTS, Category } from '@/lib/portfolio-data';
 import { cn } from '@/lib/utils';
 
 const CATEGORIES: { label: string, value: Category }[] = [
-  { label: 'Todos', value: 'All' },
-  { label: 'Branding', value: 'Branding' },
-  { label: 'Web Design', value: 'Web Design' },
-  { label: 'Ilustração', value: 'Illustration' },
-  { label: 'Embalagem', value: 'Packaging' }
+  { label: 'Todos', value: 'Todos' },
+  { label: 'Topos de Bolo', value: 'Topos de Bolo' },
+  { label: 'Camisetas', value: 'Camisetas' },
+  { label: 'Design Personalizado', value: 'Design Personalizado' },
+  { label: 'Kits Revenda', value: 'Kits Revenda' }
 ];
 
 export default function PortfolioPage() {
-  const [activeCategory, setActiveCategory] = useState<Category>('All');
+  const [activeCategory, setActiveCategory] = useState<Category>('Todos');
 
-  const filteredProjects = activeCategory === 'All' 
+  const filteredProjects = activeCategory === 'Todos' 
     ? PORTFOLIO_PROJECTS 
     : PORTFOLIO_PROJECTS.filter(p => p.category === activeCategory);
 
@@ -31,8 +31,8 @@ export default function PortfolioPage() {
         <div className="max-w-7xl mx-auto space-y-16">
           <div className="space-y-6 text-center max-w-2xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-headline font-bold tracking-tight">Nosso Portfólio</h1>
-            <p className="text-lg text-muted-foreground font-light">
-              Explore nossa seleção curada de projetos, onde cada criação é uma mistura única de estratégia e expressão artística.
+            <p className="text-lg text-muted-foreground font-light font-body">
+              Explore nossa galeria de topos de bolo e camisetas personalizadas. Cada peça é um reflexo único de criatividade e atenção aos detalhes.
             </p>
           </div>
 
@@ -42,7 +42,7 @@ export default function PortfolioPage() {
                 key={category.value}
                 onClick={() => setActiveCategory(category.value)}
                 className={cn(
-                  "px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 border",
+                  "px-6 py-2 rounded-full text-xs font-semibold uppercase tracking-widest transition-all duration-300 border",
                   activeCategory === category.value 
                     ? "bg-primary text-white border-primary shadow-md" 
                     : "bg-white text-muted-foreground border-border hover:border-primary/50"
@@ -63,7 +63,7 @@ export default function PortfolioPage() {
             <div className="py-32 text-center space-y-4">
               <p className="text-xl text-muted-foreground font-light">Nenhum projeto encontrado nesta categoria ainda.</p>
               <button 
-                onClick={() => setActiveCategory('All')}
+                onClick={() => setActiveCategory('Todos')}
                 className="text-primary font-semibold hover:underline"
               >
                 Limpar Filtros
