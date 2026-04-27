@@ -38,17 +38,6 @@ export const Footer: React.FC = () => {
               <Facebook size={20} />
             </a>
             <a 
-              href="https://tiktok.com/@napau_design" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="p-2.5 rounded-full bg-secondary text-primary hover:bg-primary hover:text-white transition-all shadow-sm"
-              aria-label="TikTok"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
-              </svg>
-            </a>
-            <a 
               href="mailto:napau.culinaria@gmail.com" 
               className="p-2.5 rounded-full bg-secondary text-primary hover:bg-primary hover:text-white transition-all shadow-sm"
               aria-label="Email"
@@ -77,11 +66,11 @@ export const Footer: React.FC = () => {
             </li>
             <li className="flex items-center gap-2">
               <Phone size={18} className="text-primary shrink-0" />
-              <a href="tel:+258847615871" className="hover:text-primary transition-colors">+258 84 761 5871</a>
+              <a href="tel:+258847615871" className="hover:text-primary transition-colors font-medium">+258 84 761 5871</a>
             </li>
             <li className="flex items-center gap-2">
               <Phone size={18} className="text-primary shrink-0" />
-              <a href="tel:+258867915871" className="hover:text-primary transition-colors">+258 86 791 5871</a>
+              <a href="tel:+258867915871" className="hover:text-primary transition-colors font-medium">+258 86 791 5871</a>
             </li>
             <li className="flex items-center gap-2">
               <Mail size={18} className="text-primary shrink-0" />
