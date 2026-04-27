@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -5,83 +6,35 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { PortfolioCard } from '@/components/PortfolioCard';
 import { Logo } from '@/components/Logo';
-import { Project, HomeContent, Flyer } from '@/lib/portfolio-data';
+import { Project, HomeContent, Flyer, DEFAULT_HOME_CONTENT, PORTFOLIO_PROJECTS, DEFAULT_FLYERS } from '@/lib/portfolio-data';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Sparkles, Cake, Shirt, GraduationCap, Calendar, MapPin, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { supabase } from '@/lib/supabase';
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [home, setHome] = useState<HomeContent>({
-    heroTitle: 'Napau Design & Arte',
-    heroSubtitle: 'Qualidade e criatividade em cada detalhe',
-    heroImage: '',
-    serviceBoloDesc: '',
-    serviceCamisetaDesc: '',
-    serviceFormacaoDesc: '',
-  });
+  const [home, setHome] = useState<HomeContent>(DEFAULT_HOME_CONTENT);
   const [flyers, setFlyers] = useState<Flyer[]>([]);
   const [carregando, setCarregando] = useState(true);
 
-  // ✅ Carregar dados do Supabase
   useEffect(() => {
-    carregarDados();
+    // Carregar do localStorage com fallback para dados default
+    const savedHome = localStorage.getItem('napau_home_content');
+    if (savedHome) setHome(JSON.parse(savedHome));
+
+    const savedProjects = localStorage.getItem('napau_projects');
+    const allProjects = savedProjects ? JSON.parse(savedProjects) : PORTFOLIO_PROJECTS;
+    setProjects(allProjects.filter((p: Project) => p.active).slice(0, 3));
+
+    const savedFlyers = localStorage.getItem('napau_flyers');
+    setFlyers(savedFlyers ? JSON.parse(savedFlyers) : DEFAULT_FLYERS);
+
+    setCarregando(false);
   }, []);
-
-  async function carregarDados() {
-    setCarregando(true);
-    try {
-      // Home
-      const { data: homeData } = await supabase
-        .from('home_content')
-        .select('*')
-        .single();
-
-      if (homeData) {
-        setHome({
-          heroTitle: homeData.heroTitle || 'Napau Design & Arte',
-          heroSubtitle: homeData.heroSubtitle || 'Qualidade e criatividade em cada detalhe',
-          heroImage: homeData.heroImage || '',
-          serviceBoloDesc: homeData.serviceBoloDesc || '',
-          serviceCamisetaDesc: homeData.serviceCamisetaDesc || '',
-          serviceFormacaoDesc: homeData.serviceFormacaoDesc || '',
-        });
-      }
-
-      // Projetos ativos (apenas 3 para a home)
-      const { data: projetosData } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('active', true)
-        .order('created_at', { ascending: false })
-        .limit(3);
-
-      if (projetosData) {
-        setProjects(projetosData as Project[]);
-      }
-
-      // Flyers ativos
-      const { data: flyersData } = await supabase
-        .from('flyers')
-        .select('*')
-        .eq('ativo', true)
-        .order('created_at', { ascending: false });
-
-      if (flyersData) {
-        setFlyers(flyersData as Flyer[]);
-      }
-    } catch (erro) {
-      console.error('Erro ao carregar dados da home:', erro);
-    } finally {
-      setCarregando(false);
-    }
-  }
 
   const activeFlyers = flyers.filter(f => f.ativo);
 
-  // Estado de carregamento inicial
   if (carregando) {
     return (
       <div className="flex flex-col min-h-screen">
@@ -103,8 +56,8 @@ export default function Home() {
       <Navbar />
       
       <main className="flex-grow">
-        {/* HERO SECTION */}
-        <section className="relative min-h-[70vh] flex flex-col items-center justify-center overflow-hidden pt-16 md:pt-20">
+        {/* HERO SECTION - Espaço reduzido para impacto imediato */}
+        <section className="relative min-h-[85vh] flex flex-col items-center justify-center overflow-hidden pt-0 md:pt-0">
           <div className="absolute inset-0 z-0">
             {home.heroImage ? (
               <Image 
@@ -120,7 +73,7 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/50 to-background"></div>
           </div>
           
-          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-4 px-6">
+          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-4 px-6 mt-12 md:mt-0">
             <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.25em] border border-primary/20 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-700">
               <Sparkles size={14} className="animate-pulse" />
               Criatividade em Moçambique
@@ -213,9 +166,6 @@ export default function Home() {
           <div className="max-w-7xl mx-auto space-y-16">
             <div className="text-center space-y-4 max-w-3xl mx-auto">
               <h2 className="text-4xl md:text-7xl font-headline font-bold tracking-tight">O Que Fazemos</h2>
-              <p className="text-muted-foreground text-lg md:text-xl font-light leading-relaxed">
-                Elevamos cada celebração ao estatuto de arte através de designs únicos e exclusivos.
-              </p>
               <div className="w-20 h-1 bg-primary/30 mx-auto rounded-full"></div>
             </div>
             
@@ -245,9 +195,6 @@ export default function Home() {
             <div className="flex flex-col md:flex-row justify-between items-end gap-8">
               <div className="space-y-4">
                 <h3 className="text-4xl md:text-8xl font-headline font-bold leading-[0.9]">Criações Recentes</h3>
-                <p className="text-muted-foreground font-light text-xl max-w-md italic border-l-4 border-primary/30 pl-8">
-                  A nossa paixão é transformar a sua imaginação em realidade tangível.
-                </p>
               </div>
               <Button asChild variant="link" className="text-primary font-bold text-2xl p-0 h-auto flex items-center gap-3 group mb-2">
                 <Link href="/portfolio">
@@ -264,7 +211,7 @@ export default function Home() {
                 <div className="col-span-full py-20 text-center">
                   <Logo size={80} className="mx-auto opacity-10" />
                   <p className="text-muted-foreground mt-6 uppercase tracking-[0.4em] text-xs font-bold">
-                    Nenhum projeto publicado ainda.
+                    A carregar o melhor da Napau...
                   </p>
                 </div>
               )}
@@ -275,17 +222,10 @@ export default function Home() {
         {/* CONTACT CTA */}
         <section id="contact" className="py-24 md:py-32 px-6 bg-primary text-white text-center overflow-hidden relative">
           <div className="absolute inset-0 opacity-15 pointer-events-none">
-            {home.heroImage ? (
-              <Image src={home.heroImage} alt="Background Texture" fill className="object-cover" />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-t from-black/20 to-transparent" />
-            )}
+            {home.heroImage && <Image src={home.heroImage} alt="Background Texture" fill className="object-cover" />}
           </div>
           <div className="max-w-4xl mx-auto space-y-10 relative z-10">
             <h2 className="text-5xl md:text-8xl font-headline font-bold leading-[1] tracking-tight">Pronto para dar vida à sua visão?</h2>
-            <p className="text-primary-foreground/90 text-xl md:text-2xl font-light leading-relaxed max-w-2xl mx-auto italic">
-              Seja para um bolo inesquecível ou uma marca de camisetas exclusiva, a Napau é a sua parceira criativa em Moçambique.
-            </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center pt-6">
               <Button asChild className="bg-white text-primary hover:bg-white/95 rounded-[2rem] px-14 py-8 text-2xl font-bold shadow-2xl transition-all hover:scale-105 active:scale-95 group">
                 <a 

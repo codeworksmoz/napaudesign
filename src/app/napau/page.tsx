@@ -14,7 +14,7 @@ import { Plus, Trash2, Save, GraduationCap, Image as ImageIcon, Home, Users, Pri
 import { useToast } from '@/hooks/use-toast';
 import { Project, Flyer, DEFAULT_FLYERS, HomeContent, DEFAULT_HOME_CONTENT, Category, PORTFOLIO_PROJECTS, Registration } from '@/lib/portfolio-data';
 
-export default function AdminPage() {
+export default function NapauAdminPage() {
   const { toast } = useToast();
   const [projects, setProjects] = useState<Project[]>([]);
   const [flyers, setFlyers] = useState<Flyer[]>([]);
@@ -23,6 +23,7 @@ export default function AdminPage() {
   const [editingProject, setEditingProject] = useState<Project | null>(null);
 
   useEffect(() => {
+    // Carregar dados salvos ou defaults
     const savedProjects = localStorage.getItem('napau_projects');
     setProjects(savedProjects ? JSON.parse(savedProjects) : PORTFOLIO_PROJECTS);
 
@@ -191,8 +192,8 @@ export default function AdminPage() {
                         <option value="Kits Revenda">Kits Revenda</option>
                       </select>
                       <Input name="year" defaultValue={editingProject?.year || '2024'} placeholder="Ano" required className="rounded-xl" />
-                      <Input name="imageUrl" defaultValue={editingProject?.imageUrl} placeholder="URL da Foto (Unsplash/Picsum)" required className="rounded-xl" />
-                      <Textarea name="description" defaultValue={editingProject?.description} placeholder="Breve descrição do trabalho..." required className="rounded-xl h-24 resize-none" />
+                      <Input name="imageUrl" defaultValue={editingProject?.imageUrl} placeholder="URL da Foto" required className="rounded-xl" />
+                      <Textarea name="description" defaultValue={editingProject?.description} placeholder="Breve descrição..." required className="rounded-xl h-24 resize-none" />
                       <Button type="submit" className="w-full rounded-xl py-6 font-bold shadow-md">{editingProject ? 'Atualizar Projeto' : 'Adicionar ao Portfólio'}</Button>
                     </form>
                   </CardContent>
@@ -254,11 +255,11 @@ export default function AdminPage() {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase text-primary">O que vai aprender (Lista Esquerda)</label>
+                          <label className="text-[10px] font-bold uppercase text-primary">Lista Esquerda</label>
                           <Textarea value={flyer.listaEsquerda.join('\n')} onChange={(e) => updateFlyer(flyer.id, 'listaEsquerda', e.target.value.split('\n'))} className="rounded-xl h-24 text-xs font-mono" />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase text-primary">O que vai aprender (Lista Direita)</label>
+                          <label className="text-[10px] font-bold uppercase text-primary">Lista Direita</label>
                           <Textarea value={flyer.listaDireita.join('\n')} onChange={(e) => updateFlyer(flyer.id, 'listaDireita', e.target.value.split('\n'))} className="rounded-xl h-24 text-xs font-mono" />
                         </div>
                       </div>
@@ -281,9 +282,8 @@ export default function AdminPage() {
                     <TableHeader className="bg-secondary/5">
                       <TableRow>
                         <TableHead>Identificação</TableHead>
-                        <TableHead>Curso Pretendido</TableHead>
+                        <TableHead>Curso</TableHead>
                         <TableHead>Documentação</TableHead>
-                        <TableHead>Estado</TableHead>
                         <TableHead className="text-right print:hidden">Ações</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -295,15 +295,14 @@ export default function AdminPage() {
                             <div className="font-medium">{r.studentName}</div>
                             <div className="text-[10px] text-muted-foreground font-mono">{r.studentPhone}</div>
                           </TableCell>
-                          <TableCell><div className="text-xs font-semibold">{r.courseTitle}</div><div className="text-[10px] text-muted-foreground">{new Date(r.registrationDate).toLocaleDateString()}</div></TableCell>
+                          <TableCell><div className="text-xs font-semibold">{r.courseTitle}</div></TableCell>
                           <TableCell><div className="text-[10px] font-bold">{r.docType}</div><div className="text-[10px] text-muted-foreground font-mono">{r.docNumber}</div></TableCell>
-                          <TableCell><span className="text-[8px] bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold uppercase">{r.status}</span></TableCell>
                           <TableCell className="text-right print:hidden">
                             <Button variant="ghost" size="icon" className="text-destructive rounded-full hover:bg-destructive/10" onClick={() => deleteRegistration(r.id)}><Trash2 size={16} /></Button>
                           </TableCell>
                         </TableRow>
                       )) : (
-                        <TableRow><TableCell colSpan={5} className="text-center py-20 text-muted-foreground font-light italic">Aguardando as primeiras inscrições...</TableCell></TableRow>
+                        <TableRow><TableCell colSpan={4} className="text-center py-20 text-muted-foreground font-light italic">Aguardando as primeiras inscrições...</TableCell></TableRow>
                       )}
                     </TableBody>
                   </Table>
