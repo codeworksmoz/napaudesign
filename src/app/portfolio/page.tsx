@@ -7,6 +7,7 @@ import { Footer } from '@/components/Footer';
 import { PortfolioCard } from '@/components/PortfolioCard';
 import { PORTFOLIO_PROJECTS, Category } from '@/lib/portfolio-data';
 import { cn } from '@/lib/utils';
+import { Sparkles } from 'lucide-react';
 
 const CATEGORIES: { label: string, value: Category }[] = [
   { label: 'Todos', value: 'Todos' },
@@ -28,11 +29,11 @@ export default function PortfolioPage() {
       <Navbar />
       
       <main className="flex-grow pt-24 md:pt-32 pb-16 md:pb-24 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto space-y-12 md:space-y-16">
+        <div className="max-w-7xl mx-auto space-y-10 md:space-y-16">
           <div className="space-y-4 md:space-y-6 text-center max-w-2xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-headline font-bold tracking-tight">Nosso Portfólio</h1>
-            <p className="text-base md:text-lg text-muted-foreground font-light font-body">
-              Explore nossa galeria de tipos de bolo e camisetas personalizadas. Cada peça é um reflexo único de criatividade e atenção aos detalhes em Moçambique.
+            <h1 className="text-3xl md:text-6xl font-headline font-bold tracking-tight">Nosso Portfólio</h1>
+            <p className="text-sm md:text-lg text-muted-foreground font-light font-body">
+              Explore nossa galeria de tipos de bolo e camisetas personalizadas. Cada peça é um reflexo único de criatividade em Moçambique.
             </p>
           </div>
 
@@ -53,20 +54,26 @@ export default function PortfolioPage() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {filteredProjects.map(project => (
-              <PortfolioCard key={project.id} project={project} />
-            ))}
-          </div>
-
-          {filteredProjects.length === 0 && (
-            <div className="py-24 md:py-32 text-center space-y-4">
-              <p className="text-lg md:text-xl text-muted-foreground font-light">Nenhum projeto encontrado nesta categoria ainda.</p>
+          {filteredProjects.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {filteredProjects.map(project => (
+                <PortfolioCard key={project.id} project={project} />
+              ))}
+            </div>
+          ) : (
+            <div className="py-20 md:py-32 text-center space-y-6 bg-secondary/10 rounded-[2rem] border-2 border-dashed border-border/50">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary">
+                <Sparkles size={32} />
+              </div>
+              <div className="space-y-2">
+                <p className="text-lg md:text-xl text-muted-foreground font-light">Criações em desenvolvimento para esta categoria.</p>
+                <p className="text-xs md:text-sm text-muted-foreground/60 uppercase tracking-widest">Fique atento às novidades!</p>
+              </div>
               <button 
                 onClick={() => setActiveCategory('Todos')}
-                className="text-primary font-semibold hover:underline"
+                className="text-primary font-semibold hover:underline text-sm uppercase tracking-widest"
               >
-                Limpar Filtros
+                Ver Todas as Criações
               </button>
             </div>
           )}

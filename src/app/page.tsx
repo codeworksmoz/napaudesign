@@ -39,12 +39,12 @@ export default function Home() {
               Qualidade e Criatividade em cada detalhe
             </div>
             
-            <h1 className="text-4xl xs:text-5xl md:text-8xl font-headline font-bold leading-tight tracking-tight px-2">
+            <h1 className="text-3xl xs:text-5xl md:text-8xl font-headline font-bold leading-tight tracking-tight px-2">
               Transformamos Momentos em <br className="hidden md:block" />
               <span className="text-primary italic">Arte Personalizada</span>.
             </h1>
             
-            <p className="text-base md:text-xl text-muted-foreground font-body font-light max-w-2xl mx-auto leading-relaxed px-4">
+            <p className="text-sm md:text-xl text-muted-foreground font-body font-light max-w-2xl mx-auto leading-relaxed px-4">
               Especialistas em tipos de bolo e camisetas exclusivas para celebrar suas histórias com elegância em Moçambique.
             </p>
             
@@ -68,7 +68,7 @@ export default function Home() {
         </section>
 
         {/* Services Highlight */}
-        <section className="py-16 md:py-24 px-4 sm:px-6 bg-white">
+        <section className="py-12 md:py-24 px-4 sm:px-6 bg-white">
           <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12">
             <div className="p-6 md:p-8 rounded-3xl bg-secondary/20 space-y-4 border border-border/50 transition-transform hover:scale-[1.02]">
               <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
@@ -95,11 +95,11 @@ export default function Home() {
         </section>
 
         {/* Featured Projects */}
-        <section className="py-16 md:py-24 px-4 sm:px-6">
-          <div className="max-w-7xl mx-auto space-y-12 md:space-y-16">
-            <div className="text-center space-y-4">
+        <section className="py-12 md:py-24 px-4 sm:px-6">
+          <div className="max-w-7xl mx-auto space-y-8 md:space-y-16">
+            <div className="text-center space-y-2 md:space-y-4">
               <h2 className="text-[10px] md:text-sm font-semibold text-primary uppercase tracking-[0.3em]">Criações Recentes</h2>
-              <h3 className="text-3xl md:text-5xl font-headline font-bold">Galeria de Destaques</h3>
+              <h3 className="text-2xl md:text-5xl font-headline font-bold">Galeria de Destaques</h3>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -109,7 +109,7 @@ export default function Home() {
             </div>
             
             <div className="text-center pt-4">
-              <Link href="/portfolio" className="inline-flex items-center gap-2 text-primary font-semibold border-b-2 border-primary/20 hover:border-primary transition-all pb-1 text-sm md:text-base">
+              <Link href="/portfolio" className="inline-flex items-center gap-2 text-primary font-semibold border-b-2 border-primary/20 hover:border-primary transition-all pb-1 text-xs md:text-base">
                 Ver Galeria Completa
                 <ArrowRight size={18} />
               </Link>
@@ -118,9 +118,9 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <section id="about" className="py-16 md:py-24 px-4 sm:px-6 bg-secondary/10">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
-            <div className="relative aspect-square md:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl">
+        <section id="about" className="py-12 md:py-24 px-4 sm:px-6 bg-secondary/10">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center">
+            <div className="relative aspect-square md:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl order-2 lg:order-1">
               <Image 
                 src="https://picsum.photos/seed/napau-about/800/1000"
                 alt="Sobre Napau"
@@ -129,16 +129,16 @@ export default function Home() {
                 data-ai-hint="artistic creative"
               />
             </div>
-            <div className="space-y-6 md:space-y-8">
+            <div className="space-y-6 md:space-y-8 order-1 lg:order-2">
               <h2 className="text-[10px] md:text-sm font-semibold text-primary uppercase tracking-[0.3em]">Nossa História</h2>
-              <h3 className="text-3xl md:text-5xl font-headline font-bold leading-tight">Paixão por Transformar Momentos.</h3>
-              <p className="text-base md:text-lg text-muted-foreground font-light leading-relaxed">
+              <h3 className="text-2xl md:text-5xl font-headline font-bold leading-tight">Paixão por Transformar Momentos.</h3>
+              <p className="text-sm md:text-lg text-muted-foreground font-light leading-relaxed">
                 A Napau Design & Arte nasceu em Moçambique com o propósito de criar memórias inesquecíveis através de produtos personalizados. Atendemos revendedores e clientes individuais com a mesma dedicação e foco na qualidade.
               </p>
-              <div className="space-y-4 border-l-2 border-primary/30 pl-4 md:pl-6 italic text-muted-foreground text-sm md:text-base">
+              <div className="space-y-4 border-l-2 border-primary/30 pl-4 md:pl-6 italic text-muted-foreground text-xs md:text-base">
                 "Cada peça é pensada com dedicação, garantindo que a sua identidade seja celebrada com criatividade e excelência."
               </div>
-              <Button asChild className="rounded-full px-6 md:px-8 py-5 md:py-6 text-base md:text-lg h-auto w-full sm:w-auto">
+              <Button asChild className="rounded-full px-6 md:px-8 py-4 md:py-6 text-sm md:text-lg h-auto w-full sm:w-auto">
                 <a href="https://wa.me/258847615871">Saber Mais no WhatsApp</a>
               </Button>
             </div>
@@ -146,12 +146,12 @@ export default function Home() {
         </section>
 
         {/* Contact Form */}
-        <section id="contact" className="py-16 md:py-24 px-4 sm:px-6 bg-background">
-          <div className="max-w-4xl mx-auto space-y-10 md:space-y-12">
-            <div className="text-center space-y-4">
+        <section id="contact" className="py-12 md:py-24 px-4 sm:px-6 bg-background">
+          <div className="max-w-4xl mx-auto space-y-8 md:space-y-12">
+            <div className="text-center space-y-2 md:space-y-4">
               <h2 className="text-[10px] md:text-sm font-semibold text-primary uppercase tracking-[0.3em]">Vamos Conversar</h2>
-              <h3 className="text-3xl md:text-5xl font-headline font-bold">Peça um Orçamento</h3>
-              <p className="text-base md:text-lg text-muted-foreground font-light">Tem uma ideia especial? Deixe-nos dar vida ao seu projeto personalizado.</p>
+              <h3 className="text-2xl md:text-5xl font-headline font-bold">Peça um Orçamento</h3>
+              <p className="text-sm md:text-lg text-muted-foreground font-light px-4">Tem uma ideia especial? Deixe-nos dar vida ao seu projeto personalizado.</p>
             </div>
             <div className="bg-white p-6 md:p-12 rounded-[1.5rem] md:rounded-[2rem] shadow-xl border border-border/50">
               <ContactForm />
