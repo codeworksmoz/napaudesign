@@ -39,8 +39,8 @@ export default function Home() {
       <Navbar />
       
       <main className="flex-grow">
-        {/* HERO SECTION - Ajustado para subir o conteúdo e eliminar espaço branco */}
-        <section className="relative min-h-[85vh] flex flex-col items-center justify-start overflow-hidden pt-32 md:pt-40">
+        {/* HERO SECTION - Ajustado para eliminar espaço branco superior */}
+        <section className="relative min-h-[80vh] flex flex-col items-center justify-start overflow-hidden pt-24 md:pt-28">
           <div className="absolute inset-0 z-0">
             <Image 
               src={home.heroImage}
@@ -52,7 +52,7 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/50 to-background"></div>
           </div>
           
-          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6 px-6">
+          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-4 px-6">
             <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.25em] border border-primary/20 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-700">
               <Sparkles size={14} className="animate-pulse" />
               Criatividade em Moçambique
@@ -63,7 +63,7 @@ export default function Home() {
             <p className="text-muted-foreground text-lg md:text-2xl font-light max-w-2xl mx-auto leading-relaxed italic animate-in fade-in duration-1000 delay-300">
               {home.heroSubtitle}
             </p>
-            <div className="flex flex-col sm:flex-row gap-5 justify-center pt-6 animate-in fade-in zoom-in-95 duration-1000 delay-500">
+            <div className="flex flex-col sm:flex-row gap-5 justify-center pt-4 animate-in fade-in zoom-in-95 duration-1000 delay-500">
               <Button asChild className="rounded-[1.5rem] px-12 py-8 text-lg font-bold gold-shimmer shadow-2xl hover:scale-105 transition-transform active:scale-95">
                 <Link href="/portfolio">Explorar Portfólio</Link>
               </Button>
@@ -76,10 +76,10 @@ export default function Home() {
 
         {/* FLYER HIGHLIGHT */}
         {activeFlyers.length > 0 && (
-          <section className="py-20 px-6 bg-secondary/10 border-y border-primary/5">
+          <section className="py-16 px-6 bg-secondary/10 border-y border-primary/5">
             <div className="max-w-7xl mx-auto">
-              <div className="flex flex-col lg:flex-row items-center gap-16">
-                <div className="flex-1 space-y-10">
+              <div className="flex flex-col lg:flex-row items-center gap-12">
+                <div className="flex-1 space-y-8">
                   <div className="space-y-4">
                     <span className="text-primary font-bold uppercase tracking-[0.3em] text-[10px] flex items-center gap-2 bg-white/50 w-fit px-4 py-2 rounded-full border border-primary/10">
                       <GraduationCap size={16} /> Próxima Formação
@@ -91,18 +91,18 @@ export default function Home() {
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="flex items-center gap-5 p-7 bg-white rounded-[2.5rem] shadow-sm border border-primary/5 group hover:border-primary/20 transition-all hover:shadow-xl">
-                      <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                        <Calendar size={32} />
+                    <div className="flex items-center gap-5 p-6 bg-white rounded-[2rem] shadow-sm border border-primary/5 group hover:border-primary/20 transition-all hover:shadow-xl">
+                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                        <Calendar size={24} />
                       </div>
                       <div>
                         <p className="text-[9px] uppercase font-bold text-muted-foreground tracking-widest">Início</p>
-                        <p className="font-bold text-xl">{activeFlyers[0].data}</p>
+                        <p className="font-bold text-lg">{activeFlyers[0].data}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-5 p-7 bg-white rounded-[2.5rem] shadow-sm border border-primary/5 group hover:border-primary/20 transition-all hover:shadow-xl">
-                      <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                        <MapPin size={32} />
+                    <div className="flex items-center gap-5 p-6 bg-white rounded-[2rem] shadow-sm border border-primary/5 group hover:border-primary/20 transition-all hover:shadow-xl">
+                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                        <MapPin size={24} />
                       </div>
                       <div>
                         <p className="text-[9px] uppercase font-bold text-muted-foreground tracking-widest">Local</p>
@@ -118,14 +118,14 @@ export default function Home() {
                   </Button>
                 </div>
                 
-                <div className="flex-1 relative aspect-[4/5] w-full max-w-md lg:max-w-none rounded-[4rem] overflow-hidden shadow-2xl border-[12px] border-white group">
+                <div className="flex-1 relative aspect-[4/5] w-full max-w-md lg:max-w-none rounded-[3rem] overflow-hidden shadow-2xl border-[8px] border-white group">
                   <Image 
                     src={activeFlyers[0].imageUrl} 
                     alt={activeFlyers[0].titulo} 
                     fill 
                     className="object-cover transition-transform duration-700 group-hover:scale-110" 
                   />
-                  <div className="absolute top-10 right-10 bg-primary/90 text-white px-10 py-5 rounded-[2rem] font-bold shadow-2xl text-2xl backdrop-blur-md animate-bounce">
+                  <div className="absolute top-8 right-8 bg-primary/90 text-white px-8 py-4 rounded-[1.5rem] font-bold shadow-2xl text-xl backdrop-blur-md animate-bounce">
                     {activeFlyers[0].preco}
                   </div>
                 </div>
@@ -135,25 +135,25 @@ export default function Home() {
         )}
 
         {/* SERVICES SECTION */}
-        <section className="py-24 px-6 bg-white">
-          <div className="max-w-7xl mx-auto space-y-20">
-            <div className="text-center space-y-6 max-w-3xl mx-auto">
+        <section className="py-20 px-6 bg-white">
+          <div className="max-w-7xl mx-auto space-y-16">
+            <div className="text-center space-y-4 max-w-3xl mx-auto">
               <h2 className="text-4xl md:text-7xl font-headline font-bold tracking-tight">O Que Fazemos</h2>
               <p className="text-muted-foreground text-lg md:text-xl font-light leading-relaxed">
                 Elevamos cada celebração ao estatuto de arte através de designs únicos e exclusivos.
               </p>
-              <div className="w-24 h-1.5 bg-primary/30 mx-auto rounded-full"></div>
+              <div className="w-20 h-1 bg-primary/30 mx-auto rounded-full"></div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
               {[
                 { icon: Cake, title: "Tipos de Bolo", desc: home.serviceBoloDesc },
                 { icon: Shirt, title: "Camisetas", desc: home.serviceCamisetaDesc },
                 { icon: GraduationCap, title: "Formação", desc: home.serviceFormacaoDesc }
               ].map((service, i) => (
-                <div key={i} className="p-12 rounded-[3.5rem] bg-secondary/5 space-y-8 border border-border/40 hover:shadow-2xl transition-all duration-700 group hover:-translate-y-4 hover:bg-white">
-                  <div className="w-24 h-24 rounded-3xl bg-primary/10 flex items-center justify-center text-primary group-hover:rotate-12 transition-transform shadow-sm">
-                    <service.icon size={48} />
+                <div key={i} className="p-10 rounded-[3rem] bg-secondary/5 space-y-6 border border-border/40 hover:shadow-2xl transition-all duration-700 group hover:-translate-y-4 hover:bg-white">
+                  <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:rotate-12 transition-transform shadow-sm">
+                    <service.icon size={40} />
                   </div>
                   <div className="space-y-4">
                     <h4 className="text-2xl md:text-3xl font-headline font-bold">{service.title}</h4>
@@ -166,10 +166,10 @@ export default function Home() {
         </section>
 
         {/* PORTFOLIO HIGHLIGHT */}
-        <section className="py-24 px-6 bg-secondary/5">
-          <div className="max-w-7xl mx-auto space-y-20">
-            <div className="flex flex-col md:flex-row justify-between items-end gap-10">
-              <div className="space-y-6">
+        <section className="py-20 px-6 bg-secondary/5">
+          <div className="max-w-7xl mx-auto space-y-16">
+            <div className="flex flex-col md:flex-row justify-between items-end gap-8">
+              <div className="space-y-4">
                 <h3 className="text-4xl md:text-8xl font-headline font-bold leading-[0.9]">Criações Recentes</h3>
                 <p className="text-muted-foreground font-light text-xl max-w-md italic border-l-4 border-primary/30 pl-8">
                   A nossa paixão é transformar a sua imaginação em realidade tangível.
@@ -183,11 +183,11 @@ export default function Home() {
               </Button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
               {projects.length > 0 ? projects.map(p => (
                 <PortfolioCard key={p.id} project={p} />
               )) : (
-                <div className="col-span-full py-24 text-center animate-pulse">
+                <div className="col-span-full py-20 text-center animate-pulse">
                   <Logo size={80} className="mx-auto opacity-10" />
                   <p className="text-muted-foreground mt-6 uppercase tracking-[0.4em] text-xs font-bold">A carregar o melhor da Napau...</p>
                 </div>
@@ -197,17 +197,17 @@ export default function Home() {
         </section>
 
         {/* CONTACT CTA */}
-        <section id="contact" className="py-32 md:py-48 px-6 bg-primary text-white text-center overflow-hidden relative">
+        <section id="contact" className="py-24 md:py-32 px-6 bg-primary text-white text-center overflow-hidden relative">
           <div className="absolute inset-0 opacity-15 pointer-events-none">
              <Image src="https://picsum.photos/seed/napau-cta/1400/900" alt="Background Texture" fill className="object-cover" />
           </div>
-          <div className="max-w-4xl mx-auto space-y-12 relative z-10">
+          <div className="max-w-4xl mx-auto space-y-10 relative z-10">
             <h2 className="text-5xl md:text-8xl font-headline font-bold leading-[1] tracking-tight">Pronto para dar vida à sua visão?</h2>
             <p className="text-primary-foreground/90 text-xl md:text-2xl font-light leading-relaxed max-w-2xl mx-auto italic">
               Seja para um bolo inesquecível ou uma marca de camisetas exclusiva, a Napau é a sua parceira criativa em Moçambique.
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-              <Button asChild className="bg-white text-primary hover:bg-white/95 rounded-[2.5rem] px-16 py-10 text-2xl font-bold shadow-2xl transition-all hover:scale-105 active:scale-95 group">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center pt-6">
+              <Button asChild className="bg-white text-primary hover:bg-white/95 rounded-[2rem] px-14 py-8 text-2xl font-bold shadow-2xl transition-all hover:scale-105 active:scale-95 group">
                 <a href={`https://wa.me/258847615871?text=${encodeURIComponent('Olá! Vim pelo site da Napau Design & Arte e gostaria de solicitar um orçamento personalizado.')}`}>
                   Falar no WhatsApp
                 </a>
