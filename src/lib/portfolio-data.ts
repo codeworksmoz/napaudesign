@@ -19,6 +19,7 @@ export const CATEGORIES: { label: string; value: Category }[] = [
   { label: 'Kits Revenda', value: 'Kits Revenda' }
 ];
 
+// Estes dados serão usados como fallback se o localStorage estiver vazio
 export const PORTFOLIO_PROJECTS: Project[] = [
   {
     id: '1',
@@ -35,15 +36,6 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     category: 'Camisetas',
     description: 'Personalização têxtil de alta qualidade com a marca Napau Design & Arte.',
     imageUrl: 'https://picsum.photos/seed/tshirt1/800/600',
-    year: '2024',
-    active: true
-  },
-  {
-    id: '3',
-    title: 'Bolo Temático Floral',
-    category: 'Tipos de Bolo',
-    description: 'Design exclusivo com flores em açúcar para celebrações especiais.',
-    imageUrl: 'https://picsum.photos/seed/cake2/800/600',
     year: '2024',
     active: true
   }
