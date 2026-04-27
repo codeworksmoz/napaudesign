@@ -8,6 +8,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Sparkles, Cake, Shirt, Users } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const featuredProjects = PORTFOLIO_PROJECTS.slice(0, 3);
@@ -163,5 +164,3 @@ export default function Home() {
     </div>
   );
 }
-
-import { Button } from '@/components/ui/button';
