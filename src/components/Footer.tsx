@@ -6,8 +6,8 @@ import { Instagram, Facebook, Mail, MapPin, Phone } from 'lucide-react';
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-white border-t border-border pt-12 md:pt-16 pb-8 px-4 sm:px-6">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-12">
-        <div className="col-span-1 sm:col-span-2 space-y-6">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-12">
+        <div className="col-span-1 md:col-span-2 space-y-6">
           <div className="flex items-center gap-3">
             <Logo size={50} />
             <div>

@@ -61,19 +61,19 @@ export default function PortfolioPage() {
               ))}
             </div>
           ) : (
-            <div className="py-20 md:py-32 text-center space-y-6 bg-secondary/10 rounded-[2rem] border-2 border-dashed border-border/50">
+            <div className="py-20 md:py-32 text-center space-y-6 bg-secondary/10 rounded-[2rem] border-2 border-dashed border-border/50 px-6">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary">
                 <Sparkles size={32} />
               </div>
               <div className="space-y-2">
-                <p className="text-lg md:text-xl text-muted-foreground font-light">Criações em desenvolvimento para esta categoria.</p>
-                <p className="text-xs md:text-sm text-muted-foreground/60 uppercase tracking-widest">Fique atento às novidades!</p>
+                <p className="text-lg md:text-xl text-muted-foreground font-light">Estamos a preparar novidades incríveis para esta categoria.</p>
+                <p className="text-xs md:text-sm text-muted-foreground/60 uppercase tracking-widest">Em breve na Napau Design & Arte!</p>
               </div>
               <button 
                 onClick={() => setActiveCategory('Todos')}
                 className="text-primary font-semibold hover:underline text-sm uppercase tracking-widest"
               >
-                Ver Todas as Criações
+                Ver Outras Criações
               </button>
             </div>
           )}
