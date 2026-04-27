@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -38,8 +39,8 @@ export default function Home() {
       <Navbar />
       
       <main className="flex-grow">
-        {/* HERO SECTION - Ajustado para eliminar espaço branco e subir o conteúdo */}
-        <section className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden pt-0">
+        {/* HERO SECTION - Ajustado para subir o conteúdo e eliminar espaço branco */}
+        <section className="relative min-h-[85vh] flex flex-col items-center justify-start overflow-hidden pt-32 md:pt-40">
           <div className="absolute inset-0 z-0">
             <Image 
               src={home.heroImage}
@@ -51,7 +52,7 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/50 to-background"></div>
           </div>
           
-          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6 px-6 -mt-10 md:-mt-20">
+          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6 px-6">
             <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.25em] border border-primary/20 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-700">
               <Sparkles size={14} className="animate-pulse" />
               Criatividade em Moçambique
@@ -187,7 +188,7 @@ export default function Home() {
                 <PortfolioCard key={p.id} project={p} />
               )) : (
                 <div className="col-span-full py-24 text-center animate-pulse">
-                  <Logo size={100} className="mx-auto opacity-10" />
+                  <Logo size={80} className="mx-auto opacity-10" />
                   <p className="text-muted-foreground mt-6 uppercase tracking-[0.4em] text-xs font-bold">A carregar o melhor da Napau...</p>
                 </div>
               )}

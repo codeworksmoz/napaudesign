@@ -63,7 +63,7 @@ export const Footer: React.FC = () => {
           <ul className="space-y-2 md:space-y-3 text-sm text-muted-foreground font-light">
             <li><a href="/" className="hover:text-primary transition-colors">Início</a></li>
             <li><a href="/portfolio" className="hover:text-primary transition-colors">Portfólio</a></li>
-            <li><a href="/#cursos" className="hover:text-primary transition-colors">Cursos</a></li>
+            <li><a href="/cursos" className="hover:text-primary transition-colors">Cursos</a></li>
             <li><a href="/#contact" className="hover:text-primary transition-colors">Orçamento</a></li>
           </ul>
         </div>
@@ -88,8 +88,11 @@ export const Footer: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto mt-12 md:mt-16 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-[0.2em] text-center md:text-left">
-        <p>© {new Date().getFullYear()} Napau Design & Arte. Todos os direitos reservados.</p>
-        <p>Desenvolvido com criatividade em Moçambique.</p>
+        <div>
+          <p>© {new Date().getFullYear()} Napau Design & Arte. Todos os direitos reservados.</p>
+          <p className="mt-1 lowercase font-medium opacity-80">Desenvolvido por CodeWorks (codeworksmoz@gmail.com)</p>
+        </div>
+        <p>Criatividade e Excelência em Moçambique.</p>
       </div>
     </footer>
   );
