@@ -10,9 +10,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Trash2, Save, GraduationCap, Image as ImageIcon, Home, Users, Printer, Edit3, Settings } from 'lucide-react';
+import { Plus, Trash2, Save, GraduationCap, Image as ImageIcon, Home, Users, Printer, Edit3, Settings, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Project, Flyer, DEFAULT_FLYERS, HomeContent, DEFAULT_HOME_CONTENT, Category, PORTFOLIO_PROJECTS, Registration } from '@/lib/portfolio-data';
+import { Project, Flyer, HomeContent, DEFAULT_HOME_CONTENT, Category, Registration } from '@/lib/portfolio-data';
+import { supabase } from '@/lib/supabase';
+import { ImageUpload } from '@/components/admin/ImageUpload';
 
 export default function NapauAdminPage() {
   const { toast } = useToast();
@@ -20,39 +22,55 @@ export default function NapauAdminPage() {
   const [flyers, setFlyers] = useState<Flyer[]>([]);
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [home, setHome] = useState<HomeContent>(DEFAULT_HOME_CONTENT);
+  const [carregando, setCarregando] = useState(true);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
 
   useEffect(() => {
-    // Carregar dados salvos ou defaults
-    const savedProjects = localStorage.getItem('napau_projects');
-    setProjects(savedProjects ? JSON.parse(savedProjects) : PORTFOLIO_PROJECTS);
-
-    const savedFlyers = localStorage.getItem('napau_flyers');
-    setFlyers(savedFlyers ? JSON.parse(savedFlyers) : DEFAULT_FLYERS);
-
-    const savedRegs = localStorage.getItem('napau_registrations');
-    setRegistrations(savedRegs ? JSON.parse(savedRegs) : []);
-
-    const savedHome = localStorage.getItem('napau_home_content');
-    if (savedHome) setHome(JSON.parse(savedHome));
+    carregarDados();
   }, []);
 
-  const saveHome = () => {
-    localStorage.setItem('napau_home_content', JSON.stringify(home));
-    toast({ title: "Conteúdo da Home atualizado!" });
+  async function carregarDados() {
+    setCarregando(true);
+    try {
+      // 1. Home
+      const { data: homeData } = await supabase.from('home_content').select('*').single();
+      if (homeData) setHome(homeData);
+
+      // 2. Projetos
+      const { data: projData } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+      if (projData) setProjects(projData as Project[]);
+
+      // 3. Flyers
+      const { data: flyData } = await supabase.from('flyers').select('*').order('created_at', { ascending: false });
+      if (flyData) setFlyers(flyData as Flyer[]);
+
+      // 4. Inscrições
+      const { data: regData } = await supabase.from('registrations').select('*').order('registrationDate', { ascending: false });
+      if (regData) setRegistrations(regData as Registration[]);
+
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error);
+    } finally {
+      setCarregando(false);
+    }
+  }
+
+  // --- HOME ---
+  const saveHome = async () => {
+    try {
+      const { error } = await supabase.from('home_content').upsert(home);
+      if (error) throw error;
+      toast({ title: "Conteúdo da Home atualizado!" });
+    } catch (e: any) {
+      toast({ title: "Erro ao salvar Home", description: e.message, variant: "destructive" });
+    }
   };
 
-  const saveProjects = (newList: Project[]) => {
-    setProjects(newList);
-    localStorage.setItem('napau_projects', JSON.stringify(newList));
-    toast({ title: "Portfólio guardado!" });
-  };
-
-  const handleProjectSubmit = (e: React.FormEvent) => {
+  // --- PORTFOLIO ---
+  const handleProjectSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    const projectData: Project = {
-      id: editingProject?.id || Date.now().toString(),
+    const projectData = {
       title: formData.get('title') as string,
       category: formData.get('category') as Category,
       description: formData.get('description') as string,
@@ -60,28 +78,51 @@ export default function NapauAdminPage() {
       year: formData.get('year') as string,
       active: true
     };
-    if (editingProject) {
-      saveProjects(projects.map(p => p.id === editingProject.id ? projectData : p));
+
+    try {
+      if (editingProject) {
+        const { error } = await supabase.from('projects').update(projectData).eq('id', editingProject.id);
+        if (error) throw error;
+        toast({ title: "Projeto atualizado!" });
+      } else {
+        const { error } = await supabase.from('projects').insert(projectData);
+        if (error) throw error;
+        toast({ title: "Projeto adicionado!" });
+      }
       setEditingProject(null);
-    } else {
-      saveProjects([projectData, ...projects]);
+      (e.target as HTMLFormElement).reset();
+      carregarDados();
+    } catch (e: any) {
+      toast({ title: "Erro ao salvar projeto", description: e.message, variant: "destructive" });
     }
-    (e.target as HTMLFormElement).reset();
   };
 
-  const deleteProject = (id: string) => {
-    if (confirm('Tem certeza?')) saveProjects(projects.filter(p => p.id !== id));
+  const deleteProject = async (id: string) => {
+    if (!confirm('Tem certeza?')) return;
+    try {
+      const { error } = await supabase.from('projects').delete().eq('id', id);
+      if (error) throw error;
+      carregarDados();
+      toast({ title: "Projeto removido!" });
+    } catch (e: any) {
+      toast({ title: "Erro ao apagar", description: e.message, variant: "destructive" });
+    }
   };
 
-  const saveFlyers = (newList: Flyer[]) => {
-    setFlyers(newList);
-    localStorage.setItem('napau_flyers', JSON.stringify(newList));
-    toast({ title: "Lista de Flyers atualizada!" });
+  // --- FLYERS ---
+  const saveFlyer = async (flyer: Flyer) => {
+    try {
+      const { error } = await supabase.from('flyers').upsert(flyer);
+      if (error) throw error;
+      toast({ title: "Flyer guardado!" });
+      carregarDados();
+    } catch (e: any) {
+      toast({ title: "Erro ao salvar flyer", description: e.message, variant: "destructive" });
+    }
   };
 
-  const addFlyer = () => {
-    const newFlyer: Flyer = {
-      id: Date.now().toString(),
+  const addFlyer = async () => {
+    const newFlyer = {
       titulo: 'Novo Curso',
       preco: '0 MT',
       data: 'DATA',
@@ -89,28 +130,53 @@ export default function NapauAdminPage() {
       contactos: '+258',
       listaEsquerda: [],
       listaDireita: [],
-      imageUrl: 'https://picsum.photos/seed/' + Date.now() + '/800/600',
+      imageUrl: '',
       ativo: true
     };
-    saveFlyers([newFlyer, ...flyers]);
-  };
-
-  const updateFlyer = (id: string, field: keyof Flyer, value: any) => {
-    const newList = flyers.map(f => f.id === id ? { ...f, [field]: value } : f);
-    setFlyers(newList);
-  };
-
-  const deleteFlyer = (id: string) => {
-    if (confirm('Deseja apagar?')) saveFlyers(flyers.filter(f => f.id !== id));
-  };
-
-  const deleteRegistration = (id: string) => {
-    if (confirm('Remover esta inscrição?')) {
-      const newList = registrations.filter(r => r.id !== id);
-      setRegistrations(newList);
-      localStorage.setItem('napau_registrations', JSON.stringify(newList));
+    try {
+      const { error } = await supabase.from('flyers').insert(newFlyer);
+      if (error) throw error;
+      carregarDados();
+    } catch (e: any) {
+      console.error(e);
     }
   };
+
+  const updateFlyerLocal = (id: string, field: keyof Flyer, value: any) => {
+    setFlyers(flyers.map(f => f.id === id ? { ...f, [field]: value } : f));
+  };
+
+  const deleteFlyer = async (id: string) => {
+    if (!confirm('Deseja apagar?')) return;
+    try {
+      const { error } = await supabase.from('flyers').delete().eq('id', id);
+      if (error) throw error;
+      carregarDados();
+    } catch (e: any) {
+      console.error(e);
+    }
+  };
+
+  // --- REGISTRATIONS ---
+  const deleteRegistration = async (id: string) => {
+    if (!confirm('Remover esta inscrição?')) return;
+    try {
+      const { error } = await supabase.from('registrations').delete().eq('id', id);
+      if (error) throw error;
+      carregarDados();
+      toast({ title: "Inscrição removida!" });
+    } catch (e: any) {
+      console.error(e);
+    }
+  };
+
+  if (carregando) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="animate-spin text-primary" size={48} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-secondary/5">
@@ -124,7 +190,7 @@ export default function NapauAdminPage() {
               </div>
               <div>
                 <h1 className="text-3xl font-headline font-bold text-foreground">Gestão Napau</h1>
-                <p className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Acesso Restrito</p>
+                <p className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Base de Dados Supabase</p>
               </div>
             </div>
           </div>
@@ -141,7 +207,7 @@ export default function NapauAdminPage() {
               <Card className="border-none shadow-xl rounded-[2rem] bg-white overflow-hidden">
                 <CardHeader className="flex flex-row items-center justify-between border-b bg-secondary/5 p-8">
                   <CardTitle className="text-xl">Conteúdo da Home</CardTitle>
-                  <Button onClick={saveHome} className="bg-primary text-white rounded-xl gap-2 px-8 py-6 font-bold shadow-lg gold-shimmer hover:scale-105 transition-transform">
+                  <Button onClick={saveHome} className="bg-primary text-white rounded-xl gap-2 px-8 py-6 font-bold shadow-lg gold-shimmer">
                     <Save size={18} /> Guardar Alterações
                   </Button>
                 </CardHeader>
@@ -152,8 +218,8 @@ export default function NapauAdminPage() {
                       <Input value={home.heroTitle} onChange={(e) => setHome({...home, heroTitle: e.target.value})} className="rounded-xl h-12" />
                     </div>
                     <div className="space-y-3">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-primary px-1">Foto Hero (URL)</label>
-                      <Input value={home.heroImage} onChange={(e) => setHome({...home, heroImage: e.target.value})} className="rounded-xl h-12" />
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-primary px-1">Foto Hero</label>
+                      <ImageUpload valor={home.heroImage} onChange={(url) => setHome({...home, heroImage: url})} />
                     </div>
                   </div>
                   <div className="space-y-3">
@@ -181,20 +247,32 @@ export default function NapauAdminPage() {
             <TabsContent value="portfolio" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <Card className="lg:col-span-4 border-none shadow-xl rounded-[2rem] bg-white h-fit">
-                  <CardHeader className="bg-secondary/5 rounded-t-[2rem]"><CardTitle className="text-lg">Gerir Trabalho</CardTitle></CardHeader>
+                  <CardHeader className="bg-secondary/5 rounded-t-[2rem]"><CardTitle className="text-lg">{editingProject ? 'Editar Trabalho' : 'Novo Trabalho'}</CardTitle></CardHeader>
                   <CardContent className="p-6">
                     <form onSubmit={handleProjectSubmit} className="space-y-4">
                       <Input name="title" defaultValue={editingProject?.title} placeholder="Título do Projeto" required className="rounded-xl" />
-                      <select name="category" defaultValue={editingProject?.category || 'Tipos de Bolo'} className="w-full p-3 border rounded-xl bg-white text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none">
+                      <select name="category" defaultValue={editingProject?.category || 'Tipos de Bolo'} className="w-full p-3 border rounded-xl bg-white text-sm font-medium outline-none">
                         <option value="Tipos de Bolo">Tipos de Bolo</option>
                         <option value="Camisetas">Camisetas</option>
                         <option value="Design Personalizado">Design Personalizado</option>
                         <option value="Kits Revenda">Kits Revenda</option>
                       </select>
                       <Input name="year" defaultValue={editingProject?.year || '2024'} placeholder="Ano" required className="rounded-xl" />
-                      <Input name="imageUrl" defaultValue={editingProject?.imageUrl} placeholder="URL da Foto" required className="rounded-xl" />
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase text-primary px-1">Imagem do Projeto</label>
+                        <Input name="imageUrl" value={editingProject?.imageUrl || ''} readOnly className="hidden" />
+                        <ImageUpload 
+                          valor={editingProject?.imageUrl || ''} 
+                          onChange={(url) => setEditingProject(prev => prev ? {...prev, imageUrl: url} : null)} 
+                        />
+                      </div>
                       <Textarea name="description" defaultValue={editingProject?.description} placeholder="Breve descrição..." required className="rounded-xl h-24 resize-none" />
-                      <Button type="submit" className="w-full rounded-xl py-6 font-bold shadow-md">{editingProject ? 'Atualizar Projeto' : 'Adicionar ao Portfólio'}</Button>
+                      <Button type="submit" className="w-full rounded-xl py-6 font-bold shadow-md">
+                        {editingProject ? 'Atualizar Projeto' : 'Adicionar ao Portfólio'}
+                      </Button>
+                      {editingProject && (
+                        <Button type="button" variant="ghost" onClick={() => setEditingProject(null)} className="w-full">Cancelar Edição</Button>
+                      )}
                     </form>
                   </CardContent>
                 </Card>
@@ -207,8 +285,8 @@ export default function NapauAdminPage() {
                           <TableCell><div className="font-bold text-foreground">{p.title}</div><div className="text-[10px] text-muted-foreground uppercase">{p.year}</div></TableCell>
                           <TableCell><span className="text-[9px] bg-primary/10 text-primary px-3 py-1 rounded-full font-bold uppercase tracking-widest">{p.category}</span></TableCell>
                           <TableCell className="text-right flex justify-end gap-2">
-                            <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10 hover:text-primary" onClick={() => setEditingProject(p)}><Edit3 size={16} /></Button>
-                            <Button variant="ghost" size="icon" className="text-destructive rounded-full hover:bg-destructive/10" onClick={() => deleteProject(p.id)}><Trash2 size={16} /></Button>
+                            <Button variant="ghost" size="icon" className="rounded-full" onClick={() => setEditingProject(p)}><Edit3 size={16} /></Button>
+                            <Button variant="ghost" size="icon" className="text-destructive rounded-full" onClick={() => deleteProject(p.id)}><Trash2 size={16} /></Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -223,44 +301,48 @@ export default function NapauAdminPage() {
                 <div className="flex justify-between items-center bg-white p-6 rounded-[2rem] shadow-sm">
                   <div>
                     <h3 className="text-xl font-bold font-headline">Catálogo de Cursos</h3>
-                    <p className="text-xs text-muted-foreground">Cada flyer será exibido com destaque na plataforma.</p>
+                    <p className="text-xs text-muted-foreground">Gestão em tempo real no Supabase.</p>
                   </div>
                   <Button onClick={addFlyer} className="rounded-xl gap-2 px-6 py-6 font-bold"><Plus size={18} /> Criar Novo Flyer</Button>
                 </div>
                 {flyers.map((flyer) => (
                   <Card key={flyer.id} className="border-none shadow-xl rounded-[2rem] bg-white overflow-hidden">
                     <CardHeader className="flex flex-row items-center justify-between border-b bg-secondary/5 p-6">
-                      <Input value={flyer.titulo} onChange={(e) => updateFlyer(flyer.id, 'titulo', e.target.value)} className="font-bold border-none text-lg bg-transparent focus:ring-0" />
+                      <Input value={flyer.titulo} onChange={(e) => updateFlyerLocal(flyer.id, 'titulo', e.target.value)} className="font-bold border-none text-lg bg-transparent focus:ring-0" />
                       <div className="flex gap-2">
-                        <Button onClick={() => saveFlyers(flyers)} variant="outline" size="icon" className="rounded-xl hover:bg-primary hover:text-white transition-all"><Save size={16} /></Button>
-                        <Button onClick={() => deleteFlyer(flyer.id)} variant="ghost" size="icon" className="text-destructive rounded-xl hover:bg-destructive/10"><Trash2 size={16} /></Button>
+                        <Button onClick={() => saveFlyer(flyer)} variant="outline" size="icon" className="rounded-xl hover:bg-primary hover:text-white"><Save size={16} /></Button>
+                        <Button onClick={() => deleteFlyer(flyer.id)} variant="ghost" size="icon" className="text-destructive rounded-xl"><Trash2 size={16} /></Button>
                       </div>
                     </CardHeader>
                     <CardContent className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-4">
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase text-primary">Flyer (Imagem)</label>
+                          <ImageUpload valor={flyer.imageUrl} onChange={(url) => updateFlyerLocal(flyer.id, 'imageUrl', url)} />
+                        </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <label className="text-[10px] font-bold uppercase text-primary">Preço</label>
-                            <Input value={flyer.preco} onChange={(e) => updateFlyer(flyer.id, 'preco', e.target.value)} className="rounded-xl" />
+                            <Input value={flyer.preco} onChange={(e) => updateFlyerLocal(flyer.id, 'preco', e.target.value)} className="rounded-xl" />
                           </div>
                           <div className="space-y-2">
                             <label className="text-[10px] font-bold uppercase text-primary">Data</label>
-                            <Input value={flyer.data} onChange={(e) => updateFlyer(flyer.id, 'data', e.target.value)} className="rounded-xl" />
+                            <Input value={flyer.data} onChange={(e) => updateFlyerLocal(flyer.id, 'data', e.target.value)} className="rounded-xl" />
                           </div>
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase text-primary">Local</label>
-                          <Input value={flyer.local} onChange={(e) => updateFlyer(flyer.id, 'local', e.target.value)} className="rounded-xl" />
                         </div>
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <label className="text-[10px] font-bold uppercase text-primary">Lista Esquerda</label>
-                          <Textarea value={flyer.listaEsquerda.join('\n')} onChange={(e) => updateFlyer(flyer.id, 'listaEsquerda', e.target.value.split('\n'))} className="rounded-xl h-24 text-xs font-mono" />
+                          <Textarea value={flyer.listaEsquerda.join('\n')} onChange={(e) => updateFlyerLocal(flyer.id, 'listaEsquerda', e.target.value.split('\n'))} className="rounded-xl h-24 text-xs font-mono" />
                         </div>
                         <div className="space-y-2">
                           <label className="text-[10px] font-bold uppercase text-primary">Lista Direita</label>
-                          <Textarea value={flyer.listaDireita.join('\n')} onChange={(e) => updateFlyer(flyer.id, 'listaDireita', e.target.value.split('\n'))} className="rounded-xl h-24 text-xs font-mono" />
+                          <Textarea value={flyer.listaDireita.join('\n')} onChange={(e) => updateFlyerLocal(flyer.id, 'listaDireita', e.target.value.split('\n'))} className="rounded-xl h-24 text-xs font-mono" />
+                        </div>
+                        <div className="col-span-2 space-y-2">
+                          <label className="text-[10px] font-bold uppercase text-primary">Local</label>
+                          <Input value={flyer.local} onChange={(e) => updateFlyerLocal(flyer.id, 'local', e.target.value)} className="rounded-xl" />
                         </div>
                       </div>
                     </CardContent>
@@ -270,12 +352,10 @@ export default function NapauAdminPage() {
             </TabsContent>
 
             <TabsContent value="registrations" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <Card className="border-none shadow-xl rounded-[2rem] bg-white overflow-hidden print:shadow-none print:border-none">
+              <Card className="border-none shadow-xl rounded-[2rem] bg-white overflow-hidden print:shadow-none">
                 <CardHeader className="flex flex-row items-center justify-between border-b bg-secondary/5 p-8 print:hidden">
                   <CardTitle className="text-xl">Inscritos Registados</CardTitle>
-                  <Button onClick={() => window.print()} variant="outline" className="rounded-xl gap-2 font-bold hover:bg-primary hover:text-white transition-all">
-                    <Printer size={18} /> Imprimir Relatório PDF
-                  </Button>
+                  <Button onClick={() => window.print()} variant="outline" className="rounded-xl gap-2 font-bold"><Printer size={18} /> Imprimir Relatório PDF</Button>
                 </CardHeader>
                 <CardContent className="p-0">
                   <Table>
@@ -298,11 +378,11 @@ export default function NapauAdminPage() {
                           <TableCell><div className="text-xs font-semibold">{r.courseTitle}</div></TableCell>
                           <TableCell><div className="text-[10px] font-bold">{r.docType}</div><div className="text-[10px] text-muted-foreground font-mono">{r.docNumber}</div></TableCell>
                           <TableCell className="text-right print:hidden">
-                            <Button variant="ghost" size="icon" className="text-destructive rounded-full hover:bg-destructive/10" onClick={() => deleteRegistration(r.id)}><Trash2 size={16} /></Button>
+                            <Button variant="ghost" size="icon" className="text-destructive rounded-full" onClick={() => deleteRegistration(r.id)}><Trash2 size={16} /></Button>
                           </TableCell>
                         </TableRow>
                       )) : (
-                        <TableRow><TableCell colSpan={4} className="text-center py-20 text-muted-foreground font-light italic">Aguardando as primeiras inscrições...</TableCell></TableRow>
+                        <TableRow><TableCell colSpan={4} className="text-center py-20">Nenhuma inscrição encontrada.</TableCell></TableRow>
                       )}
                     </TableBody>
                   </Table>

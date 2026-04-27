@@ -5,32 +5,54 @@ import React, { useEffect, useState } from 'react';
 import { Registration } from '@/lib/portfolio-data';
 import { Logo } from '@/components/Logo';
 import { Button } from '@/components/ui/button';
-import { Printer, ArrowLeft, CheckCircle } from 'lucide-react';
+import { Printer, ArrowLeft, CheckCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
+import { supabase } from '@/lib/supabase';
 
 export default function ReciboPage() {
   const params = useParams();
   const [reg, setReg] = useState<Registration | null>(null);
+  const [loading, setLoading] = useState(true);
   const [currentUrl, setCurrentUrl] = useState('');
 
   useEffect(() => {
-    // Pegar o ID da URL. Next.js 15 params.id pode ser string ou array
-    const rawId = Array.isArray(params.id) ? params.id.join('/') : params.id;
-    const cleanId = rawId ? decodeURIComponent(rawId).replace('/', '-') : '';
-    
-    const registrations: Registration[] = JSON.parse(localStorage.getItem('napau_registrations') || '[]');
-    const found = registrations.find(r => r.id === cleanId || r.id === rawId);
-    if (found) setReg(found);
-    
+    carregarInscricao();
     setCurrentUrl(window.location.href);
   }, [params.id]);
 
+  async function carregarInscricao() {
+    const rawId = Array.isArray(params.id) ? params.id.join('/') : params.id;
+    if (!rawId) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('registrations')
+        .select('*')
+        .eq('id', rawId)
+        .single();
+
+      if (data) setReg(data as Registration);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-background">
+      <Loader2 className="animate-spin text-primary" size={48} />
+      <p className="mt-4 text-muted-foreground font-medium">A buscar comprovativo...</p>
+    </div>
+  );
+
   if (!reg) return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center space-y-4">
-      <Logo size={80} className="opacity-20 animate-pulse" />
+      <Logo size={80} className="opacity-20" />
       <h2 className="text-2xl font-headline font-bold">Inscrição não encontrada</h2>
+      <p className="text-muted-foreground">O ID fornecido não existe na nossa base de dados.</p>
       <Button asChild className="rounded-xl">
         <Link href="/cursos">Voltar aos Cursos</Link>
       </Button>

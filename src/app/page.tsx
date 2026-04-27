@@ -6,11 +6,12 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { PortfolioCard } from '@/components/PortfolioCard';
 import { Logo } from '@/components/Logo';
-import { Project, HomeContent, Flyer, DEFAULT_HOME_CONTENT, PORTFOLIO_PROJECTS, DEFAULT_FLYERS } from '@/lib/portfolio-data';
+import { Project, HomeContent, Flyer, DEFAULT_HOME_CONTENT } from '@/lib/portfolio-data';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Sparkles, Cake, Shirt, GraduationCap, Calendar, MapPin, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { supabase } from '@/lib/supabase';
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -19,31 +20,51 @@ export default function Home() {
   const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
-    // Carregar do localStorage com fallback para dados default
-    const savedHome = localStorage.getItem('napau_home_content');
-    if (savedHome) setHome(JSON.parse(savedHome));
-
-    const savedProjects = localStorage.getItem('napau_projects');
-    const allProjects = savedProjects ? JSON.parse(savedProjects) : PORTFOLIO_PROJECTS;
-    setProjects(allProjects.filter((p: Project) => p.active).slice(0, 3));
-
-    const savedFlyers = localStorage.getItem('napau_flyers');
-    setFlyers(savedFlyers ? JSON.parse(savedFlyers) : DEFAULT_FLYERS);
-
-    setCarregando(false);
+    carregarDados();
   }, []);
+
+  async function carregarDados() {
+    setCarregando(true);
+    try {
+      // 1. Carregar Conteúdo da Home
+      const { data: homeData } = await supabase.from('home_content').select('*').single();
+      if (homeData) setHome(homeData);
+
+      // 2. Carregar Projetos Ativos (limite 3 para a home)
+      const { data: projectsData } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('active', true)
+        .order('created_at', { ascending: false })
+        .limit(3);
+      if (projectsData) setProjects(projectsData as Project[]);
+
+      // 3. Carregar Flyers Ativos
+      const { data: flyersData } = await supabase
+        .from('flyers')
+        .select('*')
+        .eq('ativo', true)
+        .order('created_at', { ascending: false });
+      if (flyersData) setFlyers(flyersData as Flyer[]);
+
+    } catch (error) {
+      console.error('Erro ao carregar dados do Supabase:', error);
+    } finally {
+      setCarregando(false);
+    }
+  }
 
   const activeFlyers = flyers.filter(f => f.ativo);
 
   if (carregando) {
     return (
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen bg-background">
         <Navbar />
         <main className="flex-grow flex items-center justify-center">
           <div className="text-center space-y-4">
             <Logo size={80} className="mx-auto opacity-20 animate-pulse" />
             <Loader2 className="animate-spin mx-auto text-primary" size={32} />
-            <p className="text-muted-foreground text-sm uppercase tracking-widest">A carregar...</p>
+            <p className="text-muted-foreground text-sm uppercase tracking-widest">A carregar Napau...</p>
           </div>
         </main>
         <Footer />
@@ -56,8 +77,8 @@ export default function Home() {
       <Navbar />
       
       <main className="flex-grow">
-        {/* HERO SECTION - Espaço reduzido para impacto imediato */}
-        <section className="relative min-h-[85vh] flex flex-col items-center justify-center overflow-hidden pt-0 md:pt-0">
+        {/* HERO SECTION */}
+        <section className="relative min-h-[85vh] flex flex-col items-center justify-center overflow-hidden pt-0">
           <div className="absolute inset-0 z-0">
             {home.heroImage ? (
               <Image 
@@ -74,21 +95,21 @@ export default function Home() {
           </div>
           
           <div className="relative z-10 max-w-5xl mx-auto text-center space-y-4 px-6 mt-12 md:mt-0">
-            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.25em] border border-primary/20 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-700">
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.25em] border border-primary/20 backdrop-blur-md">
               <Sparkles size={14} className="animate-pulse" />
               Criatividade em Moçambique
             </div>
-            <h1 className="text-5xl md:text-8xl font-headline font-bold leading-[0.95] tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <h1 className="text-5xl md:text-8xl font-headline font-bold leading-[0.95] tracking-tight">
               {home.heroTitle}
             </h1>
-            <p className="text-muted-foreground text-lg md:text-2xl font-light max-w-2xl mx-auto leading-relaxed italic animate-in fade-in duration-1000 delay-300">
+            <p className="text-muted-foreground text-lg md:text-2xl font-light max-w-2xl mx-auto leading-relaxed italic">
               {home.heroSubtitle}
             </p>
-            <div className="flex flex-col sm:flex-row gap-5 justify-center pt-4 animate-in fade-in zoom-in-95 duration-1000 delay-500">
-              <Button asChild className="rounded-[1.5rem] px-12 py-8 text-lg font-bold gold-shimmer shadow-2xl hover:scale-105 transition-transform active:scale-95">
+            <div className="flex flex-col sm:flex-row gap-5 justify-center pt-4">
+              <Button asChild className="rounded-[1.5rem] px-12 py-8 text-lg font-bold gold-shimmer shadow-2xl">
                 <Link href="/portfolio">Explorar Portfólio</Link>
               </Button>
-              <Button asChild variant="outline" className="rounded-[1.5rem] px-12 py-8 text-lg font-bold border-primary/30 hover:bg-primary/5 bg-white/40 backdrop-blur-sm hover:scale-105 transition-transform active:scale-95">
+              <Button asChild variant="outline" className="rounded-[1.5rem] px-12 py-8 text-lg font-bold border-primary/30 hover:bg-primary/5 bg-white/40 backdrop-blur-sm">
                 <Link href="/cursos">Cursos & Formação</Link>
               </Button>
             </div>
@@ -106,14 +127,11 @@ export default function Home() {
                       <GraduationCap size={16} /> Próxima Formação
                     </span>
                     <h2 className="text-4xl md:text-7xl font-headline font-bold text-foreground leading-tight">{activeFlyers[0].titulo}</h2>
-                    <p className="text-muted-foreground font-light text-xl leading-relaxed italic border-l-4 border-primary/30 pl-6">
-                      &quot;Domine a arte da confeitaria com as técnicas exclusivas da Napau.&quot;
-                    </p>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="flex items-center gap-5 p-6 bg-white rounded-[2rem] shadow-sm border border-primary/5 group hover:border-primary/20 transition-all hover:shadow-xl">
-                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                    <div className="flex items-center gap-5 p-6 bg-white rounded-[2rem] shadow-sm border border-primary/5">
+                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                         <Calendar size={24} />
                       </div>
                       <div>
@@ -121,8 +139,8 @@ export default function Home() {
                         <p className="font-bold text-lg">{activeFlyers[0].data}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-5 p-6 bg-white rounded-[2rem] shadow-sm border border-primary/5 group hover:border-primary/20 transition-all hover:shadow-xl">
-                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                    <div className="flex items-center gap-5 p-6 bg-white rounded-[2rem] shadow-sm border border-primary/5">
+                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                         <MapPin size={24} />
                       </div>
                       <div>
@@ -139,20 +157,20 @@ export default function Home() {
                   </Button>
                 </div>
                 
-                <div className="flex-1 relative aspect-[4/5] w-full max-w-md lg:max-w-none rounded-[3rem] overflow-hidden shadow-2xl border-[8px] border-white group">
+                <div className="flex-1 relative aspect-[4/5] w-full max-w-md lg:max-w-none rounded-[3rem] overflow-hidden shadow-2xl border-[8px] border-white">
                   {activeFlyers[0].imageUrl ? (
                     <Image 
                       src={activeFlyers[0].imageUrl} 
                       alt={activeFlyers[0].titulo} 
                       fill 
-                      className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                      className="object-cover" 
                     />
                   ) : (
                     <div className="w-full h-full bg-secondary/30 flex items-center justify-center">
                       <GraduationCap size={64} className="text-muted-foreground/30" />
                     </div>
                   )}
-                  <div className="absolute top-8 right-8 bg-primary/90 text-white px-8 py-4 rounded-[1.5rem] font-bold shadow-2xl text-xl backdrop-blur-md animate-bounce">
+                  <div className="absolute top-8 right-8 bg-primary/90 text-white px-8 py-4 rounded-[1.5rem] font-bold shadow-2xl text-xl backdrop-blur-md">
                     {activeFlyers[0].preco}
                   </div>
                 </div>
@@ -211,7 +229,7 @@ export default function Home() {
                 <div className="col-span-full py-20 text-center">
                   <Logo size={80} className="mx-auto opacity-10" />
                   <p className="text-muted-foreground mt-6 uppercase tracking-[0.4em] text-xs font-bold">
-                    A carregar o melhor da Napau...
+                    Nenhuma criação recente encontrada...
                   </p>
                 </div>
               )}
