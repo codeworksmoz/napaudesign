@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -23,7 +24,7 @@
     --border: 31 20% 88%;
     --input: 31 20% 88%;
     --ring: 31 52% 65%;
-    --radius: 1rem;
+    --radius: 1.5rem;
   }
 }
 
@@ -32,47 +33,52 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply bg-background text-foreground font-body antialiased m-0 p-0 overflow-x-hidden;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-headline;
   }
 }
 
-/* Animação de Brilho Dourado */
-.gold-shimmer:hover {
-  background: linear-gradient(110deg, #D4A574 8%, #E8D5C4 18%, #D4A574 33%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s linear infinite;
+/* Animação de Brilho Dourado Premium */
+.gold-shimmer {
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes shimmer {
-  to {
-    background-position-x: -200%;
-  }
+.gold-shimmer::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.3) 50%, transparent 55%);
+  animation: shine 4s infinite;
 }
 
-/* Animação do Loading Napau */
+@keyframes shine {
+  0% { transform: translateX(-100%) translateY(-100%); }
+  100% { transform: translateX(100%) translateY(100%); }
+}
+
+/* Animação do Loading Napau - Apenas as gotas giram */
 .napau-spin {
-  animation: napau-rotate 2s linear infinite;
+  animation: napau-rotate 2.5s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
   transform-origin: center;
 }
 
 @keyframes napau-rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* Otimizações Mobile-First */
 @media (max-width: 640px) {
-  .container-padding {
-    @apply px-4 py-8;
-  }
-  h1 {
-    @apply text-3xl leading-tight;
-  }
+  h1 { @apply text-4xl leading-tight; }
+  h2 { @apply text-3xl leading-snug; }
 }
+
+/* Esconder scrollbar mantendo funcionalidade */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
