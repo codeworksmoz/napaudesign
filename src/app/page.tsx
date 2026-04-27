@@ -1,10 +1,11 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { PortfolioCard } from '@/components/PortfolioCard';
-import { PORTFOLIO_PROJECTS, Project } from '@/lib/portfolio-data';
+import { PORTFOLIO_PROJECTS, Project, HomeContent, DEFAULT_HOME_CONTENT } from '@/lib/portfolio-data';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Sparkles, Cake, Shirt, GraduationCap } from 'lucide-react';
@@ -12,11 +13,16 @@ import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [home, setHome] = useState<HomeContent>(DEFAULT_HOME_CONTENT);
 
   useEffect(() => {
-    // Carregamento ultra-rápido via LocalStorage ou Fallback
-    const saved = localStorage.getItem('napau_projects');
-    setProjects(saved ? JSON.parse(saved).slice(0, 3) : PORTFOLIO_PROJECTS.slice(0, 3));
+    // Carregar dados dinâmicos da Home
+    const savedHome = localStorage.getItem('napau_home_content');
+    if (savedHome) setHome(JSON.parse(savedHome));
+
+    // Carregar Portfólio
+    const savedProjects = localStorage.getItem('napau_projects');
+    setProjects(savedProjects ? JSON.parse(savedProjects).slice(0, 3) : PORTFOLIO_PROJECTS.slice(0, 3));
   }, []);
 
   return (
@@ -24,11 +30,10 @@ export default function Home() {
       <Navbar />
       
       <main className="flex-grow">
-        {/* Hero Section - Mobile First */}
         <section className="relative min-h-[90svh] flex items-center justify-center overflow-hidden px-4 py-20">
           <div className="absolute inset-0 z-0">
             <Image 
-              src="https://picsum.photos/seed/napau-hero/1200/800"
+              src={home.heroImage}
               alt="Napau Design"
               fill
               className="object-cover opacity-20"
@@ -43,10 +48,12 @@ export default function Home() {
               Criatividade em Moçambique
             </div>
             <h1 className="text-4xl md:text-7xl font-headline font-bold leading-[1.1]">
-              A Arte de Personalizar <span className="text-primary italic">Momentos</span>
+              {home.heroTitle.split(' ').map((word, i) => 
+                word.toLowerCase() === 'momentos' ? <span key={i} className="text-primary italic"> {word}</span> : ` ${word}`
+              )}
             </h1>
             <p className="text-muted-foreground text-base md:text-xl font-light max-w-2xl mx-auto leading-relaxed">
-              Especialistas em tipos de bolo artísticos e camisetas exclusivas. Criamos o que você imagina com perfeição.
+              {home.heroSubtitle}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button asChild className="rounded-2xl px-10 py-7 text-lg font-bold gold-shimmer shadow-xl">
@@ -59,7 +66,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* O Que Fazemos - Services Focus */}
         <section className="py-20 md:py-32 px-4 bg-white">
           <div className="max-w-7xl mx-auto space-y-16">
             <div className="text-center space-y-4">
@@ -73,7 +79,7 @@ export default function Home() {
                   <Cake size={32} />
                 </div>
                 <h4 className="text-2xl font-headline font-bold">Tipos de Bolo</h4>
-                <p className="text-muted-foreground leading-relaxed font-light">Bolos artísticos, temáticos e personalizados para casamentos e aniversários inesquecíveis.</p>
+                <p className="text-muted-foreground leading-relaxed font-light">{home.serviceBoloDesc}</p>
               </div>
 
               <div className="p-10 rounded-[2.5rem] bg-secondary/5 space-y-6 border border-border/50 hover:shadow-2xl transition-all duration-500 group">
@@ -81,7 +87,7 @@ export default function Home() {
                   <Shirt size={32} />
                 </div>
                 <h4 className="text-2xl font-headline font-bold">Camisetas</h4>
-                <p className="text-muted-foreground leading-relaxed font-light">Estamparia premium para marcas, eventos e uso pessoal com acabamento superior.</p>
+                <p className="text-muted-foreground leading-relaxed font-light">{home.serviceCamisetaDesc}</p>
               </div>
 
               <div className="p-10 rounded-[2.5rem] bg-secondary/5 space-y-6 border border-border/50 hover:shadow-2xl transition-all duration-500 group">
@@ -89,13 +95,12 @@ export default function Home() {
                   <GraduationCap size={32} />
                 </div>
                 <h4 className="text-2xl font-headline font-bold">Formação</h4>
-                <p className="text-muted-foreground leading-relaxed font-light">Cursos profissionais de confeitaria para quem deseja dominar as técnicas mais modernas.</p>
+                <p className="text-muted-foreground leading-relaxed font-light">{home.serviceFormacaoDesc}</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Recent Work Preview */}
         <section className="py-20 md:py-32 px-4 bg-secondary/5">
           <div className="max-w-7xl mx-auto space-y-16">
             <div className="flex flex-col md:flex-row justify-between items-end gap-6">
@@ -119,7 +124,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* CTA Section */}
         <section id="contact" className="py-20 md:py-32 px-4 bg-primary text-white text-center overflow-hidden relative">
           <div className="absolute inset-0 opacity-10 pointer-events-none">
              <Image src="https://picsum.photos/seed/napau-bg/1200/800" alt="" fill className="object-cover" />
