@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { PortfolioCard } from '@/components/PortfolioCard';
+import { Logo } from '@/components/Logo';
 import { Project, HomeContent, DEFAULT_HOME_CONTENT, Flyer, DEFAULT_FLYERS } from '@/lib/portfolio-data';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,7 +18,7 @@ export default function Home() {
   const [flyers, setFlyers] = useState<Flyer[]>([]);
 
   useEffect(() => {
-    // Carregar dados dinâmicos da Home (LocalStorage pronto para ser Supabase)
+    // Carregar dados dinâmicos da Home
     const savedHome = localStorage.getItem('napau_home_content');
     if (savedHome) setHome(JSON.parse(savedHome));
 
@@ -39,7 +40,7 @@ export default function Home() {
       <Navbar />
       
       <main className="flex-grow">
-        {/* HERO SECTION - Ajustado para eliminar espaço superior */}
+        {/* HERO SECTION */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-0">
           <div className="absolute inset-0 z-0">
             <Image 
@@ -75,7 +76,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* FLYER HIGHLIGHT - Sempre no topo se ativo */}
+        {/* FLYER HIGHLIGHT - Ativo na Home */}
         {activeFlyers.length > 0 && (
           <section className="py-24 px-6 bg-secondary/10 border-y border-primary/10 overflow-hidden">
             <div className="max-w-7xl mx-auto">
@@ -87,7 +88,7 @@ export default function Home() {
                     </span>
                     <h2 className="text-4xl md:text-6xl font-headline font-bold text-foreground leading-tight">{activeFlyers[0].titulo}</h2>
                     <p className="text-muted-foreground font-light text-xl leading-relaxed italic">
-                      "Aprenda os segredos da confeitaria profissional que tornam a Napau uma referência."
+                      "Aprenda as técnicas artísticas que tornam a Napau uma referência em Moçambique."
                     </p>
                   </div>
                   
@@ -141,7 +142,7 @@ export default function Home() {
             <div className="text-center space-y-6 max-w-3xl mx-auto">
               <h2 className="text-4xl md:text-6xl font-headline font-bold">O Que Fazemos</h2>
               <p className="text-muted-foreground text-lg font-light leading-relaxed">
-                Transformamos as suas ideias em realidade através de um design cuidado e de uma confeitaria artística de alta qualidade.
+                Combinamos arte e design para criar produtos exclusivos que contam histórias.
               </p>
               <div className="w-24 h-1 bg-primary/30 mx-auto rounded-full"></div>
             </div>
@@ -187,7 +188,7 @@ export default function Home() {
               <div className="space-y-6">
                 <h3 className="text-4xl md:text-7xl font-headline font-bold">Criações Recentes</h3>
                 <p className="text-muted-foreground font-light text-lg max-w-md italic border-l-4 border-primary/30 pl-6">
-                  Uma amostra do equilíbrio entre arte e design que cultivamos no nosso estúdio.
+                  Equilíbrio entre arte e design em cada detalhe.
                 </p>
               </div>
               <Button asChild variant="link" className="text-primary font-bold text-xl p-0 h-auto flex items-center gap-2 group mb-2">
