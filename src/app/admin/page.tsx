@@ -25,19 +25,19 @@ export default function AdminPage() {
                 <nav className="flex flex-col">
                   <button className="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary font-medium rounded-xl text-left">
                     <LayoutDashboard size={20} />
-                    Overview
+                    Visão Geral
                   </button>
                   <button className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:bg-secondary/50 rounded-xl text-left transition-colors">
                     <ImageIcon size={20} />
-                    Projects
+                    Projetos
                   </button>
                   <button className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:bg-secondary/50 rounded-xl text-left transition-colors">
                     <MessageSquare size={20} />
-                    Inquiries
+                    Mensagens
                   </button>
                   <button className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:bg-secondary/50 rounded-xl text-left transition-colors">
                     <Settings size={20} />
-                    Settings
+                    Configurações
                   </button>
                 </nav>
               </CardContent>
@@ -48,28 +48,28 @@ export default function AdminPage() {
           <div className="lg:col-span-9 space-y-8">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <h1 className="text-3xl font-headline font-bold">Portfolio Management</h1>
-                <p className="text-muted-foreground">Manage your creative works and client showcases.</p>
+                <h1 className="text-3xl font-headline font-bold">Gestão do Portfólio</h1>
+                <p className="text-muted-foreground">Gerencie seus trabalhos criativos e vitrines de clientes.</p>
               </div>
               <Button className="bg-primary text-white flex gap-2 items-center rounded-xl gold-shimmer h-12 px-6">
                 <Plus size={20} />
-                Add New Project
+                Novo Projeto
               </Button>
             </div>
 
             <Card className="border-none shadow-sm rounded-2xl overflow-hidden bg-white">
               <CardHeader className="border-b border-border/50">
-                <CardTitle>Existing Projects</CardTitle>
-                <CardDescription>Total of {PORTFOLIO_PROJECTS.length} projects displayed on the website.</CardDescription>
+                <CardTitle>Projetos Existentes</CardTitle>
+                <CardDescription>Total de {PORTFOLIO_PROJECTS.length} projetos exibidos no site.</CardDescription>
               </CardHeader>
               <CardContent className="p-0">
                 <Table>
                   <TableHeader>
                     <TableRow className="hover:bg-transparent bg-secondary/20">
-                      <TableHead className="font-semibold uppercase tracking-widest text-xs px-6">Project</TableHead>
-                      <TableHead className="font-semibold uppercase tracking-widest text-xs">Category</TableHead>
-                      <TableHead className="font-semibold uppercase tracking-widest text-xs">Year</TableHead>
-                      <TableHead className="font-semibold uppercase tracking-widest text-xs text-right px-6">Actions</TableHead>
+                      <TableHead className="font-semibold uppercase tracking-widest text-xs px-6">Projeto</TableHead>
+                      <TableHead className="font-semibold uppercase tracking-widest text-xs">Categoria</TableHead>
+                      <TableHead className="font-semibold uppercase tracking-widest text-xs">Ano</TableHead>
+                      <TableHead className="font-semibold uppercase tracking-widest text-xs text-right px-6">Ações</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -78,7 +78,7 @@ export default function AdminPage() {
                         <TableCell className="px-6 font-medium">{project.title}</TableCell>
                         <TableCell>
                           <span className="bg-primary/10 text-primary px-2 py-1 rounded-md text-[10px] uppercase font-bold tracking-tighter">
-                            {project.category}
+                            {project.category === 'Packaging' ? 'Embalagem' : project.category === 'Illustration' ? 'Ilustração' : project.category}
                           </span>
                         </TableCell>
                         <TableCell className="text-muted-foreground">{project.year}</TableCell>
@@ -102,19 +102,19 @@ export default function AdminPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="border-none shadow-sm rounded-2xl bg-primary text-white">
                 <CardContent className="p-6">
-                  <p className="text-primary-foreground/70 uppercase tracking-widest text-xs font-semibold">Total Projects</p>
+                  <p className="text-primary-foreground/70 uppercase tracking-widest text-xs font-semibold">Total de Projetos</p>
                   <h3 className="text-4xl font-headline font-bold mt-1">24</h3>
                 </CardContent>
               </Card>
               <Card className="border-none shadow-sm rounded-2xl bg-accent text-white">
                 <CardContent className="p-6">
-                  <p className="text-white/70 uppercase tracking-widest text-xs font-semibold">Pending Inquiries</p>
+                  <p className="text-white/70 uppercase tracking-widest text-xs font-semibold">Mensagens Pendentes</p>
                   <h3 className="text-4xl font-headline font-bold mt-1">12</h3>
                 </CardContent>
               </Card>
               <Card className="border-none shadow-sm rounded-2xl bg-white">
                 <CardContent className="p-6">
-                  <p className="text-muted-foreground uppercase tracking-widest text-xs font-semibold">Mood Boards Created</p>
+                  <p className="text-muted-foreground uppercase tracking-widest text-xs font-semibold">Visitantes Hoje</p>
                   <h3 className="text-4xl font-headline font-bold mt-1 text-primary">156</h3>
                 </CardContent>
               </Card>

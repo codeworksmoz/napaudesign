@@ -9,10 +9,10 @@ import { cn } from '@/lib/utils';
 import { Menu, X } from 'lucide-react';
 
 const NAV_LINKS = [
-  { name: 'Home', href: '/' },
-  { name: 'Portfolio', href: '/portfolio' },
-  { name: 'About', href: '/#about' },
-  { name: 'Contact', href: '/#contact' },
+  { name: 'Início', href: '/' },
+  { name: 'Portfólio', href: '/portfolio' },
+  { name: 'Sobre', href: '/#about' },
+  { name: 'Contato', href: '/#contact' },
 ];
 
 export const Navbar: React.FC = () => {
@@ -61,7 +61,7 @@ export const Navbar: React.FC = () => {
             href="/#contact"
             className="bg-primary text-primary-foreground px-5 py-2 rounded-full text-sm font-medium gold-shimmer transition-all shadow-md hover:shadow-lg"
           >
-            Work With Us
+            Trabalhe Conosco
           </Link>
         </div>
 
@@ -105,7 +105,7 @@ export const Navbar: React.FC = () => {
           onClick={() => setIsOpen(false)}
           className="mt-4 bg-primary text-primary-foreground px-8 py-3 rounded-full text-lg font-medium shadow-lg"
         >
-          Work With Us
+          Trabalhe Conosco
         </Link>
       </div>
     </nav>

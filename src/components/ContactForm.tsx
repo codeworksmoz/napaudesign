@@ -20,8 +20,8 @@ export const ContactForm: React.FC = () => {
     setTimeout(() => {
       setLoading(false);
       toast({
-        title: "Message Sent",
-        description: "We've received your message and will get back to you shortly.",
+        title: "Mensagem Enviada",
+        description: "Recebemos sua mensagem e entraremos em contato em breve.",
       });
       (e.target as HTMLFormElement).reset();
     }, 1500);
@@ -31,36 +31,36 @@ export const ContactForm: React.FC = () => {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-muted-foreground uppercase tracking-widest px-1">Full Name</label>
+          <label className="text-sm font-medium text-muted-foreground uppercase tracking-widest px-1">Nome Completo</label>
           <Input 
             required 
-            placeholder="John Doe" 
+            placeholder="Seu nome" 
             className="bg-white/50 border-border focus:ring-primary focus:border-primary rounded-xl"
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-muted-foreground uppercase tracking-widest px-1">Email Address</label>
+          <label className="text-sm font-medium text-muted-foreground uppercase tracking-widest px-1">E-mail</label>
           <Input 
             required 
             type="email" 
-            placeholder="john@example.com" 
+            placeholder="seu@email.com" 
             className="bg-white/50 border-border focus:ring-primary focus:border-primary rounded-xl"
           />
         </div>
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium text-muted-foreground uppercase tracking-widest px-1">Subject</label>
+        <label className="text-sm font-medium text-muted-foreground uppercase tracking-widest px-1">Assunto</label>
         <Input 
           required 
-          placeholder="New branding project" 
+          placeholder="Novo projeto de branding" 
           className="bg-white/50 border-border focus:ring-primary focus:border-primary rounded-xl"
         />
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium text-muted-foreground uppercase tracking-widest px-1">Message</label>
+        <label className="text-sm font-medium text-muted-foreground uppercase tracking-widest px-1">Mensagem</label>
         <Textarea 
           required 
-          placeholder="Tell us about your vision..." 
+          placeholder="Conte-nos sobre sua visão..." 
           rows={5}
           className="bg-white/50 border-border focus:ring-primary focus:border-primary rounded-xl resize-none"
         />
@@ -70,9 +70,9 @@ export const ContactForm: React.FC = () => {
         disabled={loading}
         className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-6 rounded-xl font-semibold text-lg gold-shimmer shadow-lg flex gap-2 items-center justify-center group"
       >
-        {loading ? "Sending..." : (
+        {loading ? "Enviando..." : (
           <>
-            Send Message 
+            Enviar Mensagem 
             <Send size={18} className="group-hover:translate-x-1 transition-transform" />
           </>
         )}

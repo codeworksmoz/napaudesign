@@ -8,7 +8,13 @@ import { PortfolioCard } from '@/components/PortfolioCard';
 import { PORTFOLIO_PROJECTS, Category } from '@/lib/portfolio-data';
 import { cn } from '@/lib/utils';
 
-const CATEGORIES: Category[] = ['All', 'Branding', 'Web Design', 'Illustration', 'Packaging'];
+const CATEGORIES: { label: string, value: Category }[] = [
+  { label: 'Todos', value: 'All' },
+  { label: 'Branding', value: 'Branding' },
+  { label: 'Web Design', value: 'Web Design' },
+  { label: 'Ilustração', value: 'Illustration' },
+  { label: 'Embalagem', value: 'Packaging' }
+];
 
 export default function PortfolioPage() {
   const [activeCategory, setActiveCategory] = useState<Category>('All');
@@ -24,25 +30,25 @@ export default function PortfolioPage() {
       <main className="flex-grow pt-32 pb-24 px-6">
         <div className="max-w-7xl mx-auto space-y-16">
           <div className="space-y-6 text-center max-w-2xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-headline font-bold tracking-tight">Our Portfolio</h1>
+            <h1 className="text-4xl md:text-6xl font-headline font-bold tracking-tight">Nosso Portfólio</h1>
             <p className="text-lg text-muted-foreground font-light">
-              Explore our curated selection of projects, where each creation is a unique blend of strategy and artistic expression.
+              Explore nossa seleção curada de projetos, onde cada criação é uma mistura única de estratégia e expressão artística.
             </p>
           </div>
 
           <div className="flex flex-wrap justify-center gap-3">
             {CATEGORIES.map(category => (
               <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
+                key={category.value}
+                onClick={() => setActiveCategory(category.value)}
                 className={cn(
                   "px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 border",
-                  activeCategory === category 
+                  activeCategory === category.value 
                     ? "bg-primary text-white border-primary shadow-md" 
                     : "bg-white text-muted-foreground border-border hover:border-primary/50"
                 )}
               >
-                {category}
+                {category.label}
               </button>
             ))}
           </div>
@@ -55,12 +61,12 @@ export default function PortfolioPage() {
 
           {filteredProjects.length === 0 && (
             <div className="py-32 text-center space-y-4">
-              <p className="text-xl text-muted-foreground font-light">No projects found in this category yet.</p>
+              <p className="text-xl text-muted-foreground font-light">Nenhum projeto encontrado nesta categoria ainda.</p>
               <button 
                 onClick={() => setActiveCategory('All')}
                 className="text-primary font-semibold hover:underline"
               >
-                Clear Filters
+                Limpar Filtros
               </button>
             </div>
           )}

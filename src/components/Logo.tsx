@@ -24,10 +24,12 @@ export const Logo: React.FC<LogoProps> = ({ className, size = 100 }) => {
         </linearGradient>
       </defs>
 
-      {/* Círculo principal */}
+      {/* Fundo branco removido para transparência em layouts */}
+      
+      {/* 1. Círculo principal (contorno) */}
       <circle cx="250" cy="250" r="210" fill="none" stroke="url(#gold)" strokeWidth="2"/>
 
-      {/* Gota superior esquerda */}
+      {/* 2. Gota superior esquerda */}
       <path d="
         M 250 40 
         C 230 40, 180 45, 140 70 
@@ -39,7 +41,7 @@ export const Logo: React.FC<LogoProps> = ({ className, size = 100 }) => {
         Z
       " fill="url(#gold)" opacity="0.9"/>
 
-      {/* Gota inferior direita */}
+      {/* 3. Gota inferior direita */}
       <path d="
         M 250 460 
         C 270 460, 320 455, 360 430 
@@ -51,7 +53,7 @@ export const Logo: React.FC<LogoProps> = ({ className, size = 100 }) => {
         Z
       " fill="url(#gold)" opacity="0.85"/>
 
-      {/* Ícone "N" central superior */}
+      {/* 4. Ícone "N" central superior */}
       <g transform="translate(250, 155)">
         <circle cx="0" cy="0" r="30" fill="url(#gold)"/>
         <path d="
@@ -71,7 +73,7 @@ export const Logo: React.FC<LogoProps> = ({ className, size = 100 }) => {
         " fill="#ffffff" opacity="0.95"/>
       </g>
 
-      {/* Texto "napau" */}
+      {/* 5. Texto "napau" */}
       <text 
         x="250" 
         y="270" 
@@ -89,7 +91,7 @@ export const Logo: React.FC<LogoProps> = ({ className, size = 100 }) => {
       <circle cx="305" cy="272" r="2.5" fill="url(#gold)"/>
       <circle cx="310" cy="276" r="1.8" fill="url(#gold)" opacity="0.7"/>
 
-      {/* Texto "Design & Arte" */}
+      {/* 6. Texto "Design & Arte" */}
       <text 
         x="250" 
         y="300" 
