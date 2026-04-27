@@ -1,11 +1,9 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Paleta Napau: Off-white, Dourado suave e Terracota */
     --background: 30 25% 97%; /* #FAF7F4 */
     --foreground: 6 18% 20%;   /* #3D2C2A */
     --card: 0 0% 100%;
@@ -27,26 +25,6 @@
     --ring: 31 52% 65%;
     --radius: 1rem;
   }
-
-  .dark {
-    --background: 6 18% 10%;
-    --foreground: 30 25% 97%;
-    --card: 6 18% 12%;
-    --card-foreground: 30 25% 97%;
-    --popover: 6 18% 12%;
-    --popover-foreground: 30 25% 97%;
-    --primary: 31 52% 65%;
-    --primary-foreground: 6 18% 10%;
-    --secondary: 6 18% 15%;
-    --secondary-foreground: 31 52% 65%;
-    --muted: 6 18% 15%;
-    --muted-foreground: 30 10% 65%;
-    --accent: 21 46% 59%;
-    --accent-foreground: 30 25% 97%;
-    --border: 6 18% 18%;
-    --input: 6 18% 18%;
-    --ring: 31 52% 65%;
-  }
 }
 
 @layer base {
@@ -54,13 +32,14 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body;
+    @apply bg-background text-foreground font-body antialiased;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-headline;
   }
 }
 
+/* Animação de Brilho Dourado */
 .gold-shimmer:hover {
   background: linear-gradient(110deg, #D4A574 8%, #E8D5C4 18%, #D4A574 33%);
   background-size: 200% 100%;
@@ -70,5 +49,30 @@
 @keyframes shimmer {
   to {
     background-position-x: -200%;
+  }
+}
+
+/* Animação do Loading Napau */
+.napau-spin {
+  animation: napau-rotate 2s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes napau-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Otimizações Mobile-First */
+@media (max-width: 640px) {
+  .container-padding {
+    @apply px-4 py-8;
+  }
+  h1 {
+    @apply text-3xl leading-tight;
   }
 }

@@ -1,4 +1,3 @@
-
 export type Category = 'Todos' | 'Tipos de Bolo' | 'Camisetas' | 'Design Personalizado' | 'Kits Revenda';
 
 export interface Project {
@@ -19,23 +18,32 @@ export const CATEGORIES: { label: string; value: Category }[] = [
   { label: 'Kits Revenda', value: 'Kits Revenda' }
 ];
 
-// Estes dados serão usados como fallback se o localStorage estiver vazio
+// Fallback inicial para o site
 export const PORTFOLIO_PROJECTS: Project[] = [
   {
     id: '1',
     title: 'Bolo de Casamento Gold',
     category: 'Tipos de Bolo',
-    description: 'Bolo artístico com detalhes em folha de ouro e acabamento premium para casamentos.',
-    imageUrl: 'https://picsum.photos/seed/cake1/800/600',
+    description: 'Bolo artístico com detalhes em folha de ouro e acabamento premium.',
+    imageUrl: 'https://picsum.photos/seed/cake-gold/800/600',
     year: '2024',
     active: true
   },
   {
     id: '2',
-    title: 'Camiseta Napau Brand',
+    title: 'Camiseta Napau Signature',
     category: 'Camisetas',
-    description: 'Personalização têxtil de alta qualidade com a marca Napau Design & Arte.',
-    imageUrl: 'https://picsum.photos/seed/tshirt1/800/600',
+    description: 'Design exclusivo Napau com tecido de alta qualidade.',
+    imageUrl: 'https://picsum.photos/seed/tshirt-napau/800/600',
+    year: '2024',
+    active: true
+  },
+  {
+    id: '3',
+    title: 'Bolo Temático Safari',
+    category: 'Tipos de Bolo',
+    description: 'Bolo artístico esculpido para aniversários infantis.',
+    imageUrl: 'https://picsum.photos/seed/cake-safari/800/600',
     year: '2024',
     active: true
   }
