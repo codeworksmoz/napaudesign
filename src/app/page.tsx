@@ -14,10 +14,18 @@ export default function Home() {
   const featuredProjects = PORTFOLIO_PROJECTS.slice(0, 3);
   const heroImage = PlaceHolderImages.find(img => img.id === 'studio-main')?.imageUrl || 'https://picsum.photos/seed/napau/1200/800';
   
-  // Mensagem padrão do WhatsApp
+  // Mensagem padrão do WhatsApp conforme solicitado
   const waNumber = "258847615871";
   const waMsg = encodeURIComponent("Olá! Vim pelo site da Napau Design & Arte e gostaria de saber mais sobre os vossos serviços e cursos.");
   const waUrl = `https://wa.me/${waNumber}?text=${waMsg}`;
+
+  const cursoConteudo = [
+    "Bolo de Aniversário com Foto", "Bolo de Casamento", 
+    "Bolo Gelado", "Bolo Temático", 
+    "Bolachinhas Sortidas", "Cup-cakes Personalizados", 
+    "Drip-cakes", "Floresta Negra", 
+    "Orelhudos de Custarde", "Sobremesas"
+  ];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -50,7 +58,7 @@ export default function Home() {
             </h1>
             
             <p className="text-sm md:text-xl text-muted-foreground font-body font-light max-w-2xl mx-auto leading-relaxed px-4">
-              Especialistas em tipos de bolo e camisetas exclusivas para celebrar suas histórias com elegância em Moçambique.
+              Especialistas em tipos de bolo e camisetas exclusivas para celebrar suas histórias com elegância em Moçambique. Atendemos revendedores e clientes individuais.
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 px-4 w-full sm:w-auto">
@@ -72,7 +80,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Course Section (based on flyer) */}
+        {/* Course Section (Flyer Data) */}
         <section id="cursos" className="py-16 md:py-24 px-4 sm:px-6 bg-secondary/5">
           <div className="max-w-7xl mx-auto">
             <div className="bg-white rounded-[2.5rem] overflow-hidden shadow-2xl border border-primary/10 grid grid-cols-1 lg:grid-cols-2">
@@ -92,31 +100,25 @@ export default function Home() {
               
               <div className="p-8 md:p-16 space-y-8">
                 <div className="space-y-4">
-                  <h2 className="text-sm font-semibold text-primary uppercase tracking-[0.3em]">Educação & Arte</h2>
-                  <h3 className="text-3xl md:text-5xl font-headline font-bold">Curso de Confeitaria</h3>
+                  <h2 className="text-sm font-semibold text-primary uppercase tracking-[0.3em]">CURSO de Confeitaria</h2>
+                  <h3 className="text-3xl md:text-5xl font-headline font-bold">Aprenda a fazer</h3>
                   <p className="text-muted-foreground font-light leading-relaxed">
-                    Aulas práticas e muito produtivas com todos os segredos que você precisa para fazer um bolo espetacular. Aprenda a transformar a sua paixão num negócio rentável.
+                    AULAS PRATICAS E MUITO PRODUTIVAS COM TODOS OS SEGREDOS QUE VOCÊ PRECISA PARA FAZER UM BOLO ESPETACULAR.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
-                  {[
-                    "Bolo de Aniversário com Foto", "Bolo de Casamento", 
-                    "Bolo Gelado", "Bolo Temático", 
-                    "Bolachinhas Sortidas", "Cup-cakes Personalizados", 
-                    "Drip-cakes", "Floresta Negra", 
-                    "Orelhudos de Custarde", "Sobremesas"
-                  ].map((item, idx) => (
+                  {cursoConteudo.map((item, idx) => (
                     <div key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
                       <CheckCircle2 size={16} className="text-primary shrink-0" />
-                      <span>{item}</span>
+                      <span className="uppercase">{item}</span>
                     </div>
                   ))}
                 </div>
 
                 <div className="pt-6 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                   <div>
-                    <p className="text-[10px] uppercase tracking-widest font-semibold text-muted-foreground">Investimento</p>
+                    <p className="text-[10px] uppercase tracking-widest font-semibold text-muted-foreground">POR APENAS</p>
                     <p className="text-3xl font-headline font-bold text-primary">4.500 MT</p>
                   </div>
                   <Button asChild className="rounded-full px-8 py-6 h-auto gold-shimmer shadow-lg">
@@ -124,9 +126,15 @@ export default function Home() {
                   </Button>
                 </div>
 
-                <div className="flex items-start gap-3 text-xs text-muted-foreground pt-4">
-                  <MapPin size={16} className="text-primary shrink-0" />
-                  <span>Av. Acordos de Lusaka, Paragem Baltazar, Moçambique</span>
+                <div className="space-y-2 pt-4">
+                  <div className="flex items-start gap-3 text-xs text-muted-foreground">
+                    <MapPin size={16} className="text-primary shrink-0" />
+                    <span>AV. ACORDOS DE LUSAKA, PARagem BALTAZAR</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                    <Users size={16} className="text-primary shrink-0" />
+                    <span>+258 84 761 5871 | 86 791 5871</span>
+                  </div>
                 </div>
               </div>
             </div>
