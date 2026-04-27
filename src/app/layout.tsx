@@ -1,10 +1,12 @@
-
 import type {Metadata} from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Napau Design & Arte | Qualidade e Criatividade',
   description: 'Especialistas em tipos de bolo e camisetas personalizadas em Moçambique. Produtos exclusivos para celebrar os seus momentos.',
+  icons: {
+    icon: '/icon.svg',
+  },
 };
 
 export default function RootLayout({

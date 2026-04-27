@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -39,8 +38,8 @@ export default function Home() {
       <Navbar />
       
       <main className="flex-grow">
-        {/* HERO SECTION - Ajustado para eliminar espaço branco */}
-        <section className="relative min-h-[85vh] flex flex-col items-center justify-center overflow-hidden pt-12 md:pt-0">
+        {/* HERO SECTION - Ajustado para eliminar espaço branco e subir o conteúdo */}
+        <section className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden pt-0">
           <div className="absolute inset-0 z-0">
             <Image 
               src={home.heroImage}
@@ -48,12 +47,11 @@ export default function Home() {
               fill
               className="object-cover opacity-20 scale-105"
               priority
-              data-ai-hint="luxury texture"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/40 to-background"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/50 to-background"></div>
           </div>
           
-          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8 px-6 mt-16 md:mt-0">
+          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6 px-6 -mt-10 md:-mt-20">
             <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.25em] border border-primary/20 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-700">
               <Sparkles size={14} className="animate-pulse" />
               Criatividade em Moçambique
@@ -64,7 +62,7 @@ export default function Home() {
             <p className="text-muted-foreground text-lg md:text-2xl font-light max-w-2xl mx-auto leading-relaxed italic animate-in fade-in duration-1000 delay-300">
               {home.heroSubtitle}
             </p>
-            <div className="flex flex-col sm:flex-row gap-5 justify-center pt-8 animate-in fade-in zoom-in-95 duration-1000 delay-500">
+            <div className="flex flex-col sm:flex-row gap-5 justify-center pt-6 animate-in fade-in zoom-in-95 duration-1000 delay-500">
               <Button asChild className="rounded-[1.5rem] px-12 py-8 text-lg font-bold gold-shimmer shadow-2xl hover:scale-105 transition-transform active:scale-95">
                 <Link href="/portfolio">Explorar Portfólio</Link>
               </Button>
@@ -75,9 +73,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* FLYER HIGHLIGHT - Ativo na Home com novo design */}
+        {/* FLYER HIGHLIGHT */}
         {activeFlyers.length > 0 && (
-          <section className="py-24 px-6 bg-secondary/10 border-y border-primary/5 overflow-hidden">
+          <section className="py-20 px-6 bg-secondary/10 border-y border-primary/5">
             <div className="max-w-7xl mx-auto">
               <div className="flex flex-col lg:flex-row items-center gap-16">
                 <div className="flex-1 space-y-10">
@@ -136,7 +134,7 @@ export default function Home() {
         )}
 
         {/* SERVICES SECTION */}
-        <section className="py-24 md:py-32 px-6 bg-white">
+        <section className="py-24 px-6 bg-white">
           <div className="max-w-7xl mx-auto space-y-20">
             <div className="text-center space-y-6 max-w-3xl mx-auto">
               <h2 className="text-4xl md:text-7xl font-headline font-bold tracking-tight">O Que Fazemos</h2>
@@ -167,7 +165,7 @@ export default function Home() {
         </section>
 
         {/* PORTFOLIO HIGHLIGHT */}
-        <section className="py-24 md:py-32 px-6 bg-secondary/5">
+        <section className="py-24 px-6 bg-secondary/5">
           <div className="max-w-7xl mx-auto space-y-20">
             <div className="flex flex-col md:flex-row justify-between items-end gap-10">
               <div className="space-y-6">
