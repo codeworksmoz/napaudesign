@@ -5,31 +5,44 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { PortfolioCard } from '@/components/PortfolioCard';
-import { PORTFOLIO_PROJECTS, Project, HomeContent, DEFAULT_HOME_CONTENT } from '@/lib/portfolio-data';
+import { Project, HomeContent, DEFAULT_HOME_CONTENT, Flyer, DEFAULT_FLYERS } from '@/lib/portfolio-data';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, Cake, Shirt, GraduationCap } from 'lucide-react';
+import { ArrowRight, Sparkles, Cake, Shirt, GraduationCap, Calendar, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [home, setHome] = useState<HomeContent>(DEFAULT_HOME_CONTENT);
+  const [flyers, setFlyers] = useState<Flyer[]>([]);
 
   useEffect(() => {
     // Carregar dados dinâmicos da Home
     const savedHome = localStorage.getItem('napau_home_content');
     if (savedHome) setHome(JSON.parse(savedHome));
 
-    // Carregar Portfólio
+    // Carregar Portfólio (apenas os 3 mais recentes)
     const savedProjects = localStorage.getItem('napau_projects');
-    setProjects(savedProjects ? JSON.parse(savedProjects).slice(0, 3) : PORTFOLIO_PROJECTS.slice(0, 3));
+    if (savedProjects) {
+      setProjects(JSON.parse(savedProjects).slice(0, 3));
+    } else {
+      // Fallback para projetos default se não houver no localStorage
+      import('@/lib/portfolio-data').then(m => setProjects(m.PORTFOLIO_PROJECTS.slice(0, 3)));
+    }
+
+    // Carregar Flyers para destaque
+    const savedFlyers = localStorage.getItem('napau_flyers');
+    setFlyers(savedFlyers ? JSON.parse(savedFlyers) : DEFAULT_FLYERS);
   }, []);
+
+  const activeFlyers = flyers.filter(f => f.ativo);
 
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
       <main className="flex-grow">
+        {/* HERO SECTION */}
         <section className="relative min-h-[90svh] flex items-center justify-center overflow-hidden px-4 py-20">
           <div className="absolute inset-0 z-0">
             <Image 
@@ -48,9 +61,7 @@ export default function Home() {
               Criatividade em Moçambique
             </div>
             <h1 className="text-4xl md:text-7xl font-headline font-bold leading-[1.1]">
-              {home.heroTitle.split(' ').map((word, i) => 
-                word.toLowerCase() === 'momentos' ? <span key={i} className="text-primary italic"> {word}</span> : ` ${word}`
-              )}
+              {home.heroTitle}
             </h1>
             <p className="text-muted-foreground text-base md:text-xl font-light max-w-2xl mx-auto leading-relaxed">
               {home.heroSubtitle}
@@ -60,12 +71,65 @@ export default function Home() {
                 <Link href="/portfolio">Ver Portfólio</Link>
               </Button>
               <Button asChild variant="outline" className="rounded-2xl px-10 py-7 text-lg font-bold border-primary/20 hover:bg-primary/5">
-                <Link href="/cursos">Aprender Confeitaria</Link>
+                <Link href="/cursos">Cursos de Formação</Link>
               </Button>
             </div>
           </div>
         </section>
 
+        {/* FLYER HIGHLIGHT SECTION - Aparece sempre que houver um flyer novo/ativo */}
+        {activeFlyers.length > 0 && (
+          <section className="py-20 px-4 bg-primary/5 border-y border-primary/10 overflow-hidden">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col md:flex-row items-center gap-12">
+                <div className="flex-1 space-y-8">
+                  <div className="space-y-4">
+                    <span className="text-primary font-bold uppercase tracking-widest text-xs">Próxima Formação</span>
+                    <h2 className="text-3xl md:text-5xl font-headline font-bold text-foreground">{activeFlyers[0].titulo}</h2>
+                    <p className="text-muted-foreground font-light text-lg">Inscreva-se já e aprenda as técnicas profissionais da Napau.</p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-primary/10">
+                      <Calendar className="text-primary" size={24} />
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-muted-foreground">Data</p>
+                        <p className="font-bold">{activeFlyers[0].data}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-primary/10">
+                      <MapPin className="text-primary" size={24} />
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-muted-foreground">Local</p>
+                        <p className="font-bold text-xs truncate max-w-[150px]">{activeFlyers[0].local}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button asChild className="rounded-xl px-8 py-6 gold-shimmer">
+                    <Link href="/cursos" className="flex items-center gap-2">
+                      Saber Mais Detalhes <ArrowRight size={18} />
+                    </Link>
+                  </Button>
+                </div>
+                
+                <div className="flex-1 relative aspect-video w-full rounded-[2.5rem] overflow-hidden shadow-2xl">
+                  <Image 
+                    src={activeFlyers[0].imageUrl} 
+                    alt={activeFlyers[0].titulo} 
+                    fill 
+                    className="object-cover" 
+                  />
+                  <div className="absolute top-6 right-6 bg-primary text-white px-6 py-2 rounded-full font-bold shadow-lg">
+                    {activeFlyers[0].preco}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* SERVICES SECTION */}
         <section className="py-20 md:py-32 px-4 bg-white">
           <div className="max-w-7xl mx-auto space-y-16">
             <div className="text-center space-y-4">
@@ -101,6 +165,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* PORTFOLIO HIGHLIGHT SECTION */}
         <section className="py-20 md:py-32 px-4 bg-secondary/5">
           <div className="max-w-7xl mx-auto space-y-16">
             <div className="flex flex-col md:flex-row justify-between items-end gap-6">
@@ -117,13 +182,16 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projects.map(p => (
+              {projects.length > 0 ? projects.map(p => (
                 <PortfolioCard key={p.id} project={p} />
-              ))}
+              )) : (
+                <p className="col-span-full text-center text-muted-foreground">A carregar trabalhos...</p>
+              )}
             </div>
           </div>
         </section>
 
+        {/* CONTACT CTA */}
         <section id="contact" className="py-20 md:py-32 px-4 bg-primary text-white text-center overflow-hidden relative">
           <div className="absolute inset-0 opacity-10 pointer-events-none">
              <Image src="https://picsum.photos/seed/napau-bg/1200/800" alt="" fill className="object-cover" />

@@ -5,7 +5,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Project } from '@/lib/portfolio-data';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Calendar } from 'lucide-react';
 
 interface PortfolioCardProps {
   project: Project;
@@ -30,10 +30,13 @@ export const PortfolioCard: React.FC<PortfolioCardProps> = ({ project }) => {
       </div>
       <div className="p-6 space-y-3">
         <div className="flex justify-between items-start">
-          <Badge variant="secondary" className="font-medium px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">
+          <Badge variant="secondary" className="font-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider bg-primary/10 text-primary border-none">
             {project.category}
           </Badge>
-          <span className="text-xs text-muted-foreground font-medium">{project.year}</span>
+          <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold uppercase">
+            <Calendar size={12} />
+            {project.year}
+          </div>
         </div>
         <div>
           <h3 className="text-xl font-headline font-semibold group-hover:text-primary transition-colors">

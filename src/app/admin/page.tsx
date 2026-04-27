@@ -10,15 +10,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Trash2, Save, GraduationCap, Image as ImageIcon, Home, Settings } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, Trash2, Save, GraduationCap, Image as ImageIcon, Home, Settings, Edit3 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { PORTFOLIO_PROJECTS, Project, Flyer, DEFAULT_FLYERS, HomeContent, DEFAULT_HOME_CONTENT } from '@/lib/portfolio-data';
+import { Project, Flyer, DEFAULT_FLYERS, HomeContent, DEFAULT_HOME_CONTENT, Category, PORTFOLIO_PROJECTS } from '@/lib/portfolio-data';
 
 export default function AdminPage() {
   const { toast } = useToast();
   const [projects, setProjects] = useState<Project[]>([]);
   const [flyers, setFlyers] = useState<Flyer[]>([]);
   const [home, setHome] = useState<HomeContent>(DEFAULT_HOME_CONTENT);
+  
+  // Estado para edição
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
 
   useEffect(() => {
     // Carregar Portfólio
@@ -47,17 +51,33 @@ export default function AdminPage() {
     toast({ title: "Portfólio guardado!" });
   };
 
-  const addProject = () => {
-    const newProject: Project = {
-      id: Date.now().toString(),
-      title: 'Novo Trabalho',
-      category: 'Tipos de Bolo',
-      description: 'Descrição do trabalho...',
-      imageUrl: 'https://picsum.photos/seed/' + Date.now() + '/800/600',
-      year: new Date().getFullYear().toString(),
+  const handleProjectSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    
+    const projectData: Project = {
+      id: editingProject?.id || Date.now().toString(),
+      title: formData.get('title') as string,
+      category: formData.get('category') as Category,
+      description: formData.get('description') as string,
+      imageUrl: formData.get('imageUrl') as string,
+      year: formData.get('year') as string,
       active: true
     };
-    saveProjects([newProject, ...projects]);
+
+    if (editingProject) {
+      saveProjects(projects.map(p => p.id === editingProject.id ? projectData : p));
+      setEditingProject(null);
+    } else {
+      saveProjects([projectData, ...projects]);
+    }
+    (e.target as HTMLFormElement).reset();
+  };
+
+  const deleteProject = (id: string) => {
+    if (confirm('Tem certeza que deseja apagar este trabalho?')) {
+      saveProjects(projects.filter(p => p.id !== id));
+    }
   };
 
   // Funções Flyers
@@ -89,7 +109,9 @@ export default function AdminPage() {
   };
 
   const deleteFlyer = (id: string) => {
-    saveFlyers(flyers.filter(f => f.id !== id));
+    if (confirm('Deseja apagar este flyer?')) {
+      saveFlyers(flyers.filter(f => f.id !== id));
+    }
   };
 
   return (
@@ -150,28 +172,70 @@ export default function AdminPage() {
             </TabsContent>
 
             <TabsContent value="portfolio">
-              <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
-                <CardHeader className="flex flex-row items-center justify-between border-b p-6">
-                  <CardTitle className="text-lg">Trabalhos & Galeria</CardTitle>
-                  <Button onClick={addProject} className="bg-primary text-white rounded-xl gap-2"><Plus size={18} /> Novo Item</Button>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <Table>
-                    <TableHeader><TableRow><TableHead className="px-6">Título</TableHead><TableHead>Categoria</TableHead><TableHead className="text-right px-6">Ações</TableHead></TableRow></TableHeader>
-                    <TableBody>
-                      {projects.map((p) => (
-                        <TableRow key={p.id}>
-                          <TableCell className="px-6 font-medium">{p.title}</TableCell>
-                          <TableCell><span className="text-[10px] bg-primary/10 text-primary px-2 py-1 rounded-full font-bold uppercase">{p.category}</span></TableCell>
-                          <TableCell className="text-right px-6">
-                            <Button variant="ghost" size="icon" className="text-destructive" onClick={() => saveProjects(projects.filter(item => item.id !== p.id))}><Trash2 size={16} /></Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Formulário de Adição/Edição */}
+                <Card className="lg:col-span-1 border-none shadow-sm rounded-2xl bg-white h-fit">
+                  <CardHeader><CardTitle className="text-lg">{editingProject ? 'Editar Trabalho' : 'Novo Trabalho'}</CardTitle></CardHeader>
+                  <CardContent>
+                    <form onSubmit={handleProjectSubmit} className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase">Título</label>
+                        <Input name="title" defaultValue={editingProject?.title} required className="rounded-xl" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase">Categoria</label>
+                        <select name="category" defaultValue={editingProject?.category || 'Tipos de Bolo'} className="w-full p-2 border rounded-xl bg-white text-sm">
+                          <option value="Tipos de Bolo">Tipos de Bolo</option>
+                          <option value="Camisetas">Camisetas</option>
+                          <option value="Design Personalizado">Design Personalizado</option>
+                          <option value="Kits Revenda">Kits Revenda</option>
+                        </select>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase">Ano</label>
+                        <Input name="year" defaultValue={editingProject?.year || '2024'} required className="rounded-xl" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase">URL da Foto</label>
+                        <Input name="imageUrl" defaultValue={editingProject?.imageUrl} required className="rounded-xl" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase">Descrição Curta</label>
+                        <Textarea name="description" defaultValue={editingProject?.description} required className="rounded-xl h-24" />
+                      </div>
+                      <div className="flex gap-2">
+                        <Button type="submit" className="flex-grow rounded-xl">{editingProject ? 'Atualizar' : 'Adicionar'}</Button>
+                        {editingProject && <Button type="button" variant="outline" onClick={() => setEditingProject(null)} className="rounded-xl">Cancelar</Button>}
+                      </div>
+                    </form>
+                  </CardContent>
+                </Card>
+
+                {/* Tabela de Listagem */}
+                <Card className="lg:col-span-2 border-none shadow-sm rounded-2xl bg-white overflow-hidden">
+                  <CardHeader><CardTitle className="text-lg">Lista de Trabalhos</CardTitle></CardHeader>
+                  <CardContent className="p-0">
+                    <Table>
+                      <TableHeader><TableRow><TableHead className="px-6">Info</TableHead><TableHead>Categoria</TableHead><TableHead className="text-right px-6">Ações</TableHead></TableRow></TableHeader>
+                      <TableBody>
+                        {projects.map((p) => (
+                          <TableRow key={p.id}>
+                            <TableCell className="px-6">
+                              <div className="font-medium">{p.title}</div>
+                              <div className="text-[10px] text-muted-foreground">{p.year}</div>
+                            </TableCell>
+                            <TableCell><span className="text-[10px] bg-primary/10 text-primary px-2 py-1 rounded-full font-bold uppercase">{p.category}</span></TableCell>
+                            <TableCell className="text-right px-6 flex justify-end gap-2">
+                              <Button variant="ghost" size="icon" onClick={() => setEditingProject(p)}><Edit3 size={16} /></Button>
+                              <Button variant="ghost" size="icon" className="text-destructive" onClick={() => deleteProject(p.id)}><Trash2 size={16} /></Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
 
             <TabsContent value="flyers">
@@ -184,11 +248,22 @@ export default function AdminPage() {
                 {flyers.map((flyer) => (
                   <Card key={flyer.id} className="border-none shadow-sm rounded-2xl bg-white">
                     <CardHeader className="flex flex-row items-center justify-between border-b p-6">
-                      <Input 
-                        value={flyer.titulo} 
-                        onChange={(e) => updateFlyer(flyer.id, 'titulo', e.target.value)}
-                        className="text-lg font-bold border-none p-0 focus-visible:ring-0 bg-transparent h-auto"
-                      />
+                      <div className="flex items-center gap-4">
+                        <Input 
+                          value={flyer.titulo} 
+                          onChange={(e) => updateFlyer(flyer.id, 'titulo', e.target.value)}
+                          className="text-lg font-bold border-none p-0 focus-visible:ring-0 bg-transparent h-auto"
+                        />
+                        <div className="flex items-center gap-2 text-xs font-bold uppercase text-muted-foreground">
+                          <input 
+                            type="checkbox" 
+                            checked={flyer.ativo} 
+                            onChange={(e) => updateFlyer(flyer.id, 'ativo', e.target.checked)} 
+                            className="w-4 h-4 accent-primary"
+                          />
+                          Destaque na Home
+                        </div>
+                      </div>
                       <div className="flex gap-2">
                         <Button onClick={() => saveFlyers(flyers)} variant="outline" className="rounded-xl"><Save size={16} /></Button>
                         <Button onClick={() => deleteFlyer(flyer.id)} variant="ghost" className="text-destructive rounded-xl"><Trash2 size={16} /></Button>
