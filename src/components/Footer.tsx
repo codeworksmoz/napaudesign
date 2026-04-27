@@ -77,11 +77,15 @@ export const Footer: React.FC = () => {
             </li>
             <li className="flex items-center gap-2">
               <Phone size={18} className="text-primary shrink-0" />
-              <span>+258 84 761 5871</span>
+              <a href="tel:+258847615871" className="hover:text-primary transition-colors">+258 84 761 5871</a>
             </li>
             <li className="flex items-center gap-2">
               <Phone size={18} className="text-primary shrink-0" />
-              <span>+258 86 791 5871</span>
+              <a href="tel:+258867915871" className="hover:text-primary transition-colors">+258 86 791 5871</a>
+            </li>
+            <li className="flex items-center gap-2">
+              <Mail size={18} className="text-primary shrink-0" />
+              <a href="mailto:napau.culinaria@gmail.com" className="hover:text-primary transition-colors break-all">napau.culinaria@gmail.com</a>
             </li>
           </ul>
         </div>
