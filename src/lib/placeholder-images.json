@@ -1,3 +1,46 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "branding-1",
+      "description": "Minimalist branding for a boutique hotel with gold accents",
+      "imageUrl": "https://picsum.photos/seed/design1/800/600",
+      "imageHint": "branding luxury"
+    },
+    {
+      "id": "branding-2",
+      "description": "Eco-friendly packaging design for a skincare line",
+      "imageUrl": "https://picsum.photos/seed/design2/800/600",
+      "imageHint": "packaging organic"
+    },
+    {
+      "id": "web-1",
+      "description": "Modern architecture studio website interface",
+      "imageUrl": "https://picsum.photos/seed/design3/800/600",
+      "imageHint": "website architecture"
+    },
+    {
+      "id": "illustration-1",
+      "description": "Abstract organic shapes illustration for a gallery poster",
+      "imageUrl": "https://picsum.photos/seed/design4/800/600",
+      "imageHint": "abstract illustration"
+    },
+    {
+      "id": "branding-3",
+      "description": "Typography-focused brand identity for a coffee roastery",
+      "imageUrl": "https://picsum.photos/seed/design5/800/600",
+      "imageHint": "typography coffee"
+    },
+    {
+      "id": "web-2",
+      "description": "Portfolio website for a fashion photographer",
+      "imageUrl": "https://picsum.photos/seed/design6/800/600",
+      "imageHint": "fashion photography"
+    },
+    {
+      "id": "hero-main",
+      "description": "Clean and artistic studio workspace with natural light",
+      "imageUrl": "https://picsum.photos/seed/hero/1200/800",
+      "imageHint": "studio workspace"
+    }
+  ]
 }
