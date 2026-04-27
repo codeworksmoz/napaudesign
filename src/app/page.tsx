@@ -40,7 +40,7 @@ export default function Home() {
       
       <main className="flex-grow">
         {/* HERO SECTION - Ajustado para eliminar espaço branco superior */}
-        <section className="relative min-h-[80vh] flex flex-col items-center justify-start overflow-hidden pt-24 md:pt-28">
+        <section className="relative min-h-[70vh] flex flex-col items-center justify-center overflow-hidden pt-16 md:pt-20">
           <div className="absolute inset-0 z-0">
             <Image 
               src={home.heroImage}
