@@ -49,10 +49,17 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ course, onSu
 
   const generateId = () => {
     const now = new Date();
-    const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+    // Formato: NP20240427 (ano mês dia)
+    const dateStr = now.getFullYear().toString() + 
+                    (now.getMonth() + 1).toString().padStart(2, '0') + 
+                    now.getDate().toString().padStart(2, '0');
+    
     const registrations: Registration[] = JSON.parse(localStorage.getItem('napau_registrations') || '[]');
     const todayCount = registrations.filter(r => r.registrationDate.startsWith(now.toISOString().slice(0, 10))).length + 1;
-    return `NP${dateStr}/${todayCount}`;
+    
+    // O ID com barra "/" cria sub-segmentos na URL, por isso usamos um traço "-" para o ID técnico
+    // mas guardamos no formato visual se preferir. Para evitar 404, usamos o traço no ID da URL.
+    return `NP${dateStr}-${todayCount}`;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -60,9 +67,10 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ course, onSu
     setLoading(true);
 
     setTimeout(() => {
+      const generatedId = generateId();
       const newReg: Registration = {
         ...(formData as Registration),
-        id: generateId(),
+        id: generatedId,
         courseId: course.id,
         courseTitle: course.titulo,
         registrationDate: new Date().toISOString(),
@@ -186,8 +194,8 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ course, onSu
         </>
       )}
 
-      <Button type="submit" disabled={loading} className="w-full py-6 rounded-xl text-lg font-bold gold-shimmer">
-        {loading ? <Loader2 className="animate-spin" /> : <><CheckCircle2 className="mr-2" /> Finalizar Inscrição</>}
+      <Button type="submit" disabled={loading} className="w-full py-6 rounded-xl text-lg font-bold gold-shimmer shadow-lg">
+        {loading ? <Loader2 className="animate-spin" /> : <><CheckCircle2 className="mr-2" /> Finalizar e Gerar Recibo</>}
       </Button>
     </form>
   );
