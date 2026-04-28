@@ -26,7 +26,6 @@ export default function NapauAdminPage() {
   const [loginPassword, setLoginPassword] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
 
-  // Estados do Suporte
   const [supportName, setSupportName] = useState('');
   const [supportIssue, setSupportIssue] = useState('');
 
@@ -55,7 +54,7 @@ export default function NapauAdminPage() {
   async function carregarDados() {
     setCarregando(true);
     try {
-      const { data: homeData } = await supabase.from('home_content').select('*').single();
+      const { data: homeData } = await supabase.from('home_content').select('*').eq('id', 1).single();
       if (homeData) setHome(homeData);
 
       const { data: projData } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
@@ -87,21 +86,14 @@ export default function NapauAdminPage() {
       if (error) {
         toast({
           title: "Erro de Acesso",
-          description: "Credenciais inválidas ou e-mail não confirmado. Verifique os seus dados.",
+          description: "Credenciais inválidas ou e-mail não confirmado.",
           variant: "destructive",
         });
       } else if (data.session) {
-        toast({ 
-          title: "Acesso Autorizado", 
-          description: `Bem-vindo de volta ao painel administrativo.`,
-        });
+        toast({ title: "Bem-vindo", description: "Acesso autorizado ao painel Codworks." });
       }
     } catch (err: any) {
-      toast({
-        title: "Erro Inesperado",
-        description: "Ocorreu um problema ao ligar ao servidor. Tente novamente mais tarde.",
-        variant: "destructive",
-      });
+      toast({ title: "Erro Inesperado", variant: "destructive" });
     } finally {
       setLoggingIn(false);
     }
@@ -110,49 +102,36 @@ export default function NapauAdminPage() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setSession(null);
-    toast({ title: "Sessão Terminada", description: "Saiu do painel com segurança." });
+    toast({ title: "Sessão Terminada" });
   };
 
   const handleSupportEmail = (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`Suporte Napau: Problema de Acesso - ${supportName}`);
-    const body = encodeURIComponent(`Olá Codworks,\n\nEstou com dificuldades em aceder ao painel administrativo da Napau.\n\nDetalhes:\nNome: ${supportName}\nEmail usado: ${loginEmail}\nProblema: ${supportIssue}\n\nSolicito suporte para restabelecer o acesso.`);
+    const subject = encodeURIComponent(`Suporte Napau Codworks: ${supportName}`);
+    const body = encodeURIComponent(`Nome: ${supportName}\nEmail: ${loginEmail}\nProblema: ${supportIssue}`);
     window.location.href = `mailto:codworksmoz@gmail.com?subject=${subject}&body=${body}`;
-    toast({ title: "A abrir Gmail...", description: "Prepare o envio do seu e-mail de suporte." });
+    toast({ title: "A abrir Gmail...", description: "Envie o seu pedido de suporte." });
   };
 
-    const saveHome = async () => {
+  const saveHome = async () => {
     try {
-      const dadosParaSalvar = {
-        id: 1,
-        heroTitle: home.heroTitle || '',
-        heroSubtitle: home.heroSubtitle || '',
-        heroImage: home.heroImage || '',
-        serviceBoloDesc: home.serviceBoloDesc || '',
-        serviceCamisetaDesc: home.serviceCamisetaDesc || '',
-        serviceFormacaoDesc: home.serviceFormacaoDesc || '',
-        updated_at: new Date().toISOString(),
-      };
-
-      console.log('📤 A enviar para Supabase:', dadosParaSalvar);
-
       const { error } = await supabase
         .from('home_content')
-        .upsert(dadosParaSalvar);
+        .upsert({
+          id: 1,
+          hero_title: home.hero_title,
+          hero_subtitle: home.hero_subtitle,
+          hero_image: home.hero_image,
+          service_bolo_desc: home.service_bolo_desc,
+          service_camiseta_desc: home.service_camiseta_desc,
+          service_formacao_desc: home.service_formacao_desc,
+          updated_at: new Date().toISOString(),
+        });
 
-      if (error) {
-        console.error('❌ Erro Supabase:', error.message, error.details);
-        throw error;
-      }
-
+      if (error) throw error;
       toast({ title: "✅ Home atualizada com sucesso!" });
     } catch (e: any) {
-      console.error('Erro ao guardar:', e);
-      toast({
-        title: "Erro ao salvar Home",
-        description: e.message || "Verifique o console.",
-        variant: "destructive",
-      });
+      toast({ title: "Erro ao salvar", description: e.message, variant: "destructive" });
     }
   };
 
@@ -163,7 +142,7 @@ export default function NapauAdminPage() {
       title: formData.get('title') as string,
       category: formData.get('category') as Category,
       description: formData.get('description') as string,
-      imageUrl: formData.get('imageUrl') as string,
+      image_url: editingProject?.image_url || formData.get('image_url') as string,
       year: formData.get('year') as string,
       active: true
     };
@@ -179,46 +158,48 @@ export default function NapauAdminPage() {
         toast({ title: "Novo trabalho publicado!" });
       }
       setEditingProject(null);
-      (e.target as HTMLFormElement).reset();
       carregarDados();
     } catch (e: any) {
-      toast({ title: "Erro ao salvar", description: e.message, variant: "destructive" });
+      toast({ title: "Erro", description: e.message, variant: "destructive" });
     }
   };
 
   const deleteProject = async (id: string) => {
-    if (!confirm('Eliminar este trabalho do portfólio?')) return;
+    if (!confirm('Eliminar do portfólio?')) return;
     try {
       const { error } = await supabase.from('projects').delete().eq('id', id);
       if (error) throw error;
       carregarDados();
-      toast({ title: "Trabalho removido." });
+      toast({ title: "Removido." });
     } catch (e: any) {
-      toast({ title: "Erro ao apagar", description: e.message, variant: "destructive" });
+      toast({ title: "Erro", variant: "destructive" });
     }
   };
 
   const saveFlyer = async (flyer: Flyer) => {
     try {
-      const { error } = await supabase.from('flyers').upsert(flyer);
+      const { error } = await supabase.from('flyers').upsert({
+        ...flyer,
+        updated_at: new Date().toISOString()
+      });
       if (error) throw error;
-      toast({ title: "Dados do curso guardados!" });
+      toast({ title: "Curso guardado!" });
       carregarDados();
     } catch (e: any) {
-      toast({ title: "Erro ao salvar flyer", description: e.message, variant: "destructive" });
+      toast({ title: "Erro ao salvar", variant: "destructive" });
     }
   };
 
   const addFlyer = async () => {
     const newFlyer = {
-      titulo: 'Novo Curso de Personalização',
+      titulo: 'Novo Curso',
       preco: '0 MT',
       data: 'A definir',
       local: 'Estúdio Napau',
       contactos: '+258 84 761 5871',
-      listaEsquerda: ['Design de Topos', 'Técnicas Base'],
-      listaDireita: ['Estamparia Térmica', 'Acabamentos'],
-      imageUrl: '',
+      lista_esquerda: ['Técnica 1'],
+      lista_direita: ['Técnica 2'],
+      image_url: '',
       ativo: false
     };
     try {
@@ -230,40 +211,7 @@ export default function NapauAdminPage() {
     }
   };
 
-  const updateFlyerLocal = (id: string, field: keyof Flyer, value: any) => {
-    setFlyers(flyers.map(f => f.id === id ? { ...f, [field]: value } : f));
-  };
-
-  const deleteFlyer = async (id: string) => {
-    if (!confirm('Apagar este curso permanentemente?')) return;
-    try {
-      const { error } = await supabase.from('flyers').delete().eq('id', id);
-      if (error) throw error;
-      carregarDados();
-    } catch (e: any) {
-      console.error(e);
-    }
-  };
-
-  async function deleteRegistration(id: string) {
-    if (!confirm('Remover esta inscrição?')) return;
-    try {
-      const { error } = await supabase.from('registrations').delete().eq('id', id);
-      if (error) throw error;
-      carregarDados();
-      toast({ title: "Inscrição removida." });
-    } catch (e: any) {
-      console.error(e);
-    }
-  }
-
-  if (loadingAuth) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="animate-spin text-primary" size={48} />
-      </div>
-    );
-  }
+  if (loadingAuth) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin text-primary" size={48} /></div>;
 
   if (!session) {
     return (
@@ -273,108 +221,32 @@ export default function NapauAdminPage() {
             <div className="bg-white/20 p-4 rounded-3xl backdrop-blur-md">
               <Logo size={80} className="brightness-0 invert" />
             </div>
-            <div className="text-center space-y-1">
-              <h1 className="text-2xl font-headline font-bold">Gestão Napau</h1>
-              <p className="text-[10px] uppercase tracking-widest font-bold opacity-80">Login Administrativo</p>
-            </div>
+            <h1 className="text-2xl font-headline font-bold">Gestão Napau</h1>
           </div>
-          <CardContent className="p-10 space-y-8">
-            <form onSubmit={handleLogin} className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">E-mail</label>
-                <div className="relative">
-                  <Input 
-                    type="email" 
-                    value={loginEmail} 
-                    onChange={(e) => setLoginEmail(e.target.value)} 
-                    required 
-                    placeholder="admin@napau.co.mz"
-                    className="pl-10 h-14 rounded-2xl border-secondary"
-                  />
-                  <Users className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">Palavra-passe</label>
-                <div className="relative">
-                  <Input 
-                    type="password" 
-                    value={loginPassword} 
-                    onChange={(e) => setLoginPassword(e.target.value)} 
-                    required 
-                    placeholder="••••••••"
-                    className="pl-10 h-14 rounded-2xl border-secondary"
-                  />
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                </div>
-              </div>
-              <Button 
-                type="submit" 
-                disabled={loggingIn} 
-                className="w-full h-14 rounded-2xl text-lg font-bold gold-shimmer shadow-lg"
-              >
-                {loggingIn ? <Loader2 className="animate-spin" /> : <span className="flex items-center gap-2">Aceder ao Painel <LogIn size={20} /></span>}
+          <CardContent className="p-10 space-y-6">
+            <form onSubmit={handleLogin} className="space-y-4">
+              <Input type="email" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required placeholder="E-mail Admin" className="h-14 rounded-2xl" />
+              <Input type="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required placeholder="Password" className="h-14 rounded-2xl" />
+              <Button type="submit" disabled={loggingIn} className="w-full h-14 rounded-2xl text-lg font-bold gold-shimmer">
+                {loggingIn ? <Loader2 className="animate-spin" /> : 'Aceder'}
               </Button>
             </form>
-
-            <div className="pt-6 border-t border-secondary/20 text-center">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <button className="text-[10px] font-bold text-primary uppercase tracking-widest hover:underline flex items-center justify-center gap-2 mx-auto">
-                    <HelpCircle size={14} /> Problemas de Acesso? Suporte Codworks
-                  </button>
-                </DialogTrigger>
-                <DialogContent className="rounded-[2rem] sm:max-w-[500px]">
-                  <DialogHeader>
-                    <DialogTitle className="text-2xl font-headline text-primary">Suporte Técnico Codworks</DialogTitle>
-                    <DialogDescription className="text-xs uppercase tracking-widest font-bold text-muted-foreground mt-2">
-                      Assistência garantida em até 48 horas.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <form onSubmit={handleSupportEmail} className="space-y-6 py-4">
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-bold uppercase tracking-widest">Seu Nome</label>
-                      <Input 
-                        required 
-                        value={supportName} 
-                        onChange={(e) => setSupportName(e.target.value)}
-                        placeholder="Nome do administrador"
-                        className="rounded-xl"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-bold uppercase tracking-widest">Descreva o Problema</label>
-                      <Textarea 
-                        required 
-                        value={supportIssue} 
-                        onChange={(e) => setSupportIssue(e.target.value)}
-                        placeholder="Ex: Não consigo recuperar a password..."
-                        className="rounded-xl resize-none h-24"
-                      />
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <Button type="submit" className="rounded-xl h-12 gap-2 font-bold bg-primary hover:bg-primary/90">
-                        <Mail size={18} /> Enviar via Gmail
-                      </Button>
-                      <Button asChild variant="outline" className="rounded-xl h-12 gap-2 font-bold border-green-500 text-green-600 hover:bg-green-50">
-                        <a 
-                          href="https://wa.me/258855920773?text=Olá Codworks! Preciso de suporte no painel administrativo da Napau Design." 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                        >
-                          <MessageCircle size={18} /> WhatsApp Direto
-                        </a>
-                      </Button>
-                    </div>
-                  </form>
-                  <div className="text-center pt-2">
-                    <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest italic">
-                      Desenvolvido por Codworks (codworksmoz@gmail.com)
-                    </p>
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="text-[10px] font-bold text-primary uppercase tracking-widest hover:underline mx-auto block">Problemas de Acesso? Suporte Codworks</button>
+              </DialogTrigger>
+              <DialogContent className="rounded-3xl">
+                <DialogHeader><DialogTitle>Suporte Codworks</DialogTitle></DialogHeader>
+                <form onSubmit={handleSupportEmail} className="space-y-4 py-4">
+                  <Input required value={supportName} onChange={(e) => setSupportName(e.target.value)} placeholder="Seu Nome" />
+                  <Textarea required value={supportIssue} onChange={(e) => setSupportIssue(e.target.value)} placeholder="Descreva o problema" />
+                  <div className="flex gap-2">
+                    <Button type="submit" className="flex-1">Gmail</Button>
+                    <Button asChild variant="outline" className="flex-1"><a href="https://wa.me/258855920773" target="_blank">WhatsApp</a></Button>
                   </div>
-                </DialogContent>
-              </Dialog>
-            </div>
+                </form>
+              </DialogContent>
+            </Dialog>
           </CardContent>
         </Card>
       </div>
@@ -386,139 +258,68 @@ export default function NapauAdminPage() {
       <Navbar />
       <main className="flex-grow pt-28 pb-16 px-4">
         <div className="max-w-6xl mx-auto space-y-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg">
-                <Settings size={28} />
-              </div>
-              <div>
-                <h1 className="text-3xl font-headline font-bold text-foreground tracking-tight">Consola Napau</h1>
-                <p className="text-muted-foreground text-[10px] uppercase tracking-[0.2em] font-bold">Gestão de Topos de Bolo & Camisetas</p>
-              </div>
+              <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white"><Settings /></div>
+              <h1 className="text-2xl font-headline font-bold">Consola Codworks</h1>
             </div>
-            <Button onClick={handleLogout} variant="outline" className="rounded-xl gap-2 border-destructive/20 text-destructive hover:bg-destructive hover:text-white transition-all font-bold">
-              <LogOut size={18} /> Terminar Sessão
-            </Button>
+            <Button onClick={handleLogout} variant="outline" className="rounded-xl border-destructive text-destructive">Sair</Button>
           </div>
 
           <Tabs defaultValue="home" className="space-y-6">
-            <TabsList className="bg-white p-1 rounded-2xl shadow-sm border h-auto flex flex-wrap gap-1">
-              <TabsTrigger value="home" className="rounded-xl py-4 px-8 flex gap-2 font-bold"><Home size={18} /> Home</TabsTrigger>
-              <TabsTrigger value="portfolio" className="rounded-xl py-4 px-8 flex gap-2 font-bold"><ImageIcon size={18} /> Portfólio</TabsTrigger>
-              <TabsTrigger value="flyers" className="rounded-xl py-4 px-8 flex gap-2 font-bold"><GraduationCap size={18} /> Flyers</TabsTrigger>
-              <TabsTrigger value="registrations" className="rounded-xl py-4 px-8 flex gap-2 font-bold"><Users size={18} /> Inscrições</TabsTrigger>
+            <TabsList className="bg-white p-1 rounded-2xl shadow-sm border h-auto flex gap-1">
+              <TabsTrigger value="home" className="rounded-xl py-4 flex-1">Home</TabsTrigger>
+              <TabsTrigger value="portfolio" className="rounded-xl py-4 flex-1">Portfólio</TabsTrigger>
+              <TabsTrigger value="flyers" className="rounded-xl py-4 flex-1">Cursos</TabsTrigger>
+              <TabsTrigger value="registrations" className="rounded-xl py-4 flex-1">Inscrições</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="home" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <Card className="border-none shadow-xl rounded-[2.5rem] bg-white overflow-hidden">
-                <CardHeader className="flex flex-row items-center justify-between border-b bg-secondary/5 p-8">
-                  <div>
-                    <CardTitle className="text-2xl font-headline">Configuração Principal</CardTitle>
-                    <CardDescription>Ajuste o impacto visual da sua montra digital.</CardDescription>
-                  </div>
-                  <Button onClick={saveHome} className="bg-primary text-white rounded-xl gap-2 px-10 py-7 font-bold shadow-lg gold-shimmer">
-                    <Save size={20} /> Guardar Tudo
-                  </Button>
+            <TabsContent value="home">
+              <Card className="rounded-[2rem] border-none shadow-xl overflow-hidden">
+                <CardHeader className="flex flex-row justify-between items-center bg-secondary/5 p-8 border-b">
+                  <CardTitle>Conteúdo do Site</CardTitle>
+                  <Button onClick={saveHome} className="gold-shimmer px-8">Guardar Alterações</Button>
                 </CardHeader>
-                <CardContent className="p-8 space-y-10">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div className="space-y-4">
-                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary px-1">Título Hero</label>
-                      <Input value={home.heroTitle} onChange={(e) => setHome({...home, heroTitle: e.target.value})} className="rounded-2xl h-14 border-secondary/40 text-lg font-headline font-bold" />
-                    </div>
-                    <div className="space-y-4">
-                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary px-1">Imagem Principal</label>
-                      <ImageUpload valor={home.heroImage} onChange={(url) => setHome({...home, heroImage: url})} />
-                    </div>
+                <CardContent className="p-8 space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Input value={home.hero_title} onChange={(e) => setHome({...home, hero_title: e.target.value})} placeholder="Título Hero" />
+                    <ImageUpload valor={home.hero_image} onChange={(url) => setHome({...home, hero_image: url})} />
                   </div>
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary px-1">Subtítulo Estratégico</label>
-                    <Textarea value={home.heroSubtitle} onChange={(e) => setHome({...home, heroSubtitle: e.target.value})} className="rounded-2xl h-28 resize-none border-secondary/40 italic text-lg" />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-secondary/20">
-                    <div className="space-y-4">
-                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary px-1">Serviço: Topos de Bolo</label>
-                      <Textarea value={home.serviceBoloDesc} onChange={(e) => setHome({...home, serviceBoloDesc: e.target.value})} className="rounded-2xl h-32 resize-none border-secondary/40 text-sm leading-relaxed" />
-                    </div>
-                    <div className="space-y-4">
-                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary px-1">Serviço: Camisetas</label>
-                      <Textarea value={home.serviceCamisetaDesc} onChange={(e) => setHome({...home, serviceCamisetaDesc: e.target.value})} className="rounded-2xl h-32 resize-none border-secondary/40 text-sm leading-relaxed" />
-                    </div>
+                  <Textarea value={home.hero_subtitle} onChange={(e) => setHome({...home, hero_subtitle: e.target.value})} placeholder="Subtítulo Hero" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Textarea value={home.service_bolo_desc} onChange={(e) => setHome({...home, service_bolo_desc: e.target.value})} placeholder="Descrição Topos de Bolo" />
+                    <Textarea value={home.service_camiseta_desc} onChange={(e) => setHome({...home, service_camiseta_desc: e.target.value})} placeholder="Descrição Camisetas" />
                   </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent value="portfolio" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <Card className="lg:col-span-4 border-none shadow-xl rounded-[2.5rem] bg-white h-fit overflow-hidden">
-                  <CardHeader className="bg-secondary/5 p-8 border-b">
-                    <CardTitle className="text-xl font-headline">{editingProject ? 'Editar Trabalho' : 'Novo Trabalho'}</CardTitle>
-                    <CardDescription>Adicione peças exclusivas à galeria.</CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-8">
-                    <form onSubmit={handleProjectSubmit} className="space-y-5">
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Título</label>
-                        <Input name="title" defaultValue={editingProject?.title} placeholder="Ex: Topo de Casamento 3D" required className="rounded-xl h-12" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Categoria</label>
-                        <select name="category" defaultValue={editingProject?.category || 'Topos de Bolo'} className="w-full p-3 border rounded-xl bg-white text-sm font-bold outline-none border-secondary/40">
-                          <option value="Topos de Bolo">Topos de Bolo</option>
-                          <option value="Camisetas">Camisetas</option>
-                        </select>
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Ano</label>
-                        <Input name="year" defaultValue={editingProject?.year || '2024'} placeholder="Ex: 2024" required className="rounded-xl h-12" />
-                      </div>
-                      <div className="space-y-3">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-primary px-1">Fotografia</label>
-                        <ImageUpload 
-                          valor={editingProject?.imageUrl || ''} 
-                          onChange={(url) => setEditingProject(prev => prev ? {...prev, imageUrl: url} : null)} 
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Resumo</label>
-                        <Textarea name="description" defaultValue={editingProject?.description} placeholder="Materiais, técnicas usadas..." required className="rounded-xl h-24 resize-none border-secondary/40" />
-                      </div>
-                      <Button type="submit" className="w-full rounded-2xl py-8 font-bold shadow-md text-lg">
-                        {editingProject ? 'Atualizar Peça' : 'Publicar Peça'}
-                      </Button>
-                      {editingProject && (
-                        <Button type="button" variant="ghost" onClick={() => setEditingProject(null)} className="w-full font-bold">Cancelar</Button>
-                      )}
-                    </form>
-                  </CardContent>
+            <TabsContent value="portfolio">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <Card className="lg:col-span-4 rounded-[2rem] p-8 border-none shadow-lg">
+                  <form onSubmit={handleProjectSubmit} className="space-y-4">
+                    <Input name="title" defaultValue={editingProject?.title} placeholder="Título do Trabalho" required />
+                    <select name="category" defaultValue={editingProject?.category} className="w-full p-2 border rounded-xl bg-white">
+                      <option value="Topos de Bolo">Topos de Bolo</option>
+                      <option value="Camisetas">Camisetas</option>
+                    </select>
+                    <ImageUpload valor={editingProject?.image_url || ''} onChange={(url) => setEditingProject(prev => prev ? {...prev, image_url: url} : null)} />
+                    <Input name="year" defaultValue={editingProject?.year} placeholder="Ano" />
+                    <Textarea name="description" defaultValue={editingProject?.description} placeholder="Descrição" />
+                    <Button type="submit" className="w-full rounded-xl">Publicar</Button>
+                  </form>
                 </Card>
-                <Card className="lg:col-span-8 border-none shadow-xl rounded-[2.5rem] bg-white overflow-hidden">
+                <Card className="lg:col-span-8 rounded-[2rem] border-none shadow-lg overflow-hidden">
                   <Table>
-                    <TableHeader className="bg-secondary/5">
-                      <TableRow className="border-b-secondary/20">
-                        <TableHead className="font-bold uppercase text-[10px] tracking-widest p-6">Trabalho</TableHead>
-                        <TableHead className="font-bold uppercase text-[10px] tracking-widest">Nicho</TableHead>
-                        <TableHead className="text-right font-bold uppercase text-[10px] tracking-widest p-6">Acções</TableHead>
-                      </TableRow>
-                    </TableHeader>
+                    <TableHeader className="bg-secondary/5"><TableRow><TableHead>Trabalho</TableHead><TableHead>Categoria</TableHead><TableHead className="text-right">Acções</TableHead></TableRow></TableHeader>
                     <TableBody>
-                      {projects.map((p) => (
-                        <TableRow key={p.id} className="hover:bg-secondary/5 transition-colors border-b-secondary/10">
-                          <TableCell className="p-6">
-                            <div className="font-bold text-foreground text-lg">{p.title}</div>
-                            <div className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{p.year}</div>
-                          </TableCell>
-                          <TableCell>
-                            <span className="text-[9px] bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold uppercase tracking-widest">
-                              {p.category}
-                            </span>
-                          </TableCell>
-                          <TableCell className="text-right p-6">
-                            <div className="flex justify-end gap-2">
-                              <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10 hover:text-primary" onClick={() => setEditingProject(p)}><Edit3 size={18} /></Button>
-                              <Button variant="ghost" size="icon" className="text-destructive rounded-full hover:bg-destructive/10" onClick={() => deleteProject(p.id)}><Trash2 size={18} /></Button>
-                            </div>
+                      {projects.map(p => (
+                        <TableRow key={p.id}>
+                          <TableCell className="font-bold">{p.title}</TableCell>
+                          <TableCell>{p.category}</TableCell>
+                          <TableCell className="text-right">
+                            <Button variant="ghost" size="icon" onClick={() => setEditingProject(p)}><Edit3 size={16}/></Button>
+                            <Button variant="ghost" size="icon" className="text-destructive" onClick={() => deleteProject(p.id)}><Trash2 size={16}/></Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -528,127 +329,35 @@ export default function NapauAdminPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="flyers" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <div className="space-y-8">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-8 rounded-[2.5rem] shadow-sm border border-secondary/20 gap-4">
-                  <div>
-                    <h3 className="text-2xl font-bold font-headline">Cursos & Workshops</h3>
-                    <p className="text-sm text-muted-foreground">Gerencie as turmas ativas de formação.</p>
-                  </div>
-                  <Button onClick={addFlyer} className="rounded-2xl gap-2 px-8 py-7 font-bold shadow-lg gold-shimmer h-auto">
-                    <Plus size={20} /> Adicionar Novo Flyer
-                  </Button>
-                </div>
-                <div className="grid grid-cols-1 gap-8">
-                  {flyers.map((flyer) => (
-                    <Card key={flyer.id} className="border-none shadow-xl rounded-[2.5rem] bg-white overflow-hidden">
-                      <CardHeader className="flex flex-row items-center justify-between border-b bg-secondary/5 p-8">
-                        <div className="flex-1 max-w-2xl">
-                          <Input 
-                            value={flyer.titulo} 
-                            onChange={(e) => updateFlyerLocal(flyer.id, 'titulo', e.target.value)} 
-                            className="font-headline font-bold border-none text-2xl bg-transparent focus:ring-0 h-auto p-0"
-                          />
-                        </div>
-                        <div className="flex gap-3">
-                          <Button onClick={() => saveFlyer(flyer)} className="rounded-2xl gap-2 px-6 h-12 font-bold shadow-md">
-                            <Save size={18} /> Gravar
-                          </Button>
-                          <Button onClick={() => deleteFlyer(flyer.id)} variant="outline" size="icon" className="text-destructive border-destructive/20 rounded-2xl h-12 w-12">
-                            <Trash2 size={20} />
-                          </Button>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="p-8 grid grid-cols-1 md:grid-cols-3 gap-10">
-                        <div className="space-y-6">
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase tracking-widest text-primary">Preço sugerido</label>
-                            <Input value={flyer.preco} onChange={(e) => updateFlyerLocal(flyer.id, 'preco', e.target.value)} className="rounded-xl" />
-                          </div>
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase tracking-widest text-primary">Data Estimada</label>
-                            <Input value={flyer.data} onChange={(e) => updateFlyerLocal(flyer.id, 'data', e.target.value)} className="rounded-xl" />
-                          </div>
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase tracking-widest text-primary">Flyer (Capa)</label>
-                            <ImageUpload valor={flyer.imageUrl} onChange={(url) => updateFlyerLocal(flyer.id, 'imageUrl', url)} />
-                          </div>
-                        </div>
-                        <div className="md:col-span-2 space-y-6">
-                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-bold uppercase tracking-widest text-primary">Local</label>
-                              <Input value={flyer.local} onChange={(e) => updateFlyerLocal(flyer.id, 'local', e.target.value)} className="rounded-xl" />
-                            </div>
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-bold uppercase tracking-widest text-primary">Contacto</label>
-                              <Input value={flyer.contactos} onChange={(e) => updateFlyerLocal(flyer.id, 'contactos', e.target.value)} className="rounded-xl" />
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3 py-4 border-t">
-                            <div className={`w-12 h-6 rounded-full relative transition-colors cursor-pointer ${flyer.ativo ? 'bg-primary' : 'bg-muted'}`} 
-                                 onClick={() => updateFlyerLocal(flyer.id, 'ativo', !flyer.ativo)}>
-                              <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${flyer.ativo ? 'left-7' : 'left-1'}`} />
-                            </div>
-                            <span className="text-xs font-bold uppercase tracking-widest">{flyer.ativo ? 'Visível no Site' : 'Oculto'}</span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+            <TabsContent value="flyers">
+              <div className="space-y-4">
+                <Button onClick={addFlyer} className="gold-shimmer">Novo Flyer</Button>
+                {flyers.map(f => (
+                  <Card key={f.id} className="rounded-[2rem] p-6 border-none shadow-lg flex justify-between items-center">
+                    <Input value={f.titulo} className="max-w-xs border-none font-bold" onChange={(e) => setFlyers(flyers.map(item => item.id === f.id ? {...item, titulo: e.target.value} : item))} />
+                    <div className="flex gap-2">
+                      <Button onClick={() => saveFlyer(f)}>Gravar</Button>
+                      <Button variant="outline" className="text-destructive" onClick={() => { if(confirm('Apagar?')) supabase.from('flyers').delete().eq('id', f.id).then(() => carregarDados()) }}>Apagar</Button>
+                    </div>
+                  </Card>
+                ))}
               </div>
             </TabsContent>
 
-            <TabsContent value="registrations" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <Card className="border-none shadow-xl rounded-[2.5rem] bg-white overflow-hidden print:shadow-none">
-                <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b bg-secondary/5 p-8 gap-4 print:hidden">
-                  <div>
-                    <CardTitle className="text-2xl font-headline">Inscrições</CardTitle>
-                    <CardDescription>Lista oficial de alunos registados.</CardDescription>
-                  </div>
-                  <Button onClick={() => window.print()} variant="outline" className="rounded-2xl h-14 px-8 gap-2 font-bold">
-                    <Printer size={20} /> Imprimir Lista
-                  </Button>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <Table>
-                    <TableHeader className="bg-secondary/5">
-                      <TableRow>
-                        <TableHead className="font-bold uppercase text-[10px] tracking-widest p-6">Aluno / ID</TableHead>
-                        <TableHead className="font-bold uppercase text-[10px] tracking-widest">Curso</TableHead>
-                        <TableHead className="font-bold uppercase text-[10px] tracking-widest">Documentação</TableHead>
-                        <TableHead className="text-right font-bold uppercase text-[10px] tracking-widest p-6 print:hidden">Acções</TableHead>
+            <TabsContent value="registrations">
+              <Card className="rounded-[2rem] border-none shadow-lg overflow-hidden">
+                <Table>
+                  <TableHeader className="bg-secondary/5"><TableRow><TableHead>ID/Aluno</TableHead><TableHead>Curso</TableHead><TableHead>Estado</TableHead></TableRow></TableHeader>
+                  <TableBody>
+                    {registrations.map(r => (
+                      <TableRow key={r.id}>
+                        <TableCell><span className="text-primary font-bold">{r.id}</span><br/>{r.student_name}</TableCell>
+                        <TableCell>{r.course_title}</TableCell>
+                        <TableCell>{r.status}</TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {registrations.map((r) => (
-                        <TableRow key={r.id}>
-                          <TableCell className="p-6">
-                            <div className="font-bold text-primary">{r.id}</div>
-                            <div className="font-headline font-bold">{r.studentName}</div>
-                            <div className="text-[10px] text-muted-foreground">{r.studentPhone}</div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="text-sm font-bold">{r.courseTitle}</div>
-                            <div className="text-[9px] text-muted-foreground uppercase">{new Date(r.registrationDate).toLocaleDateString()}</div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="text-[10px] font-bold uppercase text-primary">{r.docType}</div>
-                            <div className="text-[10px] text-muted-foreground">{r.docNumber}</div>
-                          </TableCell>
-                          <TableCell className="text-right p-6 print:hidden">
-                            <div className="flex justify-end gap-2">
-                               <Button variant="ghost" size="icon" className="text-destructive" onClick={() => deleteRegistration(r.id)}>
-                                <Trash2 size={18} />
-                               </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
+                    ))}
+                  </TableBody>
+                </Table>
               </Card>
             </TabsContent>
           </Tabs>
