@@ -10,7 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Trash2, Edit3, Settings, Loader2, Plus, Image as ImageIcon, Copy, RefreshCw, X, Cake, Shirt, Upload, Filter } from 'lucide-react';
+import { Trash2, Edit3, Settings, Loader2, Plus, Image as ImageIcon, Copy, RefreshCw, X, Cake, Shirt, Upload, Filter, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Project, Flyer, HomeContent, DEFAULT_HOME_CONTENT, Registration, OFFICIAL_IMAGE } from '@/lib/portfolio-data';
 import { supabase } from '@/lib/supabase';
@@ -57,14 +57,8 @@ export default function NapauAdminPage() {
       const { data: homeData } = await supabase.from('home_content').select('*').eq('id', 1).maybeSingle();
       if (homeData) {
         setHome({
-          heroTitle: homeData.heroTitle || '',
-          heroSubtitle: homeData.heroSubtitle || '',
-          heroImage: homeData.heroImage || '',
-          serviceBoloDesc: homeData.serviceBoloDesc || '',
-          serviceBoloImages: homeData.serviceBoloImages || [],
-          serviceCamisetaDesc: homeData.serviceCamisetaDesc || '',
-          serviceCamisetaImages: homeData.serviceCamisetaImages || [],
-          serviceFormacaoDesc: homeData.serviceFormacaoDesc || '',
+          ...DEFAULT_HOME_CONTENT,
+          ...homeData
         });
       }
 
@@ -140,14 +134,7 @@ export default function NapauAdminPage() {
         .from('home_content')
         .upsert({
           id: 1,
-          heroTitle: home.heroTitle,
-          heroSubtitle: home.heroSubtitle,
-          heroImage: home.heroImage,
-          serviceBoloDesc: home.serviceBoloDesc,
-          serviceBoloImages: home.serviceBoloImages,
-          serviceCamisetaDesc: home.serviceCamisetaDesc,
-          serviceCamisetaImages: home.serviceCamisetaImages,
-          serviceFormacaoDesc: home.serviceFormacaoDesc,
+          ...home
         });
 
       if (error) throw error;
@@ -244,11 +231,12 @@ export default function NapauAdminPage() {
                 <CardHeader className="flex flex-col md:flex-row justify-between items-start md:items-center bg-[#FAF7F4] p-8 border-b gap-4">
                   <div>
                     <CardTitle className="text-xl font-headline">Configuração da Home</CardTitle>
-                    <p className="text-xs text-muted-foreground">Personalize a primeira impressão dos seus clientes.</p>
+                    <p className="text-xs text-muted-foreground">Personalize cada texto e imagem do seu site.</p>
                   </div>
                   <Button onClick={saveHome} className="gold-shimmer px-10 h-14 rounded-2xl w-full md:w-auto font-bold text-lg">Guardar Website</Button>
                 </CardHeader>
                 <CardContent className="p-8 space-y-12">
+                  {/* HERO SECTION ADMIN */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="space-y-6">
                       <div className="space-y-2">
@@ -263,19 +251,56 @@ export default function NapauAdminPage() {
                     <ImageUpload label="Imagem de Fundo (Hero)" valor={home.heroImage || ''} onChange={(url) => setHome({...home, heroImage: url})} />
                   </div>
 
-                  {/* CARROSSEL BOLOS */}
+                  {/* PERSONALIZE SEU EVENTO ADMIN */}
+                  <div className="border-t pt-10 space-y-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><Sparkles size={20}/></div>
+                      <h4 className="font-bold uppercase text-sm text-primary tracking-widest">Personalize seu Evento</h4>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                       <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Título da Secção</label>
+                          <Input value={home.eventTitle || ''} onChange={(e) => setHome({...home, eventTitle: e.target.value})} className="rounded-xl h-12" />
+                       </div>
+                       <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Subtítulo</label>
+                          <Input value={home.eventSubtitle || ''} onChange={(e) => setHome({...home, eventSubtitle: e.target.value})} className="rounded-xl h-12" />
+                       </div>
+                    </div>
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Descrição Completa</label>
+                       <Textarea value={home.eventDesc || ''} onChange={(e) => setHome({...home, eventDesc: e.target.value})} className="rounded-xl h-32 resize-none" />
+                    </div>
+                  </div>
+
+                  {/* CARROSSEL BOLOS ADMIN */}
                   <div className="border-t pt-10 space-y-8">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><Cake size={20}/></div>
-                      <h4 className="font-bold uppercase text-sm text-primary tracking-widest">Galeria: Topos de Bolo</h4>
+                      <h4 className="font-bold uppercase text-sm text-primary tracking-widest">Secção: Topos de Bolo</h4>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Descrição do Serviço</label>
-                        <Textarea value={home.serviceBoloDesc || ''} onChange={(e) => setHome({...home, serviceBoloDesc: e.target.value})} className="rounded-xl h-32 resize-none" />
+                      <div className="space-y-6">
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Título Principal</label>
+                          <Input value={home.boloTitle || ''} onChange={(e) => setHome({...home, boloTitle: e.target.value})} className="rounded-xl h-12" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Descrição Breve</label>
+                          <Textarea value={home.boloDesc || ''} onChange={(e) => setHome({...home, boloDesc: e.target.value})} className="rounded-xl h-24 resize-none" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">O que é Topo de Bolo?</label>
+                          <Textarea value={home.boloWhatIs || ''} onChange={(e) => setHome({...home, boloWhatIs: e.target.value})} className="rounded-xl h-32 resize-none" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Tipos & Preços (JSON)</label>
+                          <Textarea value={home.boloTypesJson || ''} onChange={(e) => setHome({...home, boloTypesJson: e.target.value})} className="rounded-xl h-48 font-mono text-xs" />
+                          <p className="text-[9px] text-muted-foreground">Formato: [ {"{"} "title": "...", "price": "...", "desc": "..." {"}"} ]</p>
+                        </div>
                       </div>
                       <div className="space-y-3">
-                        <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Fotos Atuais no Site</label>
+                        <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Galeria de Fotos (Carousel)</label>
                         <div className="grid grid-cols-4 gap-3">
                           {home.serviceBoloImages?.map((img, idx) => (
                             <div key={idx} className="group relative aspect-square rounded-xl overflow-hidden border-2 border-primary/10">
@@ -311,19 +336,25 @@ export default function NapauAdminPage() {
                     </div>
                   </div>
 
-                  {/* CARROSSEL CAMISETAS */}
+                  {/* CAMISETAS ADMIN */}
                   <div className="border-t pt-10 space-y-8">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><Shirt size={20}/></div>
-                      <h4 className="font-bold uppercase text-sm text-primary tracking-widest">Galeria: Camisetas</h4>
+                      <h4 className="font-bold uppercase text-sm text-primary tracking-widest">Secção: Designer de Camisetas</h4>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Descrição do Serviço</label>
-                        <Textarea value={home.serviceCamisetaDesc || ''} onChange={(e) => setHome({...home, serviceCamisetaDesc: e.target.value})} className="rounded-xl h-32 resize-none" />
+                      <div className="space-y-6">
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Título Principal</label>
+                          <Input value={home.camisetaTitle || ''} onChange={(e) => setHome({...home, camisetaTitle: e.target.value})} className="rounded-xl h-12" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Descrição Completa</label>
+                          <Textarea value={home.camisetaDesc || ''} onChange={(e) => setHome({...home, camisetaDesc: e.target.value})} className="rounded-xl h-48 resize-none" />
+                        </div>
                       </div>
                       <div className="space-y-3">
-                        <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Fotos Atuais no Site</label>
+                        <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Galeria de Fotos (Carousel)</label>
                         <div className="grid grid-cols-4 gap-3">
                           {home.serviceCamisetaImages?.map((img, idx) => (
                             <div key={idx} className="group relative aspect-square rounded-xl overflow-hidden border-2 border-primary/10">
@@ -640,3 +671,4 @@ export default function NapauAdminPage() {
     </div>
   );
 }
+

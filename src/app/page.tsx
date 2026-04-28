@@ -1,14 +1,13 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { PortfolioCard } from '@/components/PortfolioCard';
-import { Project, HomeContent, DEFAULT_HOME_CONTENT, OFFICIAL_IMAGE } from '@/lib/portfolio-data';
+import { Project, HomeContent, DEFAULT_HOME_CONTENT, OFFICIAL_IMAGE, DEFAULT_BOLO_TYPES } from '@/lib/portfolio-data';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Cake, Shirt, Loader2, Star, GraduationCap, CheckCircle, HelpCircle } from 'lucide-react';
+import { ArrowRight, Cake, Shirt, Loader2, Star, GraduationCap, CheckCircle, HelpCircle, Sparkles, ShoppingBag, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
@@ -31,14 +30,8 @@ export default function Home() {
       const { data: homeData } = await supabase.from('home_content').select('*').eq('id', 1).maybeSingle();
       if (homeData) {
         setHome({
-          heroTitle: homeData.heroTitle || DEFAULT_HOME_CONTENT.heroTitle,
-          heroSubtitle: homeData.heroSubtitle || DEFAULT_HOME_CONTENT.heroSubtitle,
-          heroImage: homeData.heroImage || DEFAULT_HOME_CONTENT.heroImage,
-          serviceBoloDesc: homeData.serviceBoloDesc || DEFAULT_HOME_CONTENT.serviceBoloDesc,
-          serviceBoloImages: homeData.serviceBoloImages || DEFAULT_HOME_CONTENT.serviceBoloImages,
-          serviceCamisetaDesc: homeData.serviceCamisetaDesc || DEFAULT_HOME_CONTENT.serviceCamisetaDesc,
-          serviceCamisetaImages: homeData.serviceCamisetaImages || DEFAULT_HOME_CONTENT.serviceCamisetaImages,
-          serviceFormacaoDesc: homeData.serviceFormacaoDesc || DEFAULT_HOME_CONTENT.serviceFormacaoDesc,
+          ...DEFAULT_HOME_CONTENT,
+          ...homeData
         });
       }
 
@@ -57,6 +50,9 @@ export default function Home() {
     }
   }
 
+  // Parse bolo types from JSON or use defaults
+  const boloTypes = home.boloTypesJson ? JSON.parse(home.boloTypesJson) : DEFAULT_BOLO_TYPES;
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
@@ -73,7 +69,6 @@ export default function Home() {
               priority 
               sizes="100vw"
             />
-            {/* Overlay mais escuro para garantir legibilidade dos textos e botões brancos */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-[#0A0A0A]" />
           </div>
           <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8 px-6">
@@ -91,7 +86,6 @@ export default function Home() {
               <Button asChild className="rounded-full px-10 py-6 text-sm font-bold gold-shimmer shadow-2xl hover:scale-105 transition-all">
                 <Link href="/portfolio">Explorar Portfólio</Link>
               </Button>
-              {/* Botão Ver Cursos com fundo semi-transparente para ser visível mesmo em fotos claras */}
               <Button asChild variant="outline" className="rounded-full px-10 py-6 text-sm text-white border-white/40 bg-white/5 hover:bg-white/20 backdrop-blur-md transition-all shadow-lg">
                 <Link href="/cursos">Ver Cursos</Link>
               </Button>
@@ -105,7 +99,7 @@ export default function Home() {
         {/* TRÊS PILARES - CARDS RÁPIDOS */}
         <section className="py-20 px-6 bg-white">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="group bg-[#FAF7F4] p-10 rounded-[2.5rem] border border-primary/5 hover:border-primary/20 transition-all text-center space-y-4">
+            <div className="group bg-[#FAF7F4] p-10 rounded-[2.5rem] border border-primary/5 hover:border-primary/20 transition-all text-center space-y-4 shadow-sm">
               <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto group-hover:scale-110 transition-transform">
                 <Cake size={32} />
               </div>
@@ -115,7 +109,7 @@ export default function Home() {
                 Ver Galeria <ArrowRight size={14} />
               </Link>
             </div>
-            <div className="group bg-[#FAF7F4] p-10 rounded-[2.5rem] border border-primary/5 hover:border-primary/20 transition-all text-center space-y-4">
+            <div className="group bg-[#FAF7F4] p-10 rounded-[2.5rem] border border-primary/5 hover:border-primary/20 transition-all text-center space-y-4 shadow-sm">
               <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto group-hover:scale-110 transition-transform">
                 <Shirt size={32} />
               </div>
@@ -125,7 +119,7 @@ export default function Home() {
                 Ver Coleção <ArrowRight size={14} />
               </Link>
             </div>
-            <div className="group bg-[#FAF7F4] p-10 rounded-[2.5rem] border border-primary/5 hover:border-primary/20 transition-all text-center space-y-4">
+            <div className="group bg-[#FAF7F4] p-10 rounded-[2.5rem] border border-primary/5 hover:border-primary/20 transition-all text-center space-y-4 shadow-sm">
               <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto group-hover:scale-110 transition-transform">
                 <GraduationCap size={32} />
               </div>
@@ -138,37 +132,139 @@ export default function Home() {
           </div>
         </section>
 
-        {/* DETALHES TOPOS DE BOLO */}
-        <section className="py-24 px-6 bg-[#FAF7F4]">
-          <div className="max-w-6xl mx-auto">
+        {/* PERSONALIZE SEU EVENTO INTRO */}
+        <section className="py-24 px-6 bg-[#FAF7F4] relative overflow-hidden">
+           <div className="absolute top-0 right-0 p-20 opacity-5 pointer-events-none">
+             <Logo size={400} />
+           </div>
+           <div className="max-w-4xl mx-auto text-center space-y-8 relative z-10">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest">
+                <Sparkles size={14} /> {home.eventTitle}
+              </div>
+              <h2 className="text-3xl md:text-5xl font-headline font-bold text-[#1A1A1A]">{home.eventSubtitle}</h2>
+              <div className="w-20 h-1.5 bg-primary mx-auto rounded-full" />
+              <p className="text-lg text-muted-foreground leading-relaxed italic max-w-2xl mx-auto">
+                {home.eventDesc}
+              </p>
+           </div>
+        </section>
+
+        {/* DESIGNER DE CAMISETAS DETALHADO */}
+        <section className="py-24 px-6 bg-white">
+          <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div className="space-y-6">
-                <h2 className="text-3xl md:text-5xl font-headline font-bold tracking-tight text-[#1A1A1A]">
-                  Topos de Bolo <br /><span className="text-primary italic">Inesquecíveis</span>
-                </h2>
-                <div className="w-16 h-1 bg-primary rounded-full" />
-                <p className="text-lg text-muted-foreground leading-relaxed max-w-md">
-                  {home.serviceBoloDesc}
-                </p>
-                <div className="space-y-3 pt-2">
-                  <div className="flex items-center gap-3 text-sm font-medium"><CheckCircle size={18} className="text-primary" /> Acabamento em Laser</div>
-                  <div className="flex items-center gap-3 text-sm font-medium"><CheckCircle size={18} className="text-primary" /> Design 100% Personalizado</div>
-                  <div className="flex items-center gap-3 text-sm font-medium"><CheckCircle size={18} className="text-primary" /> Entrega Rápida em Maputo</div>
+              <div className="relative order-2 lg:order-1">
+                <Carousel opts={{ loop: true }} plugins={[Autoplay({ delay: 5000 })]} className="w-full relative z-10">
+                  <CarouselContent>
+                    {(home.serviceCamisetaImages?.length ? home.serviceCamisetaImages : [OFFICIAL_IMAGE]).map((img, index) => (
+                      <CarouselItem key={index}>
+                        <div className="aspect-[4/3] relative rounded-[2rem] overflow-hidden shadow-2xl border-[10px] border-[#FAF7F4]">
+                          <Image src={img} alt={`Camisetas Napau ${index}`} fill className="object-cover" />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </Carousel>
+                <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
+              </div>
+              
+              <div className="space-y-8 order-1 lg:order-2">
+                <div className="space-y-4">
+                  <h2 className="text-3xl md:text-5xl font-headline font-bold tracking-tight text-[#1A1A1A]">
+                    {home.camisetaTitle}
+                  </h2>
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    {home.camisetaDesc}
+                  </p>
                 </div>
-                <div className="pt-6">
-                  <Button asChild className="rounded-xl px-8 py-6 font-bold text-base group shadow-lg" variant="default">
-                    <Link href="/portfolio?category=Topos de Bolo">
-                      Ver Trabalhos <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                    </Link>
+
+                <div className="bg-[#FAF7F4] p-8 rounded-[2rem] space-y-6 shadow-sm border border-primary/5">
+                  <h4 className="font-bold uppercase text-[10px] tracking-[0.3em] text-primary">Como funciona:</h4>
+                  <div className="space-y-4">
+                    <div className="flex gap-4 items-start">
+                      <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">1</div>
+                      <p className="text-sm font-medium">Escolha o modelo: Algodão ou Dry-Fit premium</p>
+                    </div>
+                    <div className="flex gap-4 items-start">
+                      <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">2</div>
+                      <p className="text-sm font-medium">Faça upload da sua arte ou crie connosco na hora</p>
+                    </div>
+                    <div className="flex gap-4 items-start">
+                      <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">3</div>
+                      <p className="text-sm font-medium">Receba em casa ou levante no nosso atelier</p>
+                    </div>
+                  </div>
+                  <div className="pt-2">
+                    <p className="text-[10px] text-muted-foreground font-bold uppercase">Pedidos a partir de 1 unidade • DTG & Sublimação</p>
+                  </div>
+                </div>
+
+                <Button asChild className="rounded-xl px-10 py-8 text-lg font-bold group gold-shimmer shadow-xl">
+                  <a href="https://wa.me/258847615871?text=Olá! Gostaria de criar uma camiseta personalizada.">
+                    Criar minha camiseta agora <Wand2 size={20} className="ml-2 group-hover:rotate-12 transition-transform" />
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* TOPOS DE BOLO DETALHADO */}
+        <section className="py-24 px-6 bg-[#FAF7F4]">
+          <div className="max-w-7xl mx-auto space-y-20">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <h2 className="text-3xl md:text-5xl font-headline font-bold tracking-tight text-[#1A1A1A]">
+                    {home.boloTitle}
+                  </h2>
+                  <p className="text-lg text-primary font-bold italic">
+                    {home.boloDesc}
+                  </p>
+                  <div className="p-6 bg-white rounded-3xl border border-primary/10 shadow-sm">
+                    <p className="text-sm text-muted-foreground leading-relaxed italic">
+                      <HelpCircle size={16} className="inline mr-2 text-primary" />
+                      {home.boloWhatIs}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {boloTypes.map((type: any, idx: number) => (
+                    <div key={idx} className="bg-white p-6 rounded-3xl border border-primary/5 hover:border-primary/20 transition-all group shadow-sm">
+                      <div className="flex justify-between items-start mb-2">
+                        <h5 className="font-headline font-bold text-primary group-hover:scale-105 transition-transform">{type.title}</h5>
+                        <span className="text-[10px] font-bold bg-primary/10 text-primary px-2 py-0.5 rounded-full">{type.price}</span>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground leading-snug">{type.desc}</p>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="pt-4 flex flex-col gap-4">
+                   <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-2xl border border-primary/10">
+                      <ShoppingBag size={20} className="text-primary" />
+                      <p className="text-xs font-bold uppercase tracking-widest text-primary">Como encomendar:</p>
+                   </div>
+                   <ol className="text-sm text-muted-foreground space-y-2 pl-4 list-decimal italic">
+                     <li>Escolha o tipo de topo desejado</li>
+                     <li>Envie foto, nome ou tema pelo WhatsApp</li>
+                     <li>Levante na loja ou solicite entrega em domicílio</li>
+                   </ol>
+                   <Button asChild className="rounded-xl px-10 py-8 text-lg font-bold group gold-shimmer shadow-xl mt-4">
+                    <a href="https://wa.me/258847615871?text=Olá! Gostaria de encomendar um topo de bolo.">
+                      Encomendar meu topo <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                    </a>
                   </Button>
                 </div>
               </div>
-              <div className="relative">
+
+              <div className="relative h-full flex flex-col justify-center">
                 <Carousel opts={{ loop: true }} plugins={[Autoplay({ delay: 5000 })]} className="w-full relative z-10">
                   <CarouselContent>
                     {(home.serviceBoloImages?.length ? home.serviceBoloImages : [OFFICIAL_IMAGE]).map((img, index) => (
                       <CarouselItem key={index}>
-                        <div className="aspect-[4/3] relative rounded-[2rem] overflow-hidden shadow-2xl border-[10px] border-white">
+                        <div className="aspect-[4/5] relative rounded-[2rem] overflow-hidden shadow-2xl border-[10px] border-white">
                           <Image src={img} alt={`Topos de Bolo Napau ${index}`} fill className="object-cover" />
                         </div>
                       </CarouselItem>
@@ -179,6 +275,9 @@ export default function Home() {
                     <CarouselNext className="relative right-0 top-0 translate-y-0 h-12 w-12 bg-white shadow-xl border-none hover:bg-primary hover:text-white transition-all" />
                   </div>
                 </Carousel>
+                <div className="mt-12 bg-white/60 backdrop-blur-sm p-6 rounded-[2rem] border border-white text-center">
+                  <p className="text-sm font-bold text-primary italic">"Sua festa 100% combinada: faça sua camiseta e seu topo com o mesmo tema!"</p>
+                </div>
               </div>
             </div>
           </div>
@@ -224,7 +323,7 @@ export default function Home() {
               <AccordionItem value="item-1" className="border-b-primary/10">
                 <AccordionTrigger className="font-headline font-bold text-lg text-left hover:text-primary transition-colors">Qual é o prazo médio de entrega?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed">
-                  Para topos de bolo personalizados, o prazo médio é de 3 a 5 dias úteis após a aprovação do design. Camisetas exclusivas podem levar de 5 a 7 dias, dependendo da complexidade.
+                  Para topos de bolo personalizados, o prazo médio é de 1 a 5 dias úteis, dependendo do tipo escolhido. Camisetas exclusivas podem levar de 3 a 7 dias. Projetos urgentes (24h) são possíveis para Foto Comestível.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2" className="border-b-primary/10">
@@ -242,7 +341,7 @@ export default function Home() {
               <AccordionItem value="item-4" className="border-b-primary/10">
                 <AccordionTrigger className="font-headline font-bold text-lg text-left hover:text-primary transition-colors">Posso levar o meu próprio design para a camiseta?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed">
-                  Com certeza! Pode enviar-nos a sua ideia ou ficheiro e nós adaptamos para garantir que o resultado final na estamparia seja perfeito e duradouro.
+                  Com certeza! Pode enviar-nos a sua ideia ou ficheiro e nós adaptamos para garantir que o resultado final na estamparia seja perfeito e duradouro. Trabalhamos com DTG e Sublimação.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
