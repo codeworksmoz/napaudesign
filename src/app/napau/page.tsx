@@ -10,7 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Trash2, Edit3, Settings, Loader2, MessageCircle, Plus, Image as ImageIcon, Copy, Check, RefreshCw } from 'lucide-react';
+import { Trash2, Edit3, Settings, Loader2, MessageCircle, Plus, Image as ImageIcon, Copy, Check, RefreshCw, X, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Project, Flyer, HomeContent, DEFAULT_HOME_CONTENT, Category, Registration } from '@/lib/portfolio-data';
 import { supabase } from '@/lib/supabase';
@@ -56,7 +56,6 @@ export default function NapauAdminPage() {
   async function carregarDados() {
     setCarregando(true);
     try {
-      // Carregar Home Content com mapeamento CamelCase (DB) -> SnakeCase (State)
       const { data: homeData } = await supabase.from('home_content').select('*').eq('id', 1).maybeSingle();
       if (homeData) {
         setHome({
@@ -137,7 +136,6 @@ export default function NapauAdminPage() {
 
   const saveHome = async () => {
     try {
-      // Mapeamento SnakeCase (State) -> CamelCase (DB)
       const { error } = await supabase
         .from('home_content')
         .upsert({
@@ -210,6 +208,30 @@ export default function NapauAdminPage() {
     setTimeout(() => setCopiedUrl(null), 2000);
   };
 
+  // Funções para gerir as imagens dos carrosséis de forma visual
+  const addImageToCarousel = (type: 'bolo' | 'camiseta', url: string) => {
+    if (!url) return;
+    if (type === 'bolo') {
+      const current = home.service_bolo_images || [];
+      setHome({ ...home, service_bolo_images: [...current, url] });
+    } else {
+      const current = home.service_camiseta_images || [];
+      setHome({ ...home, service_camiseta_images: [...current, url] });
+    }
+  };
+
+  const removeImageFromCarousel = (type: 'bolo' | 'camiseta', index: number) => {
+    if (type === 'bolo') {
+      const current = [...(home.service_bolo_images || [])];
+      current.splice(index, 1);
+      setHome({ ...home, service_bolo_images: current });
+    } else {
+      const current = [...(home.service_camiseta_images || [])];
+      current.splice(index, 1);
+      setHome({ ...home, service_camiseta_images: current });
+    }
+  };
+
   if (loadingAuth) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin text-primary" size={48} /></div>;
 
   if (!session) {
@@ -241,9 +263,14 @@ export default function NapauAdminPage() {
                 </DialogHeader>
                 <div className="space-y-6 py-4">
                   <p className="text-sm text-muted-foreground italic">Garantimos assistência técnica no prazo de 48h.</p>
-                  <Button asChild variant="outline" className="w-full h-12 rounded-xl gap-2 border-primary text-primary hover:bg-primary/5">
-                    <a href="https://wa.me/258855920773" target="_blank"><MessageCircle size={18} /> WhatsApp Codworks</a>
-                  </Button>
+                  <div className="space-y-3">
+                    <Button asChild variant="outline" className="w-full h-12 rounded-xl gap-2 border-primary text-primary hover:bg-primary/5">
+                      <a href="https://wa.me/258855920773" target="_blank"><MessageCircle size={18} /> WhatsApp Codworks</a>
+                    </Button>
+                    <Button asChild variant="ghost" className="w-full h-12 rounded-xl gap-2 text-muted-foreground">
+                      <a href="mailto:codworksmoz@gmail.com"><ImageIcon size={18} /> Email: codworksmoz@gmail.com</a>
+                    </Button>
+                  </div>
                 </div>
               </DialogContent>
             </Dialog>
@@ -261,7 +288,10 @@ export default function NapauAdminPage() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white"><Settings /></div>
-              <h1 className="text-2xl font-headline font-bold">Consola Codworks</h1>
+              <div>
+                <h1 className="text-2xl font-headline font-bold">Consola Codworks</h1>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Napau Design & Arte</p>
+              </div>
             </div>
             <Button onClick={handleLogout} variant="outline" className="rounded-xl border-destructive text-destructive hover:bg-destructive/5">Sair</Button>
           </div>
@@ -277,74 +307,153 @@ export default function NapauAdminPage() {
 
             <TabsContent value="home">
               <Card className="rounded-[2rem] border-none shadow-xl overflow-hidden">
-                <CardHeader className="flex flex-row justify-between items-center bg-secondary/5 p-8 border-b">
-                  <h3 className="text-xl font-bold">Conteúdo Principal</h3>
-                  <Button onClick={saveHome} className="gold-shimmer px-8 rounded-xl">Guardar Tudo</Button>
+                <CardHeader className="flex flex-col md:flex-row justify-between items-start md:items-center bg-secondary/5 p-8 border-b gap-4">
+                  <div>
+                    <CardTitle className="text-xl">Conteúdo da Página Inicial</CardTitle>
+                    <p className="text-xs text-muted-foreground">Personalize o que os seus clientes veem ao entrar no site.</p>
+                  </div>
+                  <Button onClick={saveHome} className="gold-shimmer px-8 rounded-xl w-full md:w-auto">Guardar Alterações</Button>
                 </CardHeader>
                 <CardContent className="p-8 space-y-12">
+                  {/* Hero Section */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-4">
                       <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase text-muted-foreground">Título Hero</label>
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Título de Impacto (Hero)</label>
                         <Input 
                           value={home.hero_title || ''} 
                           onChange={(e) => setHome({...home, hero_title: e.target.value})} 
                           className="rounded-xl" 
+                          placeholder="Ex: A Arte de Personalizar Momentos"
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase text-muted-foreground">Subtítulo</label>
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Subtítulo Descritivo</label>
                         <Textarea 
                           value={home.hero_subtitle || ''} 
                           onChange={(e) => setHome({...home, hero_subtitle: e.target.value})} 
                           className="rounded-xl resize-none h-32" 
+                          placeholder="Fale um pouco sobre o que a Napau faz..."
                         />
                       </div>
                     </div>
                     <ImageUpload 
-                      label="Imagem de Fundo (Hero)" 
+                      label="Imagem de Fundo Principal" 
                       valor={home.hero_image || ''} 
                       onChange={(url) => setHome({...home, hero_image: url})} 
                     />
                   </div>
 
-                  <div className="border-t pt-8 grid grid-cols-1 md:grid-cols-2 gap-12">
-                    <div className="space-y-6">
-                      <h4 className="font-bold text-primary uppercase text-xs tracking-widest flex items-center gap-2">
-                        <Plus size={14}/> Topos de Bolo
-                      </h4>
-                      <Textarea 
-                        value={home.service_bolo_desc || ''} 
-                        onChange={(e) => setHome({...home, service_bolo_desc: e.target.value})} 
-                        placeholder="Descrição do serviço" 
-                        className="rounded-xl" 
-                      />
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-bold text-muted-foreground uppercase">Imagens do Carrossel (URLs separadas por vírgula)</label>
+                  {/* Topos de Bolo Visual Editor */}
+                  <div className="border-t pt-8 space-y-6">
+                    <div className="flex items-center gap-2 text-primary">
+                      <Plus size={20}/>
+                      <h4 className="font-bold uppercase text-sm tracking-widest">Serviço: Topos de Bolo</h4>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Descrição do Serviço</label>
                         <Textarea 
-                          value={home.service_bolo_images?.join(', ') || ''} 
-                          onChange={(e) => setHome({...home, service_bolo_images: e.target.value.split(',').map(s => s.trim())})} 
-                          className="rounded-xl text-xs h-24"
+                          value={home.service_bolo_desc || ''} 
+                          onChange={(e) => setHome({...home, service_bolo_desc: e.target.value})} 
+                          placeholder="Explique este serviço para o cliente..." 
+                          className="rounded-xl h-40" 
                         />
                       </div>
+                      <div className="space-y-4">
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Galeria do Carrossel (Imagens)</label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {home.service_bolo_images?.map((img, idx) => (
+                            <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border">
+                              <Image src={img} alt="Bolo" fill className="object-cover" />
+                              <button 
+                                onClick={() => removeImageFromCarousel('bolo', idx)}
+                                className="absolute top-1 right-1 bg-destructive text-white p-1 rounded-full shadow-lg"
+                              >
+                                <X size={10} />
+                              </button>
+                            </div>
+                          ))}
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <button className="aspect-square rounded-lg border-2 border-dashed flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all">
+                                <Plus size={20} />
+                              </button>
+                            </DialogTrigger>
+                            <DialogContent className="rounded-3xl">
+                              <DialogHeader>
+                                <DialogTitle>Adicionar Foto ao Carrossel</DialogTitle>
+                              </DialogHeader>
+                              <div className="space-y-4 py-4">
+                                <p className="text-xs text-muted-foreground italic">Dica: Vá à aba "Biblioteca" para copiar o link das fotos que já carregou.</p>
+                                <Input id="new-img-bolo" placeholder="Cole aqui o URL da imagem do Supabase" className="rounded-xl" />
+                                <Button className="w-full rounded-xl" onClick={() => {
+                                  const input = document.getElementById('new-img-bolo') as HTMLInputElement;
+                                  addImageToCarousel('bolo', input.value);
+                                  input.value = '';
+                                  toast({ title: "Adicionado à galeria!" });
+                                }}>Confirmar Link</Button>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        </div>
+                      </div>
                     </div>
-                    <div className="space-y-6">
-                      <h4 className="font-bold text-primary uppercase text-xs tracking-widest flex items-center gap-2">
-                        <Plus size={14}/> Camisetas Personalizadas
-                      </h4>
-                      <Textarea 
-                        value={home.service_camiseta_desc || ''} 
-                        onChange={(e) => setHome({...home, service_camiseta_desc: e.target.value})} 
-                        placeholder="Descrição do serviço" 
-                        className="rounded-xl" 
-                      />
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-bold text-muted-foreground uppercase">Imagens do Carrossel (URLs separadas por vírgula)</label>
+                  </div>
+
+                  {/* Camisetas Visual Editor */}
+                  <div className="border-t pt-8 space-y-6">
+                    <div className="flex items-center gap-2 text-primary">
+                      <Plus size={20}/>
+                      <h4 className="font-bold uppercase text-sm tracking-widest">Serviço: Camisetas Personalizadas</h4>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Descrição do Serviço</label>
                         <Textarea 
-                          value={home.service_camiseta_images?.join(', ') || ''} 
-                          onChange={(e) => setHome({...home, service_camiseta_images: e.target.value.split(',').map(s => s.trim())})} 
-                          className="rounded-xl text-xs h-24"
+                          value={home.service_camiseta_desc || ''} 
+                          onChange={(e) => setHome({...home, service_camiseta_desc: e.target.value})} 
+                          placeholder="Explique este serviço para o cliente..." 
+                          className="rounded-xl h-40" 
                         />
+                      </div>
+                      <div className="space-y-4">
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Galeria do Carrossel (Imagens)</label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {home.service_camiseta_images?.map((img, idx) => (
+                            <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border">
+                              <Image src={img} alt="Camiseta" fill className="object-cover" />
+                              <button 
+                                onClick={() => removeImageFromCarousel('camiseta', idx)}
+                                className="absolute top-1 right-1 bg-destructive text-white p-1 rounded-full shadow-lg"
+                              >
+                                <X size={10} />
+                              </button>
+                            </div>
+                          ))}
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <button className="aspect-square rounded-lg border-2 border-dashed flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all">
+                                <Plus size={20} />
+                              </button>
+                            </DialogTrigger>
+                            <DialogContent className="rounded-3xl">
+                              <DialogHeader>
+                                <DialogTitle>Adicionar Foto ao Carrossel</DialogTitle>
+                              </DialogHeader>
+                              <div className="space-y-4 py-4">
+                                <p className="text-xs text-muted-foreground italic">Dica: Vá à aba "Biblioteca" para copiar o link das fotos que já carregou.</p>
+                                <Input id="new-img-camiseta" placeholder="Cole aqui o URL da imagem do Supabase" className="rounded-xl" />
+                                <Button className="w-full rounded-xl" onClick={() => {
+                                  const input = document.getElementById('new-img-camiseta') as HTMLInputElement;
+                                  addImageToCarousel('camiseta', input.value);
+                                  input.value = '';
+                                  toast({ title: "Adicionado à galeria!" });
+                                }}>Confirmar Link</Button>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -415,29 +524,44 @@ export default function NapauAdminPage() {
                 <CardHeader className="flex flex-row justify-between items-center p-8 border-b">
                   <div>
                     <CardTitle className="text-xl">Biblioteca de Média</CardTitle>
-                    <p className="text-xs text-muted-foreground">Todas as fotos carregadas no Supabase Storage.</p>
+                    <p className="text-xs text-muted-foreground">Use estas imagens para os carrosséis da Home.</p>
                   </div>
                   <Button onClick={carregarBiblioteca} disabled={loadingLibrary} variant="outline" className="rounded-xl gap-2">
-                    <Loader2 className={loadingLibrary ? "animate-spin" : ""} size={16} /> Atualizar
+                    <RefreshCw className={loadingLibrary ? "animate-spin" : ""} size={16} /> Atualizar
                   </Button>
                 </CardHeader>
                 <CardContent className="p-8">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {library.map((file, idx) => (
-                      <div key={idx} className="group relative aspect-square rounded-2xl overflow-hidden bg-secondary/10 border border-border/50">
-                        <Image src={file.url} alt={file.name} fill className="object-cover" />
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-2">
-                          <Button size="icon" variant="secondary" className="h-8 w-8 rounded-lg" onClick={() => copyToClipboard(file.url)}>
-                            {copiedUrl === file.url ? <Check size={14} /> : <Copy size={14} />}
+                      <div key={idx} className="group flex flex-col bg-secondary/5 rounded-2xl overflow-hidden border border-border/50">
+                        <div className="relative aspect-square">
+                          <Image src={file.url} alt={file.name} fill className="object-cover" />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                            <Button size="sm" variant="secondary" onClick={() => copyToClipboard(file.url)} className="rounded-lg gap-2">
+                              {copiedUrl === file.url ? <Check size={14} /> : <Copy size={14} />} Link
+                            </Button>
+                            <a href={file.url} target="_blank" className="bg-white/90 text-primary p-1.5 rounded-lg">
+                              <ExternalLink size={14} />
+                            </a>
+                          </div>
+                        </div>
+                        <div className="p-3 bg-white">
+                          <p className="text-[10px] text-muted-foreground truncate font-mono mb-2">{file.name}</p>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="w-full text-[10px] h-8 rounded-lg uppercase font-bold"
+                            onClick={() => copyToClipboard(file.url)}
+                          >
+                            Copiar URL Completo
                           </Button>
-                          <span className="text-[8px] text-white truncate w-full text-center px-1 font-mono">{file.name}</span>
                         </div>
                       </div>
                     ))}
                     {library.length === 0 && !loadingLibrary && (
                       <div className="col-span-full py-20 text-center opacity-40">
                         <ImageIcon size={48} className="mx-auto mb-4" />
-                        <p>Nenhuma imagem encontrada.</p>
+                        <p>Nenhuma imagem carregada no Storage.</p>
                       </div>
                     )}
                   </div>
