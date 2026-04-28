@@ -73,24 +73,26 @@ export default function Home() {
               priority 
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-[#0A0A0A]" />
+            {/* Overlay mais escuro para garantir legibilidade dos textos e botões brancos */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-[#0A0A0A]" />
           </div>
           <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8 px-6">
-            <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 text-white text-[10px] font-bold uppercase tracking-[0.5em] border border-white/10 backdrop-blur-md animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/10 text-white text-[10px] font-bold uppercase tracking-[0.5em] border border-white/20 backdrop-blur-md animate-in fade-in slide-in-from-bottom-4 duration-1000">
               <Star size={12} className="text-primary fill-primary" />
               Exclusividade & Arte em Maputo
             </div>
-            <h1 className="text-4xl md:text-7xl font-headline font-bold text-white leading-tight tracking-tight drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-1000 delay-200">
+            <h1 className="text-4xl md:text-7xl font-headline font-bold text-white leading-tight tracking-tight drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] animate-in fade-in zoom-in-95 duration-1000 delay-200">
               {home.heroTitle}
             </h1>
-            <p className="text-gray-200 text-base md:text-xl max-w-xl mx-auto italic font-light leading-relaxed drop-shadow-md animate-in fade-in slide-in-from-top-4 duration-1000 delay-500">
+            <p className="text-gray-100 text-base md:text-xl max-w-xl mx-auto italic font-light leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-top-4 duration-1000 delay-500">
               {home.heroSubtitle}
             </p>
             <div className="flex flex-wrap gap-4 justify-center pt-6 animate-in fade-in zoom-in-90 duration-1000 delay-700">
               <Button asChild className="rounded-full px-10 py-6 text-sm font-bold gold-shimmer shadow-2xl hover:scale-105 transition-all">
                 <Link href="/portfolio">Explorar Portfólio</Link>
               </Button>
-              <Button asChild variant="outline" className="rounded-full px-10 py-6 text-sm text-white border-white/30 hover:bg-white/10 backdrop-blur-sm transition-all">
+              {/* Botão Ver Cursos com fundo semi-transparente para ser visível mesmo em fotos claras */}
+              <Button asChild variant="outline" className="rounded-full px-10 py-6 text-sm text-white border-white/40 bg-white/5 hover:bg-white/20 backdrop-blur-md transition-all shadow-lg">
                 <Link href="/cursos">Ver Cursos</Link>
               </Button>
             </div>
@@ -109,7 +111,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-headline font-bold">Topos de Bolo</h3>
               <p className="text-sm text-muted-foreground">Peças em acrílico e madeira para eventos inesquecíveis.</p>
-              <Link href="/portfolio?category=Topos de Bolo" className="inline-flex items-center text-primary font-bold text-xs uppercase tracking-widest gap-2 pt-2">
+              <Link href="/portfolio?category=Topos de Bolo" className="inline-flex items-center text-primary font-bold text-xs uppercase tracking-widest gap-2 pt-2 group-hover:gap-4 transition-all">
                 Ver Galeria <ArrowRight size={14} />
               </Link>
             </div>
@@ -119,7 +121,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-headline font-bold">Camisetas</h3>
               <p className="text-sm text-muted-foreground">Estamparia premium com design exclusivo para si.</p>
-              <Link href="/portfolio?category=Camisetas" className="inline-flex items-center text-primary font-bold text-xs uppercase tracking-widest gap-2 pt-2">
+              <Link href="/portfolio?category=Camisetas" className="inline-flex items-center text-primary font-bold text-xs uppercase tracking-widest gap-2 pt-2 group-hover:gap-4 transition-all">
                 Ver Coleção <ArrowRight size={14} />
               </Link>
             </div>
@@ -129,7 +131,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-headline font-bold">Cursos</h3>
               <p className="text-sm text-muted-foreground">Aprenda as técnicas do atelier com quem faz.</p>
-              <Link href="/cursos" className="inline-flex items-center text-primary font-bold text-xs uppercase tracking-widest gap-2 pt-2">
+              <Link href="/cursos" className="inline-flex items-center text-primary font-bold text-xs uppercase tracking-widest gap-2 pt-2 group-hover:gap-4 transition-all">
                 Saber Mais <ArrowRight size={14} />
               </Link>
             </div>
@@ -154,7 +156,7 @@ export default function Home() {
                   <div className="flex items-center gap-3 text-sm font-medium"><CheckCircle size={18} className="text-primary" /> Entrega Rápida em Maputo</div>
                 </div>
                 <div className="pt-6">
-                  <Button asChild className="rounded-xl px-8 py-6 font-bold text-base group" variant="default">
+                  <Button asChild className="rounded-xl px-8 py-6 font-bold text-base group shadow-lg" variant="default">
                     <Link href="/portfolio?category=Topos de Bolo">
                       Ver Trabalhos <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
                     </Link>
@@ -173,8 +175,8 @@ export default function Home() {
                     ))}
                   </CarouselContent>
                   <div className="absolute -bottom-8 right-8 flex gap-2">
-                    <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-12 w-12 bg-white shadow-xl border-none" />
-                    <CarouselNext className="relative right-0 top-0 translate-y-0 h-12 w-12 bg-white shadow-xl border-none" />
+                    <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-12 w-12 bg-white shadow-xl border-none hover:bg-primary hover:text-white transition-all" />
+                    <CarouselNext className="relative right-0 top-0 translate-y-0 h-12 w-12 bg-white shadow-xl border-none hover:bg-primary hover:text-white transition-all" />
                   </div>
                 </Carousel>
               </div>
@@ -200,7 +202,7 @@ export default function Home() {
               </div>
             )}
             <div className="text-center pt-8">
-              <Button asChild variant="ghost" className="text-primary font-bold text-base hover:bg-primary/5 rounded-full px-12 h-14">
+              <Button asChild variant="outline" className="text-primary border-primary font-bold text-base hover:bg-primary hover:text-white rounded-full px-12 h-14 transition-all">
                 <Link href="/portfolio">Ver Portfólio Completo <ArrowRight size={18} className="ml-2" /></Link>
               </Button>
             </div>
@@ -220,25 +222,25 @@ export default function Home() {
             
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="item-1" className="border-b-primary/10">
-                <AccordionTrigger className="font-headline font-bold text-lg text-left">Qual é o prazo médio de entrega?</AccordionTrigger>
+                <AccordionTrigger className="font-headline font-bold text-lg text-left hover:text-primary transition-colors">Qual é o prazo médio de entrega?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed">
                   Para topos de bolo personalizados, o prazo médio é de 3 a 5 dias úteis após a aprovação do design. Camisetas exclusivas podem levar de 5 a 7 dias, dependendo da complexidade.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2" className="border-b-primary/10">
-                <AccordionTrigger className="font-headline font-bold text-lg text-left">Fazem entregas fora de Maputo?</AccordionTrigger>
+                <AccordionTrigger className="font-headline font-bold text-lg text-left hover:text-primary transition-colors">Fazem entregas fora de Maputo?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed">
                   Sim! Fazemos entregas em todo o território nacional via transportadoras parceiras. Os custos de envio variam consoante a província.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-3" className="border-b-primary/10">
-                <AccordionTrigger className="font-headline font-bold text-lg text-left">Quais as formas de pagamento aceites?</AccordionTrigger>
+                <AccordionTrigger className="font-headline font-bold text-lg text-left hover:text-primary transition-colors">Quais as formas de pagamento aceites?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed">
                   Aceitamos pagamentos via M-Pesa, E-Mola, transferência bancária (BCI, Standard Bank) e pagamentos em numerário no nosso atelier em Maputo.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-4" className="border-b-primary/10">
-                <AccordionTrigger className="font-headline font-bold text-lg text-left">Posso levar o meu próprio design para a camiseta?</AccordionTrigger>
+                <AccordionTrigger className="font-headline font-bold text-lg text-left hover:text-primary transition-colors">Posso levar o meu próprio design para a camiseta?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed">
                   Com certeza! Pode enviar-nos a sua ideia ou ficheiro e nós adaptamos para garantir que o resultado final na estamparia seja perfeito e duradouro.
                 </AccordionContent>
@@ -253,15 +255,15 @@ export default function Home() {
             <Image src={home.heroImage || OFFICIAL_IMAGE} alt="Pattern Napau" fill className="object-cover scale-110" />
           </div>
           <div className="max-w-3xl mx-auto space-y-10 relative z-10">
-            <h2 className="text-4xl md:text-6xl font-headline font-bold leading-tight tracking-tight drop-shadow-xl">A sua ideia merece tornar-se arte.</h2>
-            <p className="text-white/80 text-lg max-w-xl mx-auto font-light leading-relaxed">
+            <h2 className="text-4xl md:text-6xl font-headline font-bold leading-tight tracking-tight drop-shadow-[0_5px_15px_rgba(0,0,0,0.4)]">A sua ideia merece tornar-se arte.</h2>
+            <p className="text-white/90 text-lg max-w-xl mx-auto font-light leading-relaxed">
               Fale connosco hoje para um orçamento personalizado ou inscreva-se nos nossos cursos.
             </p>
             <div className="flex flex-wrap justify-center gap-4 pt-4">
-              <Button asChild className="bg-white text-primary hover:bg-white/90 rounded-full px-12 py-8 text-xl font-bold shadow-xl transition-all hover:scale-105">
+              <Button asChild className="bg-white text-primary hover:bg-white/90 rounded-full px-12 py-8 text-xl font-bold shadow-2xl transition-all hover:scale-105">
                 <a href="https://wa.me/258847615871" target="_blank">Contactar WhatsApp</a>
               </Button>
-              <Button asChild variant="outline" className="border-white text-white hover:bg-white/10 rounded-full px-10 py-8 text-lg font-bold">
+              <Button asChild variant="outline" className="border-white text-white hover:bg-white/20 bg-white/5 backdrop-blur-sm rounded-full px-10 py-8 text-lg font-bold shadow-lg">
                 <Link href="/cursos">Ver Cursos</Link>
               </Button>
             </div>
