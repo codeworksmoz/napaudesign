@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -13,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Trash2, Edit3, Settings, Loader2, MessageCircle, Plus, Image as ImageIcon, Copy, Check, RefreshCw, X, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Project, Flyer, HomeContent, DEFAULT_HOME_CONTENT, Category, Registration } from '@/lib/portfolio-data';
+import { Project, Flyer, HomeContent, DEFAULT_HOME_CONTENT, Category, Registration, OFFICIAL_IMAGE } from '@/lib/portfolio-data';
 import { supabase } from '@/lib/supabase';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 import { Logo } from '@/components/Logo';
@@ -60,14 +59,14 @@ export default function NapauAdminPage() {
       const { data: homeData } = await supabase.from('home_content').select('*').eq('id', 1).maybeSingle();
       if (homeData) {
         setHome({
-          hero_title: homeData.heroTitle || '',
-          hero_subtitle: homeData.heroSubtitle || '',
-          hero_image: homeData.heroImage || '',
-          service_bolo_desc: homeData.serviceBoloDesc || '',
-          service_bolo_images: homeData.serviceBoloImages || [],
-          service_camiseta_desc: homeData.serviceCamisetaDesc || '',
-          service_camiseta_images: homeData.serviceCamisetaImages || [],
-          service_formacao_desc: homeData.serviceFormacaoDesc || '',
+          heroTitle: homeData.heroTitle || '',
+          heroSubtitle: homeData.heroSubtitle || '',
+          heroImage: homeData.heroImage || '',
+          serviceBoloDesc: homeData.serviceBoloDesc || '',
+          serviceBoloImages: homeData.serviceBoloImages || [],
+          serviceCamisetaDesc: homeData.serviceCamisetaDesc || '',
+          serviceCamisetaImages: homeData.serviceCamisetaImages || [],
+          serviceFormacaoDesc: homeData.serviceFormacaoDesc || '',
         });
       }
 
@@ -121,6 +120,8 @@ export default function NapauAdminPage() {
       });
       if (error) {
         toast({ title: "Erro de Acesso", description: "Credenciais inválidas.", variant: "destructive" });
+      } else {
+        toast({ title: "Bem-vindo!", description: "Acesso autorizado à Codworks Console." });
       }
     } catch (err) {
       toast({ title: "Erro Inesperado", variant: "destructive" });
@@ -141,14 +142,14 @@ export default function NapauAdminPage() {
         .from('home_content')
         .upsert({
           id: 1,
-          heroTitle: home.hero_title || '',
-          heroSubtitle: home.hero_subtitle || '',
-          heroImage: home.hero_image || '',
-          serviceBoloDesc: home.service_bolo_desc || '',
-          serviceBoloImages: home.service_bolo_images || [],
-          serviceCamisetaDesc: home.service_camiseta_desc || '',
-          serviceCamisetaImages: home.service_camiseta_images || [],
-          serviceFormacaoDesc: home.service_formacao_desc || '',
+          heroTitle: home.heroTitle,
+          heroSubtitle: home.heroSubtitle,
+          heroImage: home.heroImage,
+          serviceBoloDesc: home.serviceBoloDesc,
+          serviceBoloImages: home.serviceBoloImages,
+          serviceCamisetaDesc: home.serviceCamisetaDesc,
+          serviceCamisetaImages: home.serviceCamisetaImages,
+          serviceFormacaoDesc: home.serviceFormacaoDesc,
         });
 
       if (error) throw error;
@@ -163,13 +164,13 @@ export default function NapauAdminPage() {
     const formData = new FormData(e.target as HTMLFormElement);
     
     const projectData = {
-      title: formData.get('title') as string,
-      category: formData.get('category') as Category,
-      description: formData.get('description') as string,
-      image_url: tempImageUrl || editingProject?.image_url || 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg',
-      year: formData.get('year') as string,
-      client_name: formData.get('client_name') as string,
-      materials: formData.get('materials') as string,
+      title: (formData.get('title') as string) || '',
+      category: (formData.get('category') as Category) || 'Topos de Bolo',
+      description: (formData.get('description') as string) || '',
+      imageurl: tempImageUrl || editingProject?.imageurl || OFFICIAL_IMAGE,
+      year: (formData.get('year') as string) || new Date().getFullYear().toString(),
+      client_name: (formData.get('client_name') as string) || '',
+      materials: (formData.get('materials') as string) || '',
       active: true
     };
 
@@ -209,27 +210,26 @@ export default function NapauAdminPage() {
     setTimeout(() => setCopiedUrl(null), 2000);
   };
 
-  // Funções para gerir as imagens dos carrosséis de forma visual
   const addImageToCarousel = (type: 'bolo' | 'camiseta', url: string) => {
     if (!url) return;
     if (type === 'bolo') {
-      const current = home.service_bolo_images || [];
-      setHome({ ...home, service_bolo_images: [...current, url] });
+      const current = home.serviceBoloImages || [];
+      setHome({ ...home, serviceBoloImages: [...current, url] });
     } else {
-      const current = home.service_camiseta_images || [];
-      setHome({ ...home, service_camiseta_images: [...current, url] });
+      const current = home.serviceCamisetaImages || [];
+      setHome({ ...home, serviceCamisetaImages: [...current, url] });
     }
   };
 
   const removeImageFromCarousel = (type: 'bolo' | 'camiseta', index: number) => {
     if (type === 'bolo') {
-      const current = [...(home.service_bolo_images || [])];
+      const current = [...(home.serviceBoloImages || [])];
       current.splice(index, 1);
-      setHome({ ...home, service_bolo_images: current });
+      setHome({ ...home, serviceBoloImages: current });
     } else {
-      const current = [...(home.service_camiseta_images || [])];
+      const current = [...(home.serviceCamisetaImages || [])];
       current.splice(index, 1);
-      setHome({ ...home, service_camiseta_images: current });
+      setHome({ ...home, serviceCamisetaImages: current });
     }
   };
 
@@ -243,8 +243,8 @@ export default function NapauAdminPage() {
             <div className="bg-white/20 p-4 rounded-3xl backdrop-blur-md">
               <Logo size={80} className="brightness-0 invert" />
             </div>
-            <h1 className="text-2xl font-headline font-bold">Gestão Napau</h1>
-            <p className="text-[10px] uppercase font-bold tracking-widest opacity-80">Painel Codworks</p>
+            <h1 className="text-2xl font-headline font-bold">Codworks Console</h1>
+            <p className="text-[10px] uppercase font-bold tracking-widest opacity-80">Gestão Napau</p>
           </div>
           <CardContent className="p-10 space-y-6">
             <form onSubmit={handleLogin} className="space-y-4">
@@ -316,36 +316,32 @@ export default function NapauAdminPage() {
                   <Button onClick={saveHome} className="gold-shimmer px-8 rounded-xl w-full md:w-auto">Guardar Alterações</Button>
                 </CardHeader>
                 <CardContent className="p-8 space-y-12">
-                  {/* Hero Section */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <label className="text-xs font-bold uppercase text-muted-foreground">Título de Impacto (Hero)</label>
                         <Input 
-                          value={home.hero_title || ''} 
-                          onChange={(e) => setHome({...home, hero_title: e.target.value})} 
+                          value={home.heroTitle || ''} 
+                          onChange={(e) => setHome({...home, heroTitle: e.target.value})} 
                           className="rounded-xl" 
-                          placeholder="Ex: A Arte de Personalizar Momentos"
                         />
                       </div>
                       <div className="space-y-2">
                         <label className="text-xs font-bold uppercase text-muted-foreground">Subtítulo Descritivo</label>
                         <Textarea 
-                          value={home.hero_subtitle || ''} 
-                          onChange={(e) => setHome({...home, hero_subtitle: e.target.value})} 
+                          value={home.heroSubtitle || ''} 
+                          onChange={(e) => setHome({...home, heroSubtitle: e.target.value})} 
                           className="rounded-xl resize-none h-32" 
-                          placeholder="Fale um pouco sobre o que a Napau faz..."
                         />
                       </div>
                     </div>
                     <ImageUpload 
                       label="Imagem de Fundo Principal" 
-                      valor={home.hero_image || ''} 
-                      onChange={(url) => setHome({...home, hero_image: url})} 
+                      valor={home.heroImage || ''} 
+                      onChange={(url) => setHome({...home, heroImage: url})} 
                     />
                   </div>
 
-                  {/* Topos de Bolo Visual Editor */}
                   <div className="border-t pt-8 space-y-6">
                     <div className="flex items-center gap-2 text-primary">
                       <Plus size={20}/>
@@ -355,45 +351,31 @@ export default function NapauAdminPage() {
                       <div className="space-y-4">
                         <label className="text-xs font-bold uppercase text-muted-foreground">Descrição do Serviço</label>
                         <Textarea 
-                          value={home.service_bolo_desc || ''} 
-                          onChange={(e) => setHome({...home, service_bolo_desc: e.target.value})} 
-                          placeholder="Explique este serviço para o cliente..." 
+                          value={home.serviceBoloDesc || ''} 
+                          onChange={(e) => setHome({...home, serviceBoloDesc: e.target.value})} 
                           className="rounded-xl h-40" 
                         />
                       </div>
                       <div className="space-y-4">
-                        <label className="text-xs font-bold uppercase text-muted-foreground">Galeria do Carrossel (Imagens)</label>
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Galeria do Carrossel</label>
                         <div className="grid grid-cols-3 gap-2">
-                          {home.service_bolo_images?.map((img, idx) => (
+                          {home.serviceBoloImages?.map((img, idx) => (
                             <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border">
                               <Image src={img} alt="Bolo" fill className="object-cover" />
-                              <button 
-                                onClick={() => removeImageFromCarousel('bolo', idx)}
-                                className="absolute top-1 right-1 bg-destructive text-white p-1 rounded-full shadow-lg"
-                              >
-                                <X size={10} />
-                              </button>
+                              <button onClick={() => removeImageFromCarousel('bolo', idx)} className="absolute top-1 right-1 bg-destructive text-white p-1 rounded-full shadow-lg"><X size={10} /></button>
                             </div>
                           ))}
                           <Dialog>
-                            <DialogTrigger asChild>
-                              <button className="aspect-square rounded-lg border-2 border-dashed flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all">
-                                <Plus size={20} />
-                              </button>
-                            </DialogTrigger>
+                            <DialogTrigger asChild><button className="aspect-square rounded-lg border-2 border-dashed flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary"><Plus size={20} /></button></DialogTrigger>
                             <DialogContent className="rounded-3xl">
-                              <DialogHeader>
-                                <DialogTitle>Adicionar Foto ao Carrossel</DialogTitle>
-                              </DialogHeader>
+                              <DialogHeader><DialogTitle>Adicionar Foto</DialogTitle></DialogHeader>
                               <div className="space-y-4 py-4">
-                                <p className="text-xs text-muted-foreground italic">Dica: Vá à aba "Biblioteca" para copiar o link das fotos que já carregou.</p>
-                                <Input id="new-img-bolo" placeholder="Cole aqui o URL da imagem do Supabase" className="rounded-xl" />
+                                <Input id="new-img-bolo" placeholder="Cole o URL aqui" className="rounded-xl" />
                                 <Button className="w-full rounded-xl" onClick={() => {
                                   const input = document.getElementById('new-img-bolo') as HTMLInputElement;
                                   addImageToCarousel('bolo', input.value);
                                   input.value = '';
-                                  toast({ title: "Adicionado à galeria!" });
-                                }}>Confirmar Link</Button>
+                                }}>Adicionar</Button>
                               </div>
                             </DialogContent>
                           </Dialog>
@@ -402,55 +384,40 @@ export default function NapauAdminPage() {
                     </div>
                   </div>
 
-                  {/* Camisetas Visual Editor */}
                   <div className="border-t pt-8 space-y-6">
                     <div className="flex items-center gap-2 text-primary">
                       <Plus size={20}/>
-                      <h4 className="font-bold uppercase text-sm tracking-widest">Serviço: Camisetas Personalizadas</h4>
+                      <h4 className="font-bold uppercase text-sm tracking-widest">Serviço: Camisetas</h4>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-4">
                         <label className="text-xs font-bold uppercase text-muted-foreground">Descrição do Serviço</label>
                         <Textarea 
-                          value={home.service_camiseta_desc || ''} 
-                          onChange={(e) => setHome({...home, service_camiseta_desc: e.target.value})} 
-                          placeholder="Explique este serviço para o cliente..." 
+                          value={home.serviceCamisetaDesc || ''} 
+                          onChange={(e) => setHome({...home, serviceCamisetaDesc: e.target.value})} 
                           className="rounded-xl h-40" 
                         />
                       </div>
                       <div className="space-y-4">
-                        <label className="text-xs font-bold uppercase text-muted-foreground">Galeria do Carrossel (Imagens)</label>
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Galeria do Carrossel</label>
                         <div className="grid grid-cols-3 gap-2">
-                          {home.service_camiseta_images?.map((img, idx) => (
+                          {home.serviceCamisetaImages?.map((img, idx) => (
                             <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border">
                               <Image src={img} alt="Camiseta" fill className="object-cover" />
-                              <button 
-                                onClick={() => removeImageFromCarousel('camiseta', idx)}
-                                className="absolute top-1 right-1 bg-destructive text-white p-1 rounded-full shadow-lg"
-                              >
-                                <X size={10} />
-                              </button>
+                              <button onClick={() => removeImageFromCarousel('camiseta', idx)} className="absolute top-1 right-1 bg-destructive text-white p-1 rounded-full shadow-lg"><X size={10} /></button>
                             </div>
                           ))}
                           <Dialog>
-                            <DialogTrigger asChild>
-                              <button className="aspect-square rounded-lg border-2 border-dashed flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all">
-                                <Plus size={20} />
-                              </button>
-                            </DialogTrigger>
+                            <DialogTrigger asChild><button className="aspect-square rounded-lg border-2 border-dashed flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary"><Plus size={20} /></button></DialogTrigger>
                             <DialogContent className="rounded-3xl">
-                              <DialogHeader>
-                                <DialogTitle>Adicionar Foto ao Carrossel</DialogTitle>
-                              </DialogHeader>
+                              <DialogHeader><DialogTitle>Adicionar Foto</DialogTitle></DialogHeader>
                               <div className="space-y-4 py-4">
-                                <p className="text-xs text-muted-foreground italic">Dica: Vá à aba "Biblioteca" para copiar o link das fotos que já carregou.</p>
-                                <Input id="new-img-camiseta" placeholder="Cole aqui o URL da imagem do Supabase" className="rounded-xl" />
+                                <Input id="new-img-camiseta" placeholder="Cole o URL aqui" className="rounded-xl" />
                                 <Button className="w-full rounded-xl" onClick={() => {
                                   const input = document.getElementById('new-img-camiseta') as HTMLInputElement;
                                   addImageToCarousel('camiseta', input.value);
                                   input.value = '';
-                                  toast({ title: "Adicionado à galeria!" });
-                                }}>Confirmar Link</Button>
+                                }}>Adicionar</Button>
                               </div>
                             </DialogContent>
                           </Dialog>
@@ -469,23 +436,23 @@ export default function NapauAdminPage() {
                     {editingProject ? <Edit3 size={14}/> : <Plus size={14}/>} {editingProject ? 'Editar Projeto' : 'Novo Projeto'}
                   </h3>
                   <form onSubmit={handleProjectSubmit} className="space-y-5">
-                    <Input name="title" defaultValue={editingProject?.title || ''} placeholder="Título do Trabalho" required className="rounded-xl" />
-                    <select name="category" defaultValue={editingProject?.category || 'Topos de Bolo'} className="w-full p-3 border rounded-xl bg-white text-sm">
+                    <Input name="title" value={editingProject?.title || ''} onChange={(e) => editingProject && setEditingProject({...editingProject, title: e.target.value})} placeholder="Título do Trabalho" required className="rounded-xl" />
+                    <select name="category" value={editingProject?.category || 'Topos de Bolo'} onChange={(e) => editingProject && setEditingProject({...editingProject, category: e.target.value as Category})} className="w-full p-3 border rounded-xl bg-white text-sm">
                       <option value="Topos de Bolo">Topos de Bolo</option>
                       <option value="Camisetas">Camisetas</option>
                     </select>
                     <ImageUpload 
                       label="Foto Principal" 
-                      valor={tempImageUrl || editingProject?.image_url || ''} 
+                      valor={tempImageUrl || editingProject?.imageurl || ''} 
                       onChange={(url) => {
                         setTempImageUrl(url);
-                        if (editingProject) setEditingProject({...editingProject, image_url: url});
+                        if (editingProject) setEditingProject({...editingProject, imageurl: url});
                       }} 
                     />
-                    <Input name="year" defaultValue={editingProject?.year || new Date().getFullYear().toString()} placeholder="Ano" className="rounded-xl" />
-                    <Input name="client_name" defaultValue={editingProject?.client_name || ''} placeholder="Cliente (Opcional)" className="rounded-xl" />
-                    <Input name="materials" defaultValue={editingProject?.materials || ''} placeholder="Materiais (Ex: Acrílico, Papel 200g)" className="rounded-xl" />
-                    <Textarea name="description" defaultValue={editingProject?.description || ''} placeholder="Descrição curta..." className="rounded-xl resize-none h-24" />
+                    <Input name="year" value={editingProject?.year || ''} onChange={(e) => editingProject && setEditingProject({...editingProject, year: e.target.value})} placeholder="Ano" className="rounded-xl" />
+                    <Input name="client_name" value={editingProject?.client_name || ''} onChange={(e) => editingProject && setEditingProject({...editingProject, client_name: e.target.value})} placeholder="Cliente (Opcional)" className="rounded-xl" />
+                    <Input name="materials" value={editingProject?.materials || ''} onChange={(e) => editingProject && setEditingProject({...editingProject, materials: e.target.value})} placeholder="Materiais" className="rounded-xl" />
+                    <Textarea name="description" value={editingProject?.description || ''} onChange={(e) => editingProject && setEditingProject({...editingProject, description: e.target.value})} placeholder="Descrição..." className="rounded-xl resize-none h-24" />
                     <Button type="submit" className="w-full rounded-xl gold-shimmer h-12 font-bold">
                       {editingProject ? 'Atualizar' : 'Publicar'}
                     </Button>
@@ -509,7 +476,7 @@ export default function NapauAdminPage() {
                             {p.category} | {p.year}
                           </TableCell>
                           <TableCell className="text-right">
-                            <Button variant="ghost" size="icon" onClick={() => { setEditingProject(p); setTempImageUrl(p.image_url); }} className="text-primary hover:bg-primary/10"><Edit3 size={16}/></Button>
+                            <Button variant="ghost" size="icon" onClick={() => { setEditingProject(p); setTempImageUrl(p.imageurl); }} className="text-primary hover:bg-primary/10"><Edit3 size={16}/></Button>
                             <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={() => deleteProject(p.id)}><Trash2 size={16}/></Button>
                           </TableCell>
                         </TableRow>
@@ -523,48 +490,24 @@ export default function NapauAdminPage() {
             <TabsContent value="library">
               <Card className="rounded-[2rem] border-none shadow-xl overflow-hidden bg-white">
                 <CardHeader className="flex flex-row justify-between items-center p-8 border-b">
-                  <div>
-                    <CardTitle className="text-xl">Biblioteca de Média</CardTitle>
-                    <p className="text-xs text-muted-foreground">Use estas imagens para os carrosséis da Home.</p>
-                  </div>
-                  <Button onClick={carregarBiblioteca} disabled={loadingLibrary} variant="outline" className="rounded-xl gap-2">
-                    <RefreshCw className={loadingLibrary ? "animate-spin" : ""} size={16} /> Atualizar
-                  </Button>
+                  <div><CardTitle className="text-xl">Biblioteca</CardTitle></div>
+                  <Button onClick={carregarBiblioteca} disabled={loadingLibrary} variant="outline" className="rounded-xl gap-2"><RefreshCw className={loadingLibrary ? "animate-spin" : ""} size={16} /> Atualizar</Button>
                 </CardHeader>
                 <CardContent className="p-8">
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {library.map((file, idx) => (
-                      <div key={idx} className="group flex flex-col bg-secondary/5 rounded-2xl overflow-hidden border border-border/50">
+                      <div key={idx} className="group flex flex-col bg-secondary/5 rounded-2xl overflow-hidden border">
                         <div className="relative aspect-square">
                           <Image src={file.url} alt={file.name} fill className="object-cover" />
                           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                            <Button size="sm" variant="secondary" onClick={() => copyToClipboard(file.url)} className="rounded-lg gap-2">
-                              {copiedUrl === file.url ? <Check size={14} /> : <Copy size={14} />} Link
-                            </Button>
-                            <a href={file.url} target="_blank" className="bg-white/90 text-primary p-1.5 rounded-lg">
-                              <ExternalLink size={14} />
-                            </a>
+                            <Button size="sm" variant="secondary" onClick={() => copyToClipboard(file.url)} className="rounded-lg gap-2">{copiedUrl === file.url ? <Check size={14} /> : <Copy size={14} />} Link</Button>
                           </div>
                         </div>
                         <div className="p-3 bg-white">
-                          <p className="text-[10px] text-muted-foreground truncate font-mono mb-2">{file.name}</p>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="w-full text-[10px] h-8 rounded-lg uppercase font-bold"
-                            onClick={() => copyToClipboard(file.url)}
-                          >
-                            Copiar URL Completo
-                          </Button>
+                          <Button variant="outline" size="sm" className="w-full text-[10px] h-8 rounded-lg uppercase font-bold" onClick={() => copyToClipboard(file.url)}>Copiar URL</Button>
                         </div>
                       </div>
                     ))}
-                    {library.length === 0 && !loadingLibrary && (
-                      <div className="col-span-full py-20 text-center opacity-40">
-                        <ImageIcon size={48} className="mx-auto mb-4" />
-                        <p>Nenhuma imagem carregada no Storage.</p>
-                      </div>
-                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -574,45 +517,30 @@ export default function NapauAdminPage() {
               <div className="space-y-4">
                 <Button onClick={async () => {
                   const newFlyer = {
-                    titulo: 'Novo Curso de Personalização',
+                    titulo: 'Novo Curso',
                     preco: '0 MT',
                     data: 'A anunciar',
                     local: 'Estúdio Napau',
                     contactos: '+258 84 761 5871',
-                    lista_esquerda: ['Técnica base'],
-                    lista_direita: ['Acabamento'],
-                    image_url: 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg',
+                    listaesquerda: ['Técnica base'],
+                    listadireita: ['Acabamento'],
+                    imageurl: OFFICIAL_IMAGE,
                     ativo: false
                   };
                   await supabase.from('flyers').insert(newFlyer);
                   carregarDados();
-                }} className="gold-shimmer rounded-xl h-12 px-8 font-bold">Novo Flyer de Curso</Button>
+                }} className="gold-shimmer rounded-xl h-12 px-8 font-bold">Novo Flyer</Button>
                 <div className="grid grid-cols-1 gap-4">
                   {flyers.map(f => (
                     <Card key={f.id} className="rounded-[2rem] p-6 border-none shadow-lg flex flex-col md:flex-row justify-between items-center gap-6 bg-white">
                       <div className="flex-1 space-y-4 w-full">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <Input 
-                            value={f.titulo || ''} 
-                            className="font-bold text-primary rounded-xl" 
-                            onChange={(e) => setFlyers(flyers.map(item => item.id === f.id ? {...item, titulo: e.target.value} : item))} 
-                          />
-                          <Input 
-                            value={f.preco || ''} 
-                            className="rounded-xl" 
-                            placeholder="Preço" 
-                            onChange={(e) => setFlyers(flyers.map(item => item.id === f.id ? {...item, preco: e.target.value} : item))} 
-                          />
-                        </div>
-                        <ImageUpload 
-                          valor={f.image_url || ''} 
-                          onChange={(url) => setFlyers(flyers.map(item => item.id === f.id ? {...item, image_url: url} : item))} 
-                        />
+                        <Input value={f.titulo || ''} className="font-bold text-primary rounded-xl" onChange={(e) => setFlyers(flyers.map(item => item.id === f.id ? {...item, titulo: e.target.value} : item))} />
+                        <ImageUpload valor={f.imageurl || ''} onChange={(url) => setFlyers(flyers.map(item => item.id === f.id ? {...item, imageurl: url} : item))} />
                       </div>
                       <div className="flex flex-col gap-2 w-full md:w-auto">
-                        <Button onClick={async () => { await supabase.from('flyers').upsert(f); toast({title: "Guardado!"}); carregarDados(); }} className="rounded-xl gold-shimmer">Gravar</Button>
+                        <Button onClick={async () => { await supabase.from('flyers').upsert(f); carregarDados(); }} className="rounded-xl gold-shimmer">Gravar</Button>
                         <Button variant="outline" className="rounded-xl" onClick={() => setFlyers(flyers.map(item => item.id === f.id ? {...item, ativo: !f.ativo} : item))}>{f.ativo ? 'Ocultar' : 'Ativar'}</Button>
-                        <Button variant="ghost" className="text-destructive rounded-xl hover:bg-destructive/10" onClick={async () => { if(confirm('Apagar?')) { await supabase.from('flyers').delete().eq('id', f.id); carregarDados(); } }}>Apagar</Button>
+                        <Button variant="ghost" className="text-destructive rounded-xl" onClick={async () => { if(confirm('Apagar?')) { await supabase.from('flyers').delete().eq('id', f.id); carregarDados(); } }}>Apagar</Button>
                       </div>
                     </Card>
                   ))}
@@ -625,23 +553,18 @@ export default function NapauAdminPage() {
                 <Table>
                   <TableHeader className="bg-secondary/5">
                     <TableRow>
-                      <TableHead>ID / Aluno</TableHead>
+                      <TableHead>Aluno</TableHead>
                       <TableHead>Curso</TableHead>
-                      <TableHead>Data</TableHead>
                       <TableHead>Estado</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {registrations.map(r => (
                       <TableRow key={r.id}>
+                        <TableCell><span className="font-bold">{r.studentname}</span></TableCell>
+                        <TableCell className="text-sm">{r.coursetitle}</TableCell>
                         <TableCell>
-                          <span className="text-[10px] font-mono font-bold text-primary">{r.id}</span>
-                          <br/><span className="font-bold">{r.student_name}</span>
-                        </TableCell>
-                        <TableCell className="text-sm">{r.course_title}</TableCell>
-                        <TableCell className="text-xs">{new Date(r.registration_date).toLocaleDateString('pt-MZ')}</TableCell>
-                        <TableCell>
-                          <select value={r.status} className="bg-transparent border-none text-xs font-bold text-primary cursor-pointer" onChange={async (e) => { await supabase.from('registrations').update({ status: e.target.value }).eq('id', r.id); carregarDados(); }}>
+                          <select value={r.status} className="bg-transparent border-none text-xs font-bold text-primary" onChange={async (e) => { await supabase.from('registrations').update({ status: e.target.value }).eq('id', r.id); carregarDados(); }}>
                             <option value="Pendente">🟡 Pendente</option>
                             <option value="Confirmada">🟢 Confirmada</option>
                             <option value="Cancelada">🔴 Cancelada</option>

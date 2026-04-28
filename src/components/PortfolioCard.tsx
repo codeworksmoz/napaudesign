@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Project } from '@/lib/portfolio-data';
+import { Project, OFFICIAL_IMAGE } from '@/lib/portfolio-data';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpRight, Calendar, User, Hammer } from 'lucide-react';
 
@@ -14,16 +14,12 @@ export const PortfolioCard: React.FC<PortfolioCardProps> = ({ project }) => {
   return (
     <div className="group relative bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-700 border border-border/30">
       <div className="aspect-[4/3] relative overflow-hidden">
-        {project.image_url ? (
-          <Image
-            src={project.image_url}
-            alt={project.title}
-            fill
-            className="object-cover transition-transform duration-700 group-hover:scale-110"
-          />
-        ) : (
-          <div className="w-full h-full bg-secondary/20 flex items-center justify-center text-muted-foreground">Sem imagem</div>
-        )}
+        <Image
+          src={project.imageurl || OFFICIAL_IMAGE}
+          alt={project.title}
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
+        />
         <div className="absolute inset-0 bg-primary/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
           <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-primary transform translate-y-6 group-hover:translate-y-0 transition-all duration-500 shadow-2xl">
             <ArrowUpRight size={28} />
@@ -65,9 +61,7 @@ export const PortfolioCard: React.FC<PortfolioCardProps> = ({ project }) => {
 
         {project.client_name && (
           <div className="flex items-center gap-2 pt-2">
-            <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
-              <User size={12} className="text-primary" />
-            </div>
+            <User size={12} className="text-primary" />
             <span className="text-[10px] font-medium text-muted-foreground">Cliente: {project.client_name}</span>
           </div>
         )}
