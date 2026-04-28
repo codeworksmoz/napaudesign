@@ -94,7 +94,7 @@ export default function NapauAdminPage() {
       if (error) {
         toast({
           title: "Erro de Acesso",
-          description: "Credenciais inválidas ou problema de conexão.",
+          description: "Credenciais inválidas ou problema de ligação ao Supabase.",
           variant: "destructive",
         });
       } else if (data.session) {

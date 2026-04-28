@@ -23,8 +23,15 @@ export default function Home() {
   async function carregarDados() {
     setCarregando(true);
     try {
-      const { data: homeData } = await supabase.from('home_content').select('*').eq('id', 1).single();
-      if (homeData) setHome(homeData);
+      const { data: homeData } = await supabase.from('home_content').select('*').eq('id', 1).maybeSingle();
+      if (homeData) setHome({
+        hero_title: homeData.hero_title || DEFAULT_HOME_CONTENT.hero_title,
+        hero_subtitle: homeData.hero_subtitle || DEFAULT_HOME_CONTENT.hero_subtitle,
+        hero_image: homeData.hero_image || DEFAULT_HOME_CONTENT.hero_image,
+        service_bolo_desc: homeData.service_bolo_desc || DEFAULT_HOME_CONTENT.service_bolo_desc,
+        service_camiseta_desc: homeData.service_camiseta_desc || DEFAULT_HOME_CONTENT.service_camiseta_desc,
+        service_formacao_desc: homeData.service_formacao_desc || DEFAULT_HOME_CONTENT.service_formacao_desc,
+      });
 
       const { data: projectsData } = await supabase
         .from('projects')
@@ -58,7 +65,7 @@ export default function Home() {
       <Navbar />
       
       <main className="flex-grow">
-        <section className="relative min-h-[70vh] flex flex-col items-center justify-center pt-16 pb-12 overflow-hidden bg-secondary/5">
+        <section className="relative min-h-[70vh] flex flex-col items-center justify-center pt-8 pb-12 overflow-hidden bg-secondary/5">
           <div className="absolute inset-0 z-0">
             {home.hero_image ? (
               <Image 
@@ -123,7 +130,7 @@ export default function Home() {
                 projects.map(p => <PortfolioCard key={p.id} project={p} />)
               ) : (
                 <div className="col-span-full py-20 text-center opacity-50 italic">
-                  A carregar portfólio...
+                  A preparar portfólio...
                 </div>
               )}
             </div>
