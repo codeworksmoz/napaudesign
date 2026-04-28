@@ -1,34 +1,10 @@
 {
   "placeholderImages": [
     {
-      "id": "cake-topper-1",
-      "description": "Topo de bolo personalizado dourado para aniversário",
-      "imageUrl": "https://picsum.photos/seed/topper1/800/600",
-      "imageHint": "cake topper"
-    },
-    {
-      "id": "tshirt-1",
-      "description": "Camiseta personalizada com estampa criativa",
-      "imageUrl": "https://picsum.photos/seed/tshirt1/800/600",
-      "imageHint": "personalized tshirt"
-    },
-    {
-      "id": "cake-topper-2",
-      "description": "Topo de bolo de casamento elegante em acrílico",
-      "imageUrl": "https://picsum.photos/seed/topper2/800/600",
-      "imageHint": "wedding topper"
-    },
-    {
-      "id": "tshirt-2",
-      "description": "Camiseta com design minimalista para revendedores",
-      "imageUrl": "https://picsum.photos/seed/tshirt2/800/600",
-      "imageHint": "graphic tee"
-    },
-    {
-      "id": "studio-main",
-      "description": "Espaço criativo da Napau Design & Arte",
-      "imageUrl": "https://picsum.photos/seed/napau/1200/800",
-      "imageHint": "creative studio"
+      "id": "napau-official",
+      "description": "Imagem oficial Napau Design & Arte",
+      "imageUrl": "https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg",
+      "imageHint": "branding image"
     }
   ]
 }

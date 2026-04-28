@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { PortfolioCard } from '@/components/PortfolioCard';
-import { Logo } from '@/components/Logo';
 import { Project, HomeContent, DEFAULT_HOME_CONTENT } from '@/lib/portfolio-data';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -59,17 +58,22 @@ export default function Home() {
       <Navbar />
       
       <main className="flex-grow">
-        {/* HERO SECTION - Espaçamento ajustado para não haver branco no topo */}
-        <section className="relative min-h-[60vh] flex flex-col items-center justify-center pt-20 pb-12 overflow-hidden bg-secondary/5">
+        <section className="relative min-h-[70vh] flex flex-col items-center justify-center pt-16 pb-12 overflow-hidden bg-secondary/5">
           <div className="absolute inset-0 z-0">
             {home.hero_image ? (
-              <Image src={home.hero_image} alt="Napau" fill className="object-cover opacity-10" priority />
+              <Image 
+                src={home.hero_image} 
+                alt="Napau Design" 
+                fill 
+                className="object-cover opacity-20" 
+                priority 
+              />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-primary/5 to-secondary/10" />
             )}
           </div>
           
-          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6 px-6 mt-4">
+          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6 px-6">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.2em] border border-primary/20 backdrop-blur-sm">
               <Sparkles size={14} className="animate-pulse" />
               Criatividade em Moçambique por Codworks
@@ -87,7 +91,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* SERVICES SECTION - Foco apenas em Topos e Camisetas */}
         <section className="py-20 px-6 bg-white">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="p-10 rounded-[2.5rem] bg-secondary/5 border border-border/40 hover:bg-white transition-all shadow-sm group">
@@ -128,8 +131,13 @@ export default function Home() {
         </section>
 
         <section className="py-24 px-6 bg-primary text-white text-center relative overflow-hidden">
-          <div className="absolute inset-0 opacity-5">
-            {home.hero_image && <Image src={home.hero_image} alt="Pattern" fill className="object-cover" />}
+          <div className="absolute inset-0 opacity-10">
+            <Image 
+              src="https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg" 
+              alt="Pattern" 
+              fill 
+              className="object-cover" 
+            />
           </div>
           <div className="max-w-3xl mx-auto space-y-8 relative z-10">
             <h2 className="text-4xl md:text-6xl font-headline font-bold">Vamos criar algo único?</h2>

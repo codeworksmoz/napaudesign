@@ -56,7 +56,7 @@ export interface Registration {
 export const DEFAULT_HOME_CONTENT: HomeContent = {
   hero_title: 'A Arte de Personalizar Momentos',
   hero_subtitle: 'Especialistas em topos de bolo criativos e camisetas exclusivas. Criamos o detalhe que torna a sua celebração única.',
-  hero_image: 'https://picsum.photos/seed/napau-hero/1200/800',
+  hero_image: 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg',
   service_bolo_desc: 'Topos de bolo personalizados em acrílico, madeira ou papel premium. O detalhe que faltava no seu evento.',
   service_camiseta_desc: 'Estamparia premium para marcas, eventos e uso pessoal com acabamento superior e duradouro.',
   service_formacao_desc: 'Cursos profissionais para quem deseja dominar as técnicas de design e personalização de artigos de festa.'

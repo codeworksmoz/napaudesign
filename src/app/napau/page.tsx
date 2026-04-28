@@ -6,11 +6,11 @@ import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Trash2, Save, GraduationCap, Image as ImageIcon, Home, Users, Printer, Edit3, Settings, Loader2, LogIn, LogOut, Lock, MessageCircle, Mail, HelpCircle } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Trash2, Edit3, Settings, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Project, Flyer, HomeContent, DEFAULT_HOME_CONTENT, Category, Registration } from '@/lib/portfolio-data';
 import { supabase } from '@/lib/supabase';
@@ -85,7 +85,7 @@ export default function NapauAdminPage() {
       if (error) {
         toast({
           title: "Erro de Acesso",
-          description: "Credenciais inválidas ou e-mail não confirmado.",
+          description: "Credenciais inválidas. Verifique os seus dados.",
           variant: "destructive",
         });
       } else if (data.session) {
@@ -124,7 +124,6 @@ export default function NapauAdminPage() {
           service_bolo_desc: home.service_bolo_desc,
           service_camiseta_desc: home.service_camiseta_desc,
           service_formacao_desc: home.service_formacao_desc,
-          updated_at: new Date().toISOString(),
         });
 
       if (error) throw error;
@@ -177,10 +176,7 @@ export default function NapauAdminPage() {
 
   const saveFlyer = async (flyer: Flyer) => {
     try {
-      const { error } = await supabase.from('flyers').upsert({
-        ...flyer,
-        updated_at: new Date().toISOString()
-      });
+      const { error } = await supabase.from('flyers').upsert(flyer);
       if (error) throw error;
       toast({ title: "Curso guardado!" });
       carregarDados();
@@ -198,7 +194,7 @@ export default function NapauAdminPage() {
       contactos: '+258 84 761 5871',
       lista_esquerda: ['Técnica 1'],
       lista_direita: ['Técnica 2'],
-      image_url: '',
+      image_url: 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg',
       ativo: false
     };
     try {
@@ -276,7 +272,7 @@ export default function NapauAdminPage() {
             <TabsContent value="home">
               <Card className="rounded-[2rem] border-none shadow-xl overflow-hidden">
                 <CardHeader className="flex flex-row justify-between items-center bg-secondary/5 p-8 border-b">
-                  <CardTitle>Conteúdo do Site</CardTitle>
+                  <h3 className="text-xl font-bold">Conteúdo do Site</h3>
                   <Button onClick={saveHome} className="gold-shimmer px-8">Guardar Alterações</Button>
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
@@ -297,7 +293,7 @@ export default function NapauAdminPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase text-muted-foreground">Descrição: Topos de Bolo</label>
-                      <Textarea value={home.service_bolo_desc} onChange={(e) => setHome({...home, service_bolo_desc: e.target.value})} placeholder="Descrição Topos de Bolo" />
+                      <Textarea value={home.service_bolo_desc} onChange={(e) => setHome({...home, service_bolo_desc: e.target.value})} placeholder="Descrição Topos" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase text-muted-foreground">Descrição: Camisetas</label>
@@ -317,7 +313,7 @@ export default function NapauAdminPage() {
                       <option value="Topos de Bolo">Topos de Bolo</option>
                       <option value="Camisetas">Camisetas</option>
                     </select>
-                    <ImageUpload valor={editingProject?.image_url || ''} onChange={(url) => setEditingProject(prev => prev ? {...prev, image_url: url} : null)} />
+                    <ImageUpload valor={editingProject?.image_url || 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg'} onChange={(url) => setEditingProject(prev => prev ? {...prev, image_url: url} : null)} />
                     <Input name="year" defaultValue={editingProject?.year} placeholder="Ano" />
                     <Textarea name="description" defaultValue={editingProject?.description} placeholder="Descrição" />
                     <Button type="submit" className="w-full rounded-xl">Publicar</Button>
@@ -380,9 +376,8 @@ export default function NapauAdminPage() {
                 <Table>
                   <TableHeader className="bg-secondary/5">
                     <TableRow>
-                      <TableHead>ID/Aluno</TableHead>
+                      <TableHead>Aluno</TableHead>
                       <TableHead>Curso</TableHead>
-                      <TableHead>Documento</TableHead>
                       <TableHead>Estado</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -390,12 +385,10 @@ export default function NapauAdminPage() {
                     {registrations.map(r => (
                       <TableRow key={r.id}>
                         <TableCell>
-                          <span className="text-primary font-bold">{r.id}</span>
-                          <br/>{r.student_name}
+                          <span className="text-primary font-bold">{r.student_name}</span>
                           <br/><span className="text-[10px] text-muted-foreground">{r.student_phone}</span>
                         </TableCell>
                         <TableCell>{r.course_title}</TableCell>
-                        <TableCell className="text-xs">{r.doc_type}: {r.doc_number}</TableCell>
                         <TableCell>
                           <select 
                             value={r.status} 
