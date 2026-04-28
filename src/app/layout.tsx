@@ -1,5 +1,7 @@
+
 import type {Metadata} from 'next';
 import './globals.css';
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: 'Napau Design & Arte | Topos de Bolo e Camisetas',
@@ -23,6 +25,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased selection:bg-primary/20 selection:text-primary overflow-x-hidden">
         {children}
+        <Toaster />
       </body>
     </html>
   );

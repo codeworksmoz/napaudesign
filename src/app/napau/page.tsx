@@ -77,26 +77,40 @@ export default function NapauAdminPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoggingIn(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: loginEmail,
-      password: loginPassword,
-    });
+    
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: loginEmail,
+        password: loginPassword,
+      });
 
-    if (error) {
+      if (error) {
+        toast({
+          title: "Erro de Acesso",
+          description: "Credenciais inválidas ou e-mail não confirmado. Verifique os seus dados.",
+          variant: "destructive",
+        });
+      } else if (data.session) {
+        toast({ 
+          title: "Acesso Autorizado", 
+          description: `Bem-vindo de volta ao painel administrativo.`,
+        });
+      }
+    } catch (err: any) {
       toast({
-        title: "Erro de Acesso",
-        description: "Credenciais inválidas. Verifique os seus dados.",
+        title: "Erro Inesperado",
+        description: "Ocorreu um problema ao ligar ao servidor. Tente novamente mais tarde.",
         variant: "destructive",
       });
-    } else {
-      toast({ title: "Bem-vindo!", description: "Acesso autorizado com sucesso." });
+    } finally {
+      setLoggingIn(false);
     }
-    setLoggingIn(false);
   };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setSession(null);
+    toast({ title: "Sessão Terminada", description: "Saiu do painel com segurança." });
   };
 
   const handleSupportEmail = (e: React.FormEvent) => {
@@ -205,6 +219,18 @@ export default function NapauAdminPage() {
       console.error(e);
     }
   };
+
+  async function deleteRegistration(id: string) {
+    if (!confirm('Remover esta inscrição?')) return;
+    try {
+      const { error } = await supabase.from('registrations').delete().eq('id', id);
+      if (error) throw error;
+      carregarDados();
+      toast({ title: "Inscrição removida." });
+    } catch (e: any) {
+      console.error(e);
+    }
+  }
 
   if (loadingAuth) {
     return (
@@ -384,7 +410,7 @@ export default function NapauAdminPage() {
                     <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary px-1">Subtítulo Estratégico</label>
                     <Textarea value={home.heroSubtitle} onChange={(e) => setHome({...home, heroSubtitle: e.target.value})} className="rounded-2xl h-28 resize-none border-secondary/40 italic text-lg" />
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-6 border-t border-secondary/20">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-secondary/20">
                     <div className="space-y-4">
                       <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary px-1">Serviço: Topos de Bolo</label>
                       <Textarea value={home.serviceBoloDesc} onChange={(e) => setHome({...home, serviceBoloDesc: e.target.value})} className="rounded-2xl h-32 resize-none border-secondary/40 text-sm leading-relaxed" />
@@ -392,10 +418,6 @@ export default function NapauAdminPage() {
                     <div className="space-y-4">
                       <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary px-1">Serviço: Camisetas</label>
                       <Textarea value={home.serviceCamisetaDesc} onChange={(e) => setHome({...home, serviceCamisetaDesc: e.target.value})} className="rounded-2xl h-32 resize-none border-secondary/40 text-sm leading-relaxed" />
-                    </div>
-                    <div className="space-y-4">
-                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary px-1">Serviço: Formação</label>
-                      <Textarea value={home.serviceFormacaoDesc} onChange={(e) => setHome({...home, serviceFormacaoDesc: e.target.value})} className="rounded-2xl h-32 resize-none border-secondary/40 text-sm leading-relaxed" />
                     </div>
                   </div>
                 </CardContent>
@@ -610,15 +632,4 @@ export default function NapauAdminPage() {
       <Footer />
     </div>
   );
-
-  async function deleteRegistration(id: string) {
-    if (!confirm('Remover esta inscrição?')) return;
-    try {
-      const { error } = await supabase.from('registrations').delete().eq('id', id);
-      if (error) throw error;
-      carregarDados();
-    } catch (e: any) {
-      console.error(e);
-    }
-  }
 }
