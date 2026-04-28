@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -60,7 +59,8 @@ export default function Home() {
       <Navbar />
       
       <main className="flex-grow">
-        <section className="relative min-h-[60vh] flex flex-col items-center justify-center pt-24 pb-12 overflow-hidden bg-secondary/5">
+        {/* HERO SECTION - Espaçamento ajustado para não haver branco no topo */}
+        <section className="relative min-h-[60vh] flex flex-col items-center justify-center pt-20 pb-12 overflow-hidden bg-secondary/5">
           <div className="absolute inset-0 z-0">
             {home.hero_image ? (
               <Image src={home.hero_image} alt="Napau" fill className="object-cover opacity-10" priority />
@@ -69,7 +69,7 @@ export default function Home() {
             )}
           </div>
           
-          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6 px-6">
+          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6 px-6 mt-4">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.2em] border border-primary/20 backdrop-blur-sm">
               <Sparkles size={14} className="animate-pulse" />
               Criatividade em Moçambique por Codworks
@@ -87,15 +87,20 @@ export default function Home() {
           </div>
         </section>
 
+        {/* SERVICES SECTION - Foco apenas em Topos e Camisetas */}
         <section className="py-20 px-6 bg-white">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="p-10 rounded-[2.5rem] bg-secondary/5 border border-border/40 hover:bg-white transition-all shadow-sm group">
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform"><Cake size={32} /></div>
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+                <Cake size={32} />
+              </div>
               <h3 className="text-2xl font-headline font-bold mb-4">Topos de Bolo</h3>
               <p className="text-muted-foreground leading-relaxed">{home.service_bolo_desc}</p>
             </div>
             <div className="p-10 rounded-[2.5rem] bg-secondary/5 border border-border/40 hover:bg-white transition-all shadow-sm group">
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform"><Shirt size={32} /></div>
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+                <Shirt size={32} />
+              </div>
               <h3 className="text-2xl font-headline font-bold mb-4">Camisetas Personalizadas</h3>
               <p className="text-muted-foreground leading-relaxed">{home.service_camiseta_desc}</p>
             </div>
@@ -106,19 +111,31 @@ export default function Home() {
           <div className="max-w-7xl mx-auto space-y-12">
             <div className="flex justify-between items-end">
               <h2 className="text-3xl md:text-5xl font-headline font-bold">Portfólio Recente</h2>
-              <Button asChild variant="link" className="text-primary font-bold flex gap-2"><Link href="/portfolio">Ver Tudo <ArrowRight size={18} /></Link></Button>
+              <Button asChild variant="link" className="text-primary font-bold flex gap-2">
+                <Link href="/portfolio">Ver Tudo <ArrowRight size={18} /></Link>
+              </Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projects.map(p => <PortfolioCard key={p.id} project={p} />)}
+              {projects.length > 0 ? (
+                projects.map(p => <PortfolioCard key={p.id} project={p} />)
+              ) : (
+                <div className="col-span-full py-20 text-center opacity-50 italic">
+                  A carregar portfólio...
+                </div>
+              )}
             </div>
           </div>
         </section>
 
         <section className="py-24 px-6 bg-primary text-white text-center relative overflow-hidden">
-          <div className="absolute inset-0 opacity-5">{home.hero_image && <Image src={home.hero_image} alt="Pattern" fill className="object-cover" />}</div>
+          <div className="absolute inset-0 opacity-5">
+            {home.hero_image && <Image src={home.hero_image} alt="Pattern" fill className="object-cover" />}
+          </div>
           <div className="max-w-3xl mx-auto space-y-8 relative z-10">
             <h2 className="text-4xl md:text-6xl font-headline font-bold">Vamos criar algo único?</h2>
-            <p className="text-primary-foreground/90 text-xl font-light">Peça o seu orçamento via WhatsApp para a Codworks assegurar o seu design.</p>
+            <p className="text-primary-foreground/90 text-xl font-light">
+              Peça o seu orçamento via WhatsApp para a Codworks assegurar o seu design.
+            </p>
             <Button asChild className="bg-white text-primary hover:bg-white/90 rounded-full px-12 py-8 text-xl font-bold shadow-2xl transition-all hover:scale-105">
               <a href="https://wa.me/258847615871" target="_blank">Falar com a Napau</a>
             </Button>

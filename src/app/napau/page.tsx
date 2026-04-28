@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -282,13 +281,28 @@ export default function NapauAdminPage() {
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Input value={home.hero_title} onChange={(e) => setHome({...home, hero_title: e.target.value})} placeholder="Título Hero" />
-                    <ImageUpload valor={home.hero_image} onChange={(url) => setHome({...home, hero_image: url})} />
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">Título Principal</label>
+                      <Input value={home.hero_title} onChange={(e) => setHome({...home, hero_title: e.target.value})} placeholder="Título Hero" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">Imagem de Fundo</label>
+                      <ImageUpload valor={home.hero_image} onChange={(url) => setHome({...home, hero_image: url})} />
+                    </div>
                   </div>
-                  <Textarea value={home.hero_subtitle} onChange={(e) => setHome({...home, hero_subtitle: e.target.value})} placeholder="Subtítulo Hero" />
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase text-muted-foreground">Subtítulo / Descrição</label>
+                    <Textarea value={home.hero_subtitle} onChange={(e) => setHome({...home, hero_subtitle: e.target.value})} placeholder="Subtítulo Hero" />
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Textarea value={home.service_bolo_desc} onChange={(e) => setHome({...home, service_bolo_desc: e.target.value})} placeholder="Descrição Topos de Bolo" />
-                    <Textarea value={home.service_camiseta_desc} onChange={(e) => setHome({...home, service_camiseta_desc: e.target.value})} placeholder="Descrição Camisetas" />
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">Descrição: Topos de Bolo</label>
+                      <Textarea value={home.service_bolo_desc} onChange={(e) => setHome({...home, service_bolo_desc: e.target.value})} placeholder="Descrição Topos de Bolo" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">Descrição: Camisetas</label>
+                      <Textarea value={home.service_camiseta_desc} onChange={(e) => setHome({...home, service_camiseta_desc: e.target.value})} placeholder="Descrição Camisetas" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -307,11 +321,18 @@ export default function NapauAdminPage() {
                     <Input name="year" defaultValue={editingProject?.year} placeholder="Ano" />
                     <Textarea name="description" defaultValue={editingProject?.description} placeholder="Descrição" />
                     <Button type="submit" className="w-full rounded-xl">Publicar</Button>
+                    {editingProject && <Button type="button" variant="ghost" onClick={() => setEditingProject(null)} className="w-full">Cancelar Edição</Button>}
                   </form>
                 </Card>
                 <Card className="lg:col-span-8 rounded-[2rem] border-none shadow-lg overflow-hidden">
                   <Table>
-                    <TableHeader className="bg-secondary/5"><TableRow><TableHead>Trabalho</TableHead><TableHead>Categoria</TableHead><TableHead className="text-right">Acções</TableHead></TableRow></TableHeader>
+                    <TableHeader className="bg-secondary/5">
+                      <TableRow>
+                        <TableHead>Trabalho</TableHead>
+                        <TableHead>Categoria</TableHead>
+                        <TableHead className="text-right">Acções</TableHead>
+                      </TableRow>
+                    </TableHeader>
                     <TableBody>
                       {projects.map(p => (
                         <TableRow key={p.id}>
@@ -331,13 +352,23 @@ export default function NapauAdminPage() {
 
             <TabsContent value="flyers">
               <div className="space-y-4">
-                <Button onClick={addFlyer} className="gold-shimmer">Novo Flyer</Button>
+                <Button onClick={addFlyer} className="gold-shimmer">Novo Flyer de Curso</Button>
                 {flyers.map(f => (
-                  <Card key={f.id} className="rounded-[2rem] p-6 border-none shadow-lg flex justify-between items-center">
-                    <Input value={f.titulo} className="max-w-xs border-none font-bold" onChange={(e) => setFlyers(flyers.map(item => item.id === f.id ? {...item, titulo: e.target.value} : item))} />
+                  <Card key={f.id} className="rounded-[2rem] p-6 border-none shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div className="flex-1 space-y-2">
+                      <Input 
+                        value={f.titulo} 
+                        className="font-bold border-none text-lg" 
+                        onChange={(e) => setFlyers(flyers.map(item => item.id === f.id ? {...item, titulo: e.target.value} : item))} 
+                      />
+                      <p className="text-xs text-muted-foreground px-3">Estado: {f.ativo ? '✅ Ativo' : '❌ Inativo'}</p>
+                    </div>
                     <div className="flex gap-2">
                       <Button onClick={() => saveFlyer(f)}>Gravar</Button>
-                      <Button variant="outline" className="text-destructive" onClick={() => { if(confirm('Apagar?')) supabase.from('flyers').delete().eq('id', f.id).then(() => carregarDados()) }}>Apagar</Button>
+                      <Button variant="outline" onClick={() => setFlyers(flyers.map(item => item.id === f.id ? {...item, ativo: !f.ativo} : item))}>
+                        {f.ativo ? 'Desativar' : 'Ativar'}
+                      </Button>
+                      <Button variant="outline" className="text-destructive" onClick={() => { if(confirm('Apagar curso?')) supabase.from('flyers').delete().eq('id', f.id).then(() => carregarDados()) }}>Apagar</Button>
                     </div>
                   </Card>
                 ))}
@@ -347,13 +378,37 @@ export default function NapauAdminPage() {
             <TabsContent value="registrations">
               <Card className="rounded-[2rem] border-none shadow-lg overflow-hidden">
                 <Table>
-                  <TableHeader className="bg-secondary/5"><TableRow><TableHead>ID/Aluno</TableHead><TableHead>Curso</TableHead><TableHead>Estado</TableHead></TableRow></TableHeader>
+                  <TableHeader className="bg-secondary/5">
+                    <TableRow>
+                      <TableHead>ID/Aluno</TableHead>
+                      <TableHead>Curso</TableHead>
+                      <TableHead>Documento</TableHead>
+                      <TableHead>Estado</TableHead>
+                    </TableRow>
+                  </TableHeader>
                   <TableBody>
                     {registrations.map(r => (
                       <TableRow key={r.id}>
-                        <TableCell><span className="text-primary font-bold">{r.id}</span><br/>{r.student_name}</TableCell>
+                        <TableCell>
+                          <span className="text-primary font-bold">{r.id}</span>
+                          <br/>{r.student_name}
+                          <br/><span className="text-[10px] text-muted-foreground">{r.student_phone}</span>
+                        </TableCell>
                         <TableCell>{r.course_title}</TableCell>
-                        <TableCell>{r.status}</TableCell>
+                        <TableCell className="text-xs">{r.doc_type}: {r.doc_number}</TableCell>
+                        <TableCell>
+                          <select 
+                            value={r.status} 
+                            className="bg-transparent border-none text-xs font-bold text-primary"
+                            onChange={(e) => {
+                              supabase.from('registrations').update({ status: e.target.value }).eq('id', r.id).then(() => carregarDados());
+                            }}
+                          >
+                            <option value="Pendente">Pendente</option>
+                            <option value="Confirmada">Confirmada</option>
+                            <option value="Cancelada">Cancelada</option>
+                          </select>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

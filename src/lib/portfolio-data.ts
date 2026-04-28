@@ -1,4 +1,3 @@
-
 export type Category = 'Todos' | 'Topos de Bolo' | 'Camisetas';
 
 export interface Project {
