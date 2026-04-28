@@ -591,9 +591,11 @@ export default function NapauAdminPage() {
                             <div className="text-[10px] text-muted-foreground">{r.docNumber}</div>
                           </TableCell>
                           <TableCell className="text-right p-6 print:hidden">
-                            <Button variant="ghost" size="icon" className="text-destructive" onClick={() => deleteRegistration(r.id)}>
-                              <Trash2 size={18} />
-                            </Button>
+                            <div className="flex justify-end gap-2">
+                               <Button variant="ghost" size="icon" className="text-destructive" onClick={() => deleteRegistration(r.id)}>
+                                <Trash2 size={18} />
+                               </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))}
