@@ -1,4 +1,6 @@
 
+"use client";
+
 import React from 'react';
 import { Logo } from './Logo';
 import { Instagram, Facebook, Mail, MapPin, Phone } from 'lucide-react';
@@ -12,11 +14,11 @@ export const Footer: React.FC = () => {
             <Logo size={50} />
             <div>
               <h3 className="font-headline font-bold text-lg md:text-xl text-primary tracking-tight">NAPAU</h3>
-              <p className="text-[8px] text-muted-foreground uppercase tracking-[0.3em]">Design & Arte</p>
+              <p className="text-[8px] text-muted-foreground uppercase tracking-[0.3em] font-bold">Design & Arte</p>
             </div>
           </div>
           <p className="text-sm md:text-base text-muted-foreground max-w-sm leading-relaxed font-light">
-            Especialistas em tipos de bolo e camisetas personalizadas em Moçambique. Qualidade e criatividade em cada detalhe para celebrar os seus momentos especiais.
+            Especialistas em topos de bolo e camisetas personalizadas em Moçambique. Qualidade e criatividade em cada detalhe para celebrar os seus momentos especiais.
           </p>
           <div className="flex gap-3 md:gap-4">
             <a 
@@ -62,7 +64,7 @@ export const Footer: React.FC = () => {
           <ul className="space-y-2 md:space-y-3 text-sm text-muted-foreground font-light">
             <li className="flex items-start gap-2">
               <MapPin size={18} className="text-primary shrink-0 mt-1" />
-              <span>Av. Acordos de Lusaka, Paragem Baltazar, Moçambique</span>
+              <span>Av. Acordos de Lusaka, Paragem Baltazar, Maputo</span>
             </li>
             <li className="flex items-center gap-2">
               <Phone size={18} className="text-primary shrink-0" />
@@ -81,9 +83,9 @@ export const Footer: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto mt-12 md:mt-16 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-[0.2em] text-center md:text-left">
-        <div>
+        <div className="space-y-1">
           <p>© {new Date().getFullYear()} Napau Design & Arte. Todos os direitos reservados.</p>
-          <p className="mt-1 lowercase font-medium opacity-80">Desenvolvido por CodeWorks (codeworksmoz@gmail.com)</p>
+          <p className="font-medium text-primary/80 lowercase">Desenvolvido por CodeWorks (codeworksmoz@gmail.com)</p>
         </div>
         <p>Criatividade e Excelência em Moçambique.</p>
       </div>
