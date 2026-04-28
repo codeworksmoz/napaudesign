@@ -85,7 +85,7 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto mt-12 md:mt-16 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-[0.2em] text-center md:text-left">
         <div className="space-y-1">
           <p>© {new Date().getFullYear()} Napau Design & Arte. Todos os direitos reservados.</p>
-          <p className="font-medium text-primary/80 lowercase">Desenvolvido por CodeWorks (codeworksmoz@gmail.com)</p>
+          <p className="font-medium text-primary/80 lowercase">Desenvolvido por Codworks (codworksmoz@gmail.com)</p>
         </div>
         <p>Criatividade e Excelência em Moçambique.</p>
       </div>

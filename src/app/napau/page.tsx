@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Trash2, Save, GraduationCap, Image as ImageIcon, Home, Users, Printer, Edit3, Settings, Loader2, LogIn, LogOut, Lock, MessageCircle, Mail, HelpCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Project, Flyer, HomeContent, DEFAULT_HOME_CONTENT, Category, Registration } from '@/lib/portfolio-data';
@@ -102,8 +102,8 @@ export default function NapauAdminPage() {
   const handleSupportEmail = (e: React.FormEvent) => {
     e.preventDefault();
     const subject = encodeURIComponent(`Suporte Napau: Problema de Acesso - ${supportName}`);
-    const body = encodeURIComponent(`Olá CodeWorks,\n\nEstou com dificuldades em aceder ao painel administrativo da Napau.\n\nDetalhes:\nNome: ${supportName}\nEmail usado: ${loginEmail}\nProblema: ${supportIssue}\n\nSolicito suporte para restabelecer o acesso.`);
-    window.location.href = `mailto:codeworksmoz@gmail.com?subject=${subject}&body=${body}`;
+    const body = encodeURIComponent(`Olá Codworks,\n\nEstou com dificuldades em aceder ao painel administrativo da Napau.\n\nDetalhes:\nNome: ${supportName}\nEmail usado: ${loginEmail}\nProblema: ${supportIssue}\n\nSolicito suporte para restabelecer o acesso.`);
+    window.location.href = `mailto:codworksmoz@gmail.com?subject=${subject}&body=${body}`;
     toast({ title: "A abrir Gmail...", description: "Prepare o envio do seu e-mail de suporte." });
   };
 
@@ -270,12 +270,12 @@ export default function NapauAdminPage() {
               <Dialog>
                 <DialogTrigger asChild>
                   <button className="text-[10px] font-bold text-primary uppercase tracking-widest hover:underline flex items-center justify-center gap-2 mx-auto">
-                    <HelpCircle size={14} /> Problemas de Acesso? Suporte CodeWorks
+                    <HelpCircle size={14} /> Problemas de Acesso? Suporte Codworks
                   </button>
                 </DialogTrigger>
                 <DialogContent className="rounded-[2rem] sm:max-w-[500px]">
                   <DialogHeader>
-                    <DialogTitle className="text-2xl font-headline text-primary">Suporte Técnico CodeWorks</DialogTitle>
+                    <DialogTitle className="text-2xl font-headline text-primary">Suporte Técnico Codworks</DialogTitle>
                     <DialogDescription className="text-xs uppercase tracking-widest font-bold text-muted-foreground mt-2">
                       Assistência garantida em até 48 horas.
                     </DialogDescription>
@@ -307,7 +307,7 @@ export default function NapauAdminPage() {
                       </Button>
                       <Button asChild variant="outline" className="rounded-xl h-12 gap-2 font-bold border-green-500 text-green-600 hover:bg-green-50">
                         <a 
-                          href="https://wa.me/258855920773?text=Olá CodeWorks! Preciso de suporte no painel administrativo da Napau Design." 
+                          href="https://wa.me/258855920773?text=Olá Codworks! Preciso de suporte no painel administrativo da Napau Design." 
                           target="_blank" 
                           rel="noopener noreferrer"
                         >
@@ -318,7 +318,7 @@ export default function NapauAdminPage() {
                   </form>
                   <div className="text-center pt-2">
                     <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest italic">
-                      Desenvolvido por CodeWorks (codeworksmoz@gmail.com)
+                      Desenvolvido por Codworks (codworksmoz@gmail.com)
                     </p>
                   </div>
                 </DialogContent>

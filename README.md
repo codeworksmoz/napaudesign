@@ -10,7 +10,7 @@ Plataforma profissional para a Napau Design & Arte, especializada em tipos de bo
 - **Inscrições Digitais:** Sistema de reserva de vagas com geração automática de IDs e recibos com QR Code.
 
 ## Desenvolvimento
-Desenvolvido por **CodeWorks** (codeworksmoz@gmail.com).
+Desenvolvido por **Codworks** (codworksmoz@gmail.com).
 
 ## Deploy
 Pronto para ser servido no Netlify via integração direta com o GitHub.

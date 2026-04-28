@@ -1,3 +1,4 @@
+
 # Guia de Migração de Dados - Napau Design & Arte
 
 Este documento detalha como transitar da persistência atual em `localStorage` para uma base de dados real (SQL ou NoSQL).
@@ -70,3 +71,6 @@ if (!error) setData(data);
 1. Conecte o repositório GitHub ao Netlify.
 2. Configure as Variáveis de Ambiente (ENV) no painel do Netlify para as chaves da sua base de dados.
 3. O comando de build é `next build`.
+
+---
+Desenvolvido por **Codworks** (codworksmoz@gmail.com)
