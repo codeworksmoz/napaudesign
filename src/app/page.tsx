@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -8,7 +9,7 @@ import { Logo } from '@/components/Logo';
 import { Project, HomeContent, Flyer, DEFAULT_HOME_CONTENT } from '@/lib/portfolio-data';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, Cake, Shirt, GraduationCap, Calendar, MapPin, Loader2 } from 'lucide-react';
+import { ArrowRight, Sparkles, Cake, Shirt, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase';
 
@@ -25,7 +26,7 @@ export default function Home() {
   async function carregarDados() {
     setCarregando(true);
     try {
-      const { data: homeData } = await supabase.from('home_content').select('*').single();
+      const { data: homeData } = await supabase.from('home_content').select('*').maybeSingle();
       if (homeData) setHome(homeData);
 
       const { data: projectsData } = await supabase
@@ -50,8 +51,6 @@ export default function Home() {
     }
   }
 
-  const activeFlyers = flyers.filter(f => f.ativo);
-
   if (carregando) {
     return (
       <div className="flex flex-col min-h-screen bg-background">
@@ -73,8 +72,8 @@ export default function Home() {
       <Navbar />
       
       <main className="flex-grow">
-        {/* HERO SECTION - Espaço branco eliminado ajustando padding-top */}
-        <section className="relative min-h-[50vh] flex flex-col items-center justify-center pt-16 pb-12 overflow-hidden">
+        {/* HERO SECTION - Espaço reduzido ajustando o padding-top e o alinhamento */}
+        <section className="relative min-h-[60vh] flex flex-col items-center justify-start pt-24 pb-12 overflow-hidden">
           <div className="absolute inset-0 z-0">
             {home.heroImage ? (
               <Image 
@@ -90,7 +89,7 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-transparent to-background"></div>
           </div>
           
-          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6 px-6 mt-4">
+          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-4 px-6 mt-6">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.2em] border border-primary/20 backdrop-blur-sm">
               <Sparkles size={14} className="animate-pulse" />
               Criatividade em Moçambique
@@ -101,7 +100,7 @@ export default function Home() {
             <p className="text-muted-foreground text-lg md:text-2xl font-light max-w-2xl mx-auto leading-relaxed italic">
               {home.heroSubtitle}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
               <Button asChild className="rounded-full px-10 py-7 text-lg font-bold gold-shimmer shadow-xl">
                 <Link href="/portfolio">Ver Galeria</Link>
               </Button>
@@ -112,7 +111,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* SERVICES SECTION - Focado em Topos e Camisetas */}
+        {/* SERVICES SECTION - Especialização exclusiva */}
         <section className="py-20 px-6 bg-white">
           <div className="max-w-7xl mx-auto space-y-16">
             <div className="text-center space-y-4 max-w-3xl mx-auto">
