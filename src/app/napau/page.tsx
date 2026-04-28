@@ -245,8 +245,6 @@ export default function NapauAdminPage() {
                       <select name="category" defaultValue={editingProject?.category || 'Topos de Bolo'} className="w-full p-3 border rounded-xl bg-white text-sm font-medium outline-none">
                         <option value="Topos de Bolo">Topos de Bolo</option>
                         <option value="Camisetas">Camisetas</option>
-                        <option value="Design Personalizado">Design Personalizado</option>
-                        <option value="Kits Revenda">Kits Revenda</option>
                       </select>
                       <Input name="year" defaultValue={editingProject?.year || '2024'} placeholder="Ano" required className="rounded-xl" />
                       <div className="space-y-2">
@@ -287,7 +285,6 @@ export default function NapauAdminPage() {
             </TabsContent>
 
             <TabsContent value="flyers" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-              {/* Flyers Management UI - Semelhante ao anterior mas ligado ao Supabase */}
               <div className="space-y-8">
                 <div className="flex justify-between items-center bg-white p-6 rounded-[2rem] shadow-sm">
                   <div>
@@ -305,7 +302,6 @@ export default function NapauAdminPage() {
                         <Button onClick={() => deleteFlyer(flyer.id)} variant="ghost" size="icon" className="text-destructive rounded-xl"><Trash2 size={16} /></Button>
                       </div>
                     </CardHeader>
-                    {/* ... Resto do formulário de flyer ... */}
                   </Card>
                 ))}
               </div>

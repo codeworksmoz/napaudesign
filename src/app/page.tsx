@@ -73,8 +73,8 @@ export default function Home() {
       <Navbar />
       
       <main className="flex-grow">
-        {/* HERO SECTION - Espaço branco eliminado */}
-        <section className="relative min-h-[60vh] flex flex-col items-center justify-center pt-20 pb-12 overflow-hidden">
+        {/* HERO SECTION - Espaço branco eliminado ajustando padding-top */}
+        <section className="relative min-h-[50vh] flex flex-col items-center justify-center pt-16 pb-12 overflow-hidden">
           <div className="absolute inset-0 z-0">
             {home.heroImage ? (
               <Image 
@@ -90,12 +90,12 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-transparent to-background"></div>
           </div>
           
-          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6 px-6">
+          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6 px-6 mt-4">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.2em] border border-primary/20 backdrop-blur-sm">
               <Sparkles size={14} className="animate-pulse" />
               Criatividade em Moçambique
             </div>
-            <h1 className="text-5xl md:text-8xl font-headline font-bold leading-[1] tracking-tight text-foreground">
+            <h1 className="text-5xl md:text-8xl font-headline font-bold leading-[1.1] tracking-tight text-foreground">
               {home.heroTitle}
             </h1>
             <p className="text-muted-foreground text-lg md:text-2xl font-light max-w-2xl mx-auto leading-relaxed italic">
