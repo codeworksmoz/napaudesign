@@ -10,7 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Trash2, Edit3, Settings, Loader2, MessageCircle, Mail } from 'lucide-react';
+import { Trash2, Edit3, Settings, Loader2, MessageCircle, Mail, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Project, Flyer, HomeContent, DEFAULT_HOME_CONTENT, Category, Registration } from '@/lib/portfolio-data';
 import { supabase } from '@/lib/supabase';
@@ -33,7 +33,10 @@ export default function NapauAdminPage() {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [home, setHome] = useState<HomeContent>(DEFAULT_HOME_CONTENT);
   const [carregando, setCarregando] = useState(true);
+  
+  // Estados para o formulário de portfólio
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [tempImageUrl, setTempImageUrl] = useState('');
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -53,6 +56,7 @@ export default function NapauAdminPage() {
   async function carregarDados() {
     setCarregando(true);
     try {
+      // Mapeamento de camelCase da DB para snake_case do frontend
       const { data: homeData } = await supabase.from('home_content').select('*').eq('id', 1).maybeSingle();
       if (homeData) {
         setHome({
@@ -94,11 +98,9 @@ export default function NapauAdminPage() {
       if (error) {
         toast({
           title: "Erro de Acesso",
-          description: "Credenciais inválidas ou problema de ligação ao Supabase.",
+          description: "Credenciais inválidas. Verifique o seu acesso Codworks.",
           variant: "destructive",
         });
-      } else if (data.session) {
-        toast({ title: "Bem-vindo", description: "Acesso autorizado ao painel Codworks." });
       }
     } catch (err: any) {
       toast({ title: "Erro Inesperado", variant: "destructive" });
@@ -118,7 +120,6 @@ export default function NapauAdminPage() {
     const subject = encodeURIComponent(`Suporte Napau Codworks: ${supportName}`);
     const body = encodeURIComponent(`Nome: ${supportName}\nEmail: ${loginEmail}\nProblema: ${supportIssue}\n\nNota: Suporte Codworks garante resposta em 48h.`);
     window.location.href = `mailto:codworksmoz@gmail.com?subject=${subject}&body=${body}`;
-    toast({ title: "A abrir Gmail...", description: "Envie o seu pedido de suporte à Codworks." });
   };
 
   const saveHome = async () => {
@@ -145,11 +146,12 @@ export default function NapauAdminPage() {
   const handleProjectSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
+    
     const projectData = {
       title: formData.get('title') as string,
       category: formData.get('category') as Category,
       description: formData.get('description') as string,
-      image_url: editingProject?.image_url || formData.get('image_url') as string,
+      image_url: tempImageUrl || editingProject?.image_url || 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg',
       year: formData.get('year') as string,
       active: true
     };
@@ -165,6 +167,7 @@ export default function NapauAdminPage() {
         toast({ title: "Novo trabalho publicado!" });
       }
       setEditingProject(null);
+      setTempImageUrl('');
       carregarDados();
     } catch (e: any) {
       toast({ title: "Erro", description: e.message, variant: "destructive" });
@@ -177,9 +180,9 @@ export default function NapauAdminPage() {
       const { error } = await supabase.from('projects').delete().eq('id', id);
       if (error) throw error;
       carregarDados();
-      toast({ title: "Removido." });
+      toast({ title: "Removido do portfólio." });
     } catch (e: any) {
-      toast({ title: "Erro", variant: "destructive" });
+      toast({ title: "Erro ao remover", variant: "destructive" });
     }
   };
 
@@ -187,31 +190,10 @@ export default function NapauAdminPage() {
     try {
       const { error } = await supabase.from('flyers').upsert(flyer);
       if (error) throw error;
-      toast({ title: "Curso guardado!" });
+      toast({ title: "Curso guardado com sucesso!" });
       carregarDados();
     } catch (e: any) {
       toast({ title: "Erro ao salvar", variant: "destructive" });
-    }
-  };
-
-  const addFlyer = async () => {
-    const newFlyer = {
-      titulo: 'Novo Curso',
-      preco: '0 MT',
-      data: 'A definir',
-      local: 'Estúdio Napau',
-      contactos: '+258 84 761 5871',
-      lista_esquerda: ['Técnica 1'],
-      lista_direita: ['Técnica 2'],
-      image_url: 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg',
-      ativo: false
-    };
-    try {
-      const { error } = await supabase.from('flyers').insert(newFlyer);
-      if (error) throw error;
-      carregarDados();
-    } catch (e: any) {
-      console.error(e);
     }
   };
 
@@ -250,15 +232,11 @@ export default function NapauAdminPage() {
                   </p>
                   <form onSubmit={handleSupportEmail} className="space-y-4">
                     <Input required value={supportName} onChange={(e) => setSupportName(e.target.value)} placeholder="Seu Nome" className="rounded-xl" />
-                    <Textarea required value={supportIssue} onChange={(e) => setSupportIssue(e.target.value)} placeholder="Descreva o problema com o login..." className="rounded-xl resize-none" />
+                    <Textarea required value={supportIssue} onChange={(e) => setSupportIssue(e.target.value)} placeholder="Descreva o problema..." className="rounded-xl resize-none" />
                     <Button type="submit" className="w-full h-12 rounded-xl gap-2">
                       <Mail size={18} /> Preparar E-mail (Gmail)
                     </Button>
                   </form>
-                  <div className="relative">
-                    <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
-                    <div className="relative flex justify-center text-[10px] uppercase font-bold"><span className="bg-white px-2 text-muted-foreground">Ou via WhatsApp</span></div>
-                  </div>
                   <Button asChild variant="outline" className="w-full h-12 rounded-xl gap-2 border-primary text-primary hover:bg-primary/5">
                     <a href="https://wa.me/258855920773" target="_blank">
                       <MessageCircle size={18} /> WhatsApp Codworks
@@ -287,7 +265,7 @@ export default function NapauAdminPage() {
           </div>
 
           <Tabs defaultValue="home" className="space-y-6">
-            <TabsList className="bg-white p-1 rounded-2xl shadow-sm border h-auto flex gap-1">
+            <TabsList className="bg-white p-1 rounded-2xl shadow-sm border h-auto flex gap-1 overflow-x-auto no-scrollbar">
               <TabsTrigger value="home" className="rounded-xl py-4 flex-1">Home</TabsTrigger>
               <TabsTrigger value="portfolio" className="rounded-xl py-4 flex-1">Portfólio</TabsTrigger>
               <TabsTrigger value="flyers" className="rounded-xl py-4 flex-1">Cursos</TabsTrigger>
@@ -300,29 +278,32 @@ export default function NapauAdminPage() {
                   <h3 className="text-xl font-bold">Conteúdo do Site</h3>
                   <Button onClick={saveHome} className="gold-shimmer px-8 rounded-xl">Guardar Alterações</Button>
                 </CardHeader>
-                <CardContent className="p-8 space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase text-muted-foreground">Título Principal</label>
-                      <Input value={home.hero_title || ''} onChange={(e) => setHome({...home, hero_title: e.target.value})} placeholder="Título Hero" className="rounded-xl" />
+                <CardContent className="p-8 space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Título Principal</label>
+                        <Input value={home.hero_title || ''} onChange={(e) => setHome({...home, hero_title: e.target.value})} className="rounded-xl" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase text-muted-foreground">Subtítulo</label>
+                        <Textarea value={home.hero_subtitle || ''} onChange={(e) => setHome({...home, hero_subtitle: e.target.value})} className="rounded-xl resize-none h-32" />
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase text-muted-foreground">Imagem de Fundo</label>
-                      <ImageUpload valor={home.hero_image || 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg'} onChange={(url) => setHome({...home, hero_image: url})} />
-                    </div>
+                    <ImageUpload 
+                      label="Imagem de Fundo (Hero)"
+                      valor={home.hero_image || ''} 
+                      onChange={(url) => setHome({...home, hero_image: url})} 
+                    />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-muted-foreground">Subtítulo / Descrição</label>
-                    <Textarea value={home.hero_subtitle || ''} onChange={(e) => setHome({...home, hero_subtitle: e.target.value})} placeholder="Subtítulo Hero" className="rounded-xl resize-none" />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase text-muted-foreground">Descrição: Topos de Bolo</label>
-                      <Textarea value={home.service_bolo_desc || ''} onChange={(e) => setHome({...home, service_bolo_desc: e.target.value})} placeholder="Descrição Topos" className="rounded-xl resize-none" />
+                      <Textarea value={home.service_bolo_desc || ''} onChange={(e) => setHome({...home, service_bolo_desc: e.target.value})} className="rounded-xl resize-none" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase text-muted-foreground">Descrição: Camisetas</label>
-                      <Textarea value={home.service_camiseta_desc || ''} onChange={(e) => setHome({...home, service_camiseta_desc: e.target.value})} placeholder="Descrição Camisetas" className="rounded-xl resize-none" />
+                      <Textarea value={home.service_camiseta_desc || ''} onChange={(e) => setHome({...home, service_camiseta_desc: e.target.value})} className="rounded-xl resize-none" />
                     </div>
                   </div>
                 </CardContent>
@@ -331,19 +312,31 @@ export default function NapauAdminPage() {
 
             <TabsContent value="portfolio">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <Card className="lg:col-span-4 rounded-[2rem] p-8 border-none shadow-lg bg-white">
-                  <h3 className="font-bold mb-4 uppercase text-[10px] tracking-widest text-primary">Novo Trabalho</h3>
-                  <form onSubmit={handleProjectSubmit} className="space-y-4">
+                <Card className="lg:col-span-4 rounded-[2rem] p-8 border-none shadow-lg bg-white h-fit">
+                  <h3 className="font-bold mb-6 uppercase text-[10px] tracking-widest text-primary flex items-center gap-2">
+                    {editingProject ? <Edit3 size={14}/> : <Plus size={14}/>}
+                    {editingProject ? 'Editar Trabalho' : 'Novo Trabalho'}
+                  </h3>
+                  <form onSubmit={handleProjectSubmit} className="space-y-5">
                     <Input name="title" defaultValue={editingProject?.title || ''} placeholder="Título do Trabalho" required className="rounded-xl" />
-                    <select name="category" defaultValue={editingProject?.category || 'Topos de Bolo'} className="w-full p-3 border rounded-xl bg-white text-sm">
+                    <select name="category" defaultValue={editingProject?.category || 'Topos de Bolo'} className="w-full p-3 border rounded-xl bg-white text-sm focus:ring-primary">
                       <option value="Topos de Bolo">Topos de Bolo</option>
                       <option value="Camisetas">Camisetas</option>
                     </select>
-                    <ImageUpload valor={editingProject?.image_url || 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg'} onChange={(url) => setEditingProject(prev => prev ? {...prev, image_url: url} : null)} />
+                    <ImageUpload 
+                      valor={tempImageUrl || editingProject?.image_url || ''} 
+                      onChange={setTempImageUrl} 
+                    />
                     <Input name="year" defaultValue={editingProject?.year || new Date().getFullYear().toString()} placeholder="Ano" className="rounded-xl" />
-                    <Textarea name="description" defaultValue={editingProject?.description || ''} placeholder="Descrição curta..." className="rounded-xl resize-none" />
-                    <Button type="submit" className="w-full rounded-xl gold-shimmer h-12">Publicar</Button>
-                    {editingProject && <Button type="button" variant="ghost" onClick={() => setEditingProject(null)} className="w-full">Cancelar Edição</Button>}
+                    <Textarea name="description" defaultValue={editingProject?.description || ''} placeholder="Descrição curta..." className="rounded-xl resize-none h-24" />
+                    <Button type="submit" className="w-full rounded-xl gold-shimmer h-12 font-bold">
+                      {editingProject ? 'Atualizar' : 'Publicar no Portfólio'}
+                    </Button>
+                    {editingProject && (
+                      <Button type="button" variant="ghost" onClick={() => { setEditingProject(null); setTempImageUrl(''); }} className="w-full">
+                        Cancelar Edição
+                      </Button>
+                    )}
                   </form>
                 </Card>
                 <Card className="lg:col-span-8 rounded-[2rem] border-none shadow-lg overflow-hidden bg-white">
@@ -352,7 +345,7 @@ export default function NapauAdminPage() {
                       <TableRow>
                         <TableHead>Trabalho</TableHead>
                         <TableHead>Categoria</TableHead>
-                        <TableHead className="text-right">Acções</TableHead>
+                        <TableHead className="text-right">Ações</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -361,8 +354,12 @@ export default function NapauAdminPage() {
                           <TableCell className="font-bold text-primary">{p.title}</TableCell>
                           <TableCell className="text-xs uppercase font-medium">{p.category}</TableCell>
                           <TableCell className="text-right">
-                            <Button variant="ghost" size="icon" onClick={() => setEditingProject(p)} className="text-primary"><Edit3 size={16}/></Button>
-                            <Button variant="ghost" size="icon" className="text-destructive" onClick={() => deleteProject(p.id)}><Trash2 size={16}/></Button>
+                            <Button variant="ghost" size="icon" onClick={() => { setEditingProject(p); setTempImageUrl(p.image_url); }} className="text-primary hover:bg-primary/10">
+                              <Edit3 size={16}/>
+                            </Button>
+                            <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={() => deleteProject(p.id)}>
+                              <Trash2 size={16}/>
+                            </Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -374,26 +371,48 @@ export default function NapauAdminPage() {
 
             <TabsContent value="flyers">
               <div className="space-y-4">
-                <Button onClick={addFlyer} className="gold-shimmer rounded-xl h-12 px-8">Novo Flyer de Curso</Button>
-                {flyers.map(f => (
-                  <Card key={f.id} className="rounded-[2rem] p-6 border-none shadow-lg flex flex-col md:flex-row justify-between items-center gap-4 bg-white">
-                    <div className="flex-1 space-y-2">
-                      <Input 
-                        value={f.titulo || ''} 
-                        className="font-bold border-none text-lg text-primary focus-visible:ring-0 p-0 h-auto" 
-                        onChange={(e) => setFlyers(flyers.map(item => item.id === f.id ? {...item, titulo: e.target.value} : item))} 
-                      />
-                      <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Estado: {f.ativo ? '✅ Ativo no site' : '❌ Inativo'}</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button onClick={() => saveFlyer(f)} className="rounded-xl">Gravar</Button>
-                      <Button variant="outline" className="rounded-xl" onClick={() => setFlyers(flyers.map(item => item.id === f.id ? {...item, ativo: !f.ativo} : item))}>
-                        {f.ativo ? 'Desativar' : 'Ativar'}
-                      </Button>
-                      <Button variant="outline" className="rounded-xl text-destructive border-destructive" onClick={() => { if(confirm('Apagar curso definitivamente?')) supabase.from('flyers').delete().eq('id', f.id).then(() => carregarDados()) }}>Apagar</Button>
-                    </div>
-                  </Card>
-                ))}
+                <Button onClick={async () => {
+                  const newFlyer = {
+                    titulo: 'Novo Curso de Personalização',
+                    preco: '0 MT',
+                    data: 'A anunciar',
+                    local: 'Estúdio Napau',
+                    contactos: '+258 84 761 5871',
+                    lista_esquerda: ['Técnica base'],
+                    lista_direita: ['Acabamento'],
+                    image_url: 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg',
+                    ativo: false
+                  };
+                  await supabase.from('flyers').insert(newFlyer);
+                  carregarDados();
+                }} className="gold-shimmer rounded-xl h-12 px-8 font-bold">
+                  Criar Novo Flyer de Curso
+                </Button>
+                <div className="grid grid-cols-1 gap-4">
+                  {flyers.map(f => (
+                    <Card key={f.id} className="rounded-[2rem] p-6 border-none shadow-lg flex flex-col md:flex-row justify-between items-center gap-6 bg-white">
+                      <div className="flex-1 space-y-4 w-full">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <Input value={f.titulo} className="font-bold text-primary rounded-xl" onChange={(e) => setFlyers(flyers.map(item => item.id === f.id ? {...item, titulo: e.target.value} : item))} />
+                          <Input value={f.preco} className="rounded-xl" placeholder="Preço" onChange={(e) => setFlyers(flyers.map(item => item.id === f.id ? {...item, preco: e.target.value} : item))} />
+                        </div>
+                        <ImageUpload valor={f.image_url} onChange={(url) => setFlyers(flyers.map(item => item.id === f.id ? {...item, image_url: url} : item))} />
+                      </div>
+                      <div className="flex flex-col gap-2 w-full md:w-auto">
+                        <Button onClick={() => saveFlyer(f)} className="rounded-xl gold-shimmer">Gravar</Button>
+                        <Button variant="outline" className="rounded-xl" onClick={() => setFlyers(flyers.map(item => item.id === f.id ? {...item, ativo: !f.ativo} : item))}>
+                          {f.ativo ? 'Ocultar do Site' : 'Ativar no Site'}
+                        </Button>
+                        <Button variant="ghost" className="text-destructive rounded-xl hover:bg-destructive/10" onClick={async () => {
+                          if(confirm('Apagar curso?')) {
+                            await supabase.from('flyers').delete().eq('id', f.id);
+                            carregarDados();
+                          }
+                        }}>Apagar</Button>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
               </div>
             </TabsContent>
 
@@ -402,8 +421,9 @@ export default function NapauAdminPage() {
                 <Table>
                   <TableHeader className="bg-secondary/5">
                     <TableRow>
-                      <TableHead>Aluno</TableHead>
+                      <TableHead>ID / Aluno</TableHead>
                       <TableHead>Curso</TableHead>
+                      <TableHead>Data Inscrição</TableHead>
                       <TableHead>Estado</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -411,21 +431,26 @@ export default function NapauAdminPage() {
                     {registrations.map(r => (
                       <TableRow key={r.id}>
                         <TableCell>
-                          <span className="text-primary font-bold">{r.student_name}</span>
-                          <br/><span className="text-[10px] text-muted-foreground font-mono">{r.student_phone}</span>
+                          <span className="text-[10px] font-mono font-bold text-primary">{r.id}</span>
+                          <br/><span className="font-bold">{r.student_name}</span>
+                          <br/><span className="text-[10px] text-muted-foreground">{r.student_phone}</span>
                         </TableCell>
                         <TableCell className="text-sm">{r.course_title}</TableCell>
+                        <TableCell className="text-xs">
+                          {new Date(r.registration_date).toLocaleDateString('pt-MZ')}
+                        </TableCell>
                         <TableCell>
                           <select 
                             value={r.status} 
                             className="bg-transparent border-none text-xs font-bold text-primary cursor-pointer hover:underline"
-                            onChange={(e) => {
-                              supabase.from('registrations').update({ status: e.target.value }).eq('id', r.id).then(() => carregarDados());
+                            onChange={async (e) => {
+                              await supabase.from('registrations').update({ status: e.target.value }).eq('id', r.id);
+                              carregarDados();
                             }}
                           >
-                            <option value="Pendente">Pendente</option>
-                            <option value="Confirmada">Confirmada</option>
-                            <option value="Cancelada">Cancelada</option>
+                            <option value="Pendente">🟡 Pendente</option>
+                            <option value="Confirmada">🟢 Confirmada</option>
+                            <option value="Cancelada">🔴 Cancelada</option>
                           </select>
                         </TableCell>
                       </TableRow>
