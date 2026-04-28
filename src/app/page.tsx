@@ -44,7 +44,7 @@ export default function Home() {
       if (flyersData) setFlyers(flyersData as Flyer[]);
 
     } catch (error) {
-      console.error('Erro ao carregar dados do Supabase:', error);
+      console.error('Erro ao carregar dados:', error);
     } finally {
       setCarregando(false);
     }
@@ -73,8 +73,8 @@ export default function Home() {
       <Navbar />
       
       <main className="flex-grow">
-        {/* HERO SECTION */}
-        <section className="relative min-h-[85vh] flex flex-col items-center justify-center overflow-hidden pt-0">
+        {/* HERO SECTION - Ajustado para eliminar espaço branco */}
+        <section className="relative min-h-[70vh] flex flex-col items-center pt-32 pb-16 overflow-hidden">
           <div className="absolute inset-0 z-0">
             {home.heroImage ? (
               <Image 
@@ -90,7 +90,7 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/50 to-background"></div>
           </div>
           
-          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-4 px-6 mt-12 md:mt-0">
+          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-4 px-6">
             <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.25em] border border-primary/20 backdrop-blur-md">
               <Sparkles size={14} className="animate-pulse" />
               Design & Arte em Moçambique
@@ -106,7 +106,7 @@ export default function Home() {
                 <Link href="/portfolio">Ver Coleção</Link>
               </Button>
               <Button asChild variant="outline" className="rounded-[1.5rem] px-12 py-8 text-lg font-bold border-primary/30 hover:bg-primary/5 bg-white/40 backdrop-blur-sm">
-                <Link href="/cursos">Cursos Disponíveis</Link>
+                <Link href="/cursos">Cursos & Formação</Link>
               </Button>
             </div>
           </div>
