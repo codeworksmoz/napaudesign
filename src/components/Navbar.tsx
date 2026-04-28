@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -37,7 +36,7 @@ export const Navbar: React.FC = () => {
       <nav 
         className={cn(
           "fixed top-0 left-0 right-0 z-[60] transition-all duration-500 px-6 py-4",
-          scrolled || isOpen ? "bg-white/80 backdrop-blur-xl shadow-sm border-b border-primary/10" : "bg-transparent"
+          scrolled || isOpen ? "bg-white/90 backdrop-blur-xl shadow-md border-b border-primary/10" : "bg-transparent"
         )}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -45,14 +44,14 @@ export const Navbar: React.FC = () => {
             <Logo size={45} className="transition-transform duration-500 group-hover:scale-110" />
             <div className="flex flex-col leading-none">
               <span className={cn(
-                "font-headline font-bold text-xl tracking-tight transition-colors drop-shadow-sm",
-                scrolled || isOpen ? "text-primary" : "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+                "font-headline font-bold text-xl tracking-tight transition-colors",
+                scrolled || isOpen ? "text-primary" : "text-white [text-shadow:0_2px_10px_rgba(0,0,0,0.8)]"
               )}>
                 NAPAU
               </span>
               <span className={cn(
                 "text-[8px] uppercase tracking-[0.4em] font-bold transition-colors",
-                scrolled || isOpen ? "text-muted-foreground" : "text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+                scrolled || isOpen ? "text-muted-foreground" : "text-white/95 [text-shadow:0_1px_5px_rgba(0,0,0,0.8)]"
               )}>
                 Design & Arte
               </span>
@@ -66,15 +65,15 @@ export const Navbar: React.FC = () => {
                 key={link.name}
                 href={link.href}
                 className={cn(
-                  "text-[9px] font-bold uppercase tracking-[0.3em] transition-all hover:text-primary relative group/link drop-shadow-sm",
+                  "text-[9px] font-bold uppercase tracking-[0.3em] transition-all hover:text-primary relative group/link",
                   pathname === link.href 
                     ? "text-primary" 
-                    : (scrolled ? "text-muted-foreground" : "text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]")
+                    : (scrolled ? "text-muted-foreground" : "text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]")
                 )}
               >
                 {link.name}
                 <span className={cn(
-                  "absolute -bottom-1 left-0 h-[1px] bg-primary transition-all duration-300",
+                  "absolute -bottom-1.5 left-0 h-[1.5px] bg-primary transition-all duration-500",
                   pathname === link.href ? "w-full" : "w-0 group-hover/link:w-full"
                 )}></span>
               </Link>
@@ -82,7 +81,7 @@ export const Navbar: React.FC = () => {
             <a 
               href="https://wa.me/258847615871"
               target="_blank"
-              className="bg-primary text-white px-8 py-3 rounded-full text-[9px] font-bold uppercase tracking-[0.2em] shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
+              className="bg-primary text-white px-10 py-3.5 rounded-full text-[9px] font-bold uppercase tracking-[0.2em] shadow-xl hover:shadow-primary/40 transition-all active:scale-95 gold-shimmer"
             >
               Orçamento
             </a>
@@ -91,8 +90,8 @@ export const Navbar: React.FC = () => {
           {/* Mobile Menu Trigger */}
           <button 
             className={cn(
-              "md:hidden relative z-[70] p-2 rounded-full transition-colors",
-              scrolled || isOpen ? "text-primary hover:bg-primary/5" : "text-white hover:bg-white/10"
+              "md:hidden relative z-[70] p-2.5 rounded-full transition-colors",
+              scrolled || isOpen ? "text-primary hover:bg-primary/5" : "text-white hover:bg-black/20"
             )}
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle Menu"
@@ -130,7 +129,7 @@ export const Navbar: React.FC = () => {
             target="_blank"
             onClick={() => setIsOpen(false)}
             className={cn(
-              "mt-4 bg-primary text-white px-12 py-5 rounded-full text-lg font-bold shadow-xl transition-all transform",
+              "mt-4 bg-primary text-white px-12 py-5 rounded-full text-lg font-bold shadow-xl transition-all transform gold-shimmer",
               isOpen ? "translate-y-0 opacity-100 scale-100" : "translate-y-10 opacity-0 scale-90"
             )}
             style={{ transitionDelay: '400ms' }}

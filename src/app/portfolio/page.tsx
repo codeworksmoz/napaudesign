@@ -6,7 +6,7 @@ import { Footer } from '@/components/Footer';
 import { PortfolioCard } from '@/components/PortfolioCard';
 import { Category, Project } from '@/lib/portfolio-data';
 import { cn } from '@/lib/utils';
-import { Sparkles, Loader2 } from 'lucide-react';
+import { Sparkles, Loader2, Filter } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 const CATEGORIES: { label: string, value: Category }[] = [
@@ -46,28 +46,31 @@ export default function PortfolioPage() {
     : projects.filter(p => p.category === activeCategory);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[#FAF7F4]">
       <Navbar />
       
       <main className="flex-grow pt-32 pb-24 px-6">
         <div className="max-w-7xl mx-auto space-y-16">
-          <div className="space-y-6 text-center max-w-2xl mx-auto">
-            <h1 className="text-4xl md:text-7xl font-headline font-bold tracking-tight">Nosso Portfólio</h1>
-            <p className="text-lg text-muted-foreground font-light">
-              Explore nossa galeria especializada em topos de bolo exclusivos e camisetas personalizadas.
+          <div className="space-y-6 text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.2em] border border-primary/20">
+              <Filter size={12} /> Galeria Exclusiva
+            </div>
+            <h1 className="text-4xl md:text-7xl font-headline font-bold tracking-tight drop-shadow-sm">Nosso Portfólio</h1>
+            <p className="text-lg text-muted-foreground font-light leading-relaxed italic">
+              Explore nossa galeria especializada em topos de bolo artísticos e camisetas personalizadas com acabamento premium.
             </p>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-4">
             {CATEGORIES.map(category => (
               <button
                 key={category.value}
                 onClick={() => setActiveCategory(category.value)}
                 className={cn(
-                  "px-8 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 border",
+                  "px-10 py-3.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-500 border",
                   activeCategory === category.value 
-                    ? "bg-primary text-white border-primary shadow-lg" 
-                    : "bg-white text-muted-foreground border-border hover:border-primary/50"
+                    ? "bg-primary text-white border-primary shadow-xl scale-105" 
+                    : "bg-white text-muted-foreground border-border hover:border-primary/50 hover:text-primary shadow-sm"
                 )}
               >
                 {category.label}
@@ -76,21 +79,22 @@ export default function PortfolioPage() {
           </div>
 
           {loading ? (
-            <div className="flex justify-center py-20">
+            <div className="flex flex-col items-center justify-center py-32 space-y-4">
               <Loader2 className="animate-spin text-primary" size={48} />
+              <p className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest">A carregar galeria...</p>
             </div>
           ) : filteredProjects.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
               {filteredProjects.map(project => (
                 <PortfolioCard key={project.id} project={project} />
               ))}
             </div>
           ) : (
-            <div className="py-32 text-center space-y-6 bg-secondary/5 rounded-[3rem] border-2 border-dashed border-primary/10 px-6">
+            <div className="py-32 text-center space-y-6 bg-white rounded-[3rem] border-2 border-dashed border-primary/10 px-6 shadow-sm">
               <Sparkles size={48} className="mx-auto text-primary/30" />
-              <div className="space-y-2">
-                <p className="text-xl text-muted-foreground font-light">Estamos a preparar novas criações para esta categoria.</p>
-                <p className="text-xs text-muted-foreground/60 uppercase tracking-widest font-bold">Em breve na Napau!</p>
+              <div className="space-y-4">
+                <p className="text-2xl font-headline font-bold text-primary">Novas criações a caminho</p>
+                <p className="text-sm text-muted-foreground font-light italic max-w-md mx-auto">Estamos a preparar peças exclusivas para esta categoria. Volte em breve para se inspirar na Napau!</p>
               </div>
             </div>
           )}

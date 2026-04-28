@@ -1,28 +1,27 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 30 25% 97%; /* #FAF7F4 */
-    --foreground: 6 18% 20%;   /* #3D2C2A */
+    --background: 31 20% 98%; /* #FAF7F4 */
+    --foreground: 6 18% 15%;   /* #2A1D1B */
     --card: 0 0% 100%;
-    --card-foreground: 6 18% 20%;
+    --card-foreground: 6 18% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 6 18% 20%;
+    --popover-foreground: 6 18% 15%;
     --primary: 31 52% 65%;    /* #D4A574 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 28 43% 84%;  /* #E8D5C4 */
+    --secondary: 28 43% 92%;  /* #F4EBE2 */
     --secondary-foreground: 31 52% 30%;
-    --muted: 28 20% 92%;
+    --muted: 28 20% 94%;
     --muted-foreground: 6 10% 45%;
     --accent: 21 46% 59%;     /* #C48B6B */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 31 20% 88%;
-    --input: 31 20% 88%;
+    --border: 31 20% 90%;
+    --input: 31 20% 90%;
     --ring: 31 52% 65%;
     --radius: 1.5rem;
   }
@@ -40,6 +39,15 @@
   }
 }
 
+/* Tipografia Editorial Premium */
+.font-headline {
+  font-family: 'Playfair Display', serif;
+}
+
+.font-body {
+  font-family: 'Inter', sans-serif;
+}
+
 /* Animação de Brilho Dourado Premium */
 .gold-shimmer {
   position: relative;
@@ -53,8 +61,8 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.3) 50%, transparent 55%);
-  animation: shine 4s infinite;
+  background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.4) 50%, transparent 55%);
+  animation: shine 5s infinite cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes shine {
@@ -62,15 +70,20 @@
   100% { transform: translateX(100%) translateY(100%); }
 }
 
-/* Animação do Loading Napau - Apenas as gotas giram */
+/* Animação do Loading Napau */
 .napau-spin {
-  animation: napau-rotate 2.5s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+  animation: napau-rotate 3s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
   transform-origin: center;
 }
 
 @keyframes napau-rotate {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+/* Sombra para legibilidade de texto sobre fotos */
+.text-shadow-premium {
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
 /* Otimizações Mobile-First */

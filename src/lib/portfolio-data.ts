@@ -5,10 +5,12 @@ export interface Project {
   title: string;
   category: Category;
   description: string;
-  imageurl: string; // ✅ Coluna lowercase joined
+  imageurl: string; // Coluna lowercase conforme instruído
   year: string;
   active: boolean;
   created_at?: string;
+  client_name?: string;
+  materials?: string;
 }
 
 export interface Flyer {
@@ -18,9 +20,9 @@ export interface Flyer {
   data: string;
   local: string;
   contactos: string;
-  listaesquerda: string[]; // ✅ Coluna lowercase joined
-  listadireita: string[];  // ✅ Coluna lowercase joined
-  imageurl: string;        // ✅ Coluna lowercase joined
+  listaesquerda: string[]; // Coluna lowercase
+  listadireita: string[];  // Coluna lowercase
+  imageurl: string;        // Coluna lowercase
   ativo: boolean;
   created_at?: string;
 }
