@@ -1,2 +1,0 @@
-
-// Ficheiro removido - IA desativada
