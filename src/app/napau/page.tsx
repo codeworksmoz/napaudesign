@@ -10,7 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Trash2, Edit3, Settings, Loader2 } from 'lucide-react';
+import { Trash2, Edit3, Settings, Loader2, MessageCircle, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Project, Flyer, HomeContent, DEFAULT_HOME_CONTENT, Category, Registration } from '@/lib/portfolio-data';
 import { supabase } from '@/lib/supabase';
@@ -53,8 +53,17 @@ export default function NapauAdminPage() {
   async function carregarDados() {
     setCarregando(true);
     try {
-      const { data: homeData } = await supabase.from('home_content').select('*').eq('id', 1).single();
-      if (homeData) setHome(homeData);
+      const { data: homeData } = await supabase.from('home_content').select('*').eq('id', 1).maybeSingle();
+      if (homeData) {
+        setHome({
+          hero_title: homeData.hero_title || '',
+          hero_subtitle: homeData.hero_subtitle || '',
+          hero_image: homeData.hero_image || 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg',
+          service_bolo_desc: homeData.service_bolo_desc || '',
+          service_camiseta_desc: homeData.service_camiseta_desc || '',
+          service_formacao_desc: homeData.service_formacao_desc || '',
+        });
+      }
 
       const { data: projData } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
       if (projData) setProjects(projData as Project[]);
@@ -85,7 +94,7 @@ export default function NapauAdminPage() {
       if (error) {
         toast({
           title: "Erro de Acesso",
-          description: "Credenciais inválidas. Verifique os seus dados.",
+          description: "Credenciais inválidas ou problema de conexão.",
           variant: "destructive",
         });
       } else if (data.session) {
@@ -107,9 +116,9 @@ export default function NapauAdminPage() {
   const handleSupportEmail = (e: React.FormEvent) => {
     e.preventDefault();
     const subject = encodeURIComponent(`Suporte Napau Codworks: ${supportName}`);
-    const body = encodeURIComponent(`Nome: ${supportName}\nEmail: ${loginEmail}\nProblema: ${supportIssue}`);
+    const body = encodeURIComponent(`Nome: ${supportName}\nEmail: ${loginEmail}\nProblema: ${supportIssue}\n\nNota: Suporte Codworks garante resposta em 48h.`);
     window.location.href = `mailto:codworksmoz@gmail.com?subject=${subject}&body=${body}`;
-    toast({ title: "A abrir Gmail...", description: "Envie o seu pedido de suporte." });
+    toast({ title: "A abrir Gmail...", description: "Envie o seu pedido de suporte à Codworks." });
   };
 
   const saveHome = async () => {
@@ -217,6 +226,7 @@ export default function NapauAdminPage() {
               <Logo size={80} className="brightness-0 invert" />
             </div>
             <h1 className="text-2xl font-headline font-bold">Gestão Napau</h1>
+            <p className="text-[10px] uppercase font-bold tracking-widest opacity-80">Painel Codworks</p>
           </div>
           <CardContent className="p-10 space-y-6">
             <form onSubmit={handleLogin} className="space-y-4">
@@ -230,16 +240,31 @@ export default function NapauAdminPage() {
               <DialogTrigger asChild>
                 <button className="text-[10px] font-bold text-primary uppercase tracking-widest hover:underline mx-auto block">Problemas de Acesso? Suporte Codworks</button>
               </DialogTrigger>
-              <DialogContent className="rounded-3xl">
-                <DialogHeader><DialogTitle>Suporte Codworks</DialogTitle></DialogHeader>
-                <form onSubmit={handleSupportEmail} className="space-y-4 py-4">
-                  <Input required value={supportName} onChange={(e) => setSupportName(e.target.value)} placeholder="Seu Nome" />
-                  <Textarea required value={supportIssue} onChange={(e) => setSupportIssue(e.target.value)} placeholder="Descreva o problema" />
-                  <div className="flex gap-2">
-                    <Button type="submit" className="flex-1">Gmail</Button>
-                    <Button asChild variant="outline" className="flex-1"><a href="https://wa.me/258855920773" target="_blank">WhatsApp</a></Button>
+              <DialogContent className="rounded-3xl border-none shadow-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-primary font-headline text-2xl">Suporte Codworks</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-6 py-4">
+                  <p className="text-sm text-muted-foreground italic">
+                    Garantimos assistência técnica no prazo de 48h. Escolha como prefere contactar a nossa equipa:
+                  </p>
+                  <form onSubmit={handleSupportEmail} className="space-y-4">
+                    <Input required value={supportName} onChange={(e) => setSupportName(e.target.value)} placeholder="Seu Nome" className="rounded-xl" />
+                    <Textarea required value={supportIssue} onChange={(e) => setSupportIssue(e.target.value)} placeholder="Descreva o problema com o login..." className="rounded-xl resize-none" />
+                    <Button type="submit" className="w-full h-12 rounded-xl gap-2">
+                      <Mail size={18} /> Preparar E-mail (Gmail)
+                    </Button>
+                  </form>
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+                    <div className="relative flex justify-center text-[10px] uppercase font-bold"><span className="bg-white px-2 text-muted-foreground">Ou via WhatsApp</span></div>
                   </div>
-                </form>
+                  <Button asChild variant="outline" className="w-full h-12 rounded-xl gap-2 border-primary text-primary hover:bg-primary/5">
+                    <a href="https://wa.me/258855920773" target="_blank">
+                      <MessageCircle size={18} /> WhatsApp Codworks
+                    </a>
+                  </Button>
+                </div>
               </DialogContent>
             </Dialog>
           </CardContent>
@@ -258,7 +283,7 @@ export default function NapauAdminPage() {
               <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white"><Settings /></div>
               <h1 className="text-2xl font-headline font-bold">Consola Codworks</h1>
             </div>
-            <Button onClick={handleLogout} variant="outline" className="rounded-xl border-destructive text-destructive">Sair</Button>
+            <Button onClick={handleLogout} variant="outline" className="rounded-xl border-destructive text-destructive hover:bg-destructive/5">Sair</Button>
           </div>
 
           <Tabs defaultValue="home" className="space-y-6">
@@ -273,31 +298,31 @@ export default function NapauAdminPage() {
               <Card className="rounded-[2rem] border-none shadow-xl overflow-hidden">
                 <CardHeader className="flex flex-row justify-between items-center bg-secondary/5 p-8 border-b">
                   <h3 className="text-xl font-bold">Conteúdo do Site</h3>
-                  <Button onClick={saveHome} className="gold-shimmer px-8">Guardar Alterações</Button>
+                  <Button onClick={saveHome} className="gold-shimmer px-8 rounded-xl">Guardar Alterações</Button>
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase text-muted-foreground">Título Principal</label>
-                      <Input value={home.hero_title} onChange={(e) => setHome({...home, hero_title: e.target.value})} placeholder="Título Hero" />
+                      <Input value={home.hero_title || ''} onChange={(e) => setHome({...home, hero_title: e.target.value})} placeholder="Título Hero" className="rounded-xl" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase text-muted-foreground">Imagem de Fundo</label>
-                      <ImageUpload valor={home.hero_image} onChange={(url) => setHome({...home, hero_image: url})} />
+                      <ImageUpload valor={home.hero_image || 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg'} onChange={(url) => setHome({...home, hero_image: url})} />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-bold uppercase text-muted-foreground">Subtítulo / Descrição</label>
-                    <Textarea value={home.hero_subtitle} onChange={(e) => setHome({...home, hero_subtitle: e.target.value})} placeholder="Subtítulo Hero" />
+                    <Textarea value={home.hero_subtitle || ''} onChange={(e) => setHome({...home, hero_subtitle: e.target.value})} placeholder="Subtítulo Hero" className="rounded-xl resize-none" />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase text-muted-foreground">Descrição: Topos de Bolo</label>
-                      <Textarea value={home.service_bolo_desc} onChange={(e) => setHome({...home, service_bolo_desc: e.target.value})} placeholder="Descrição Topos" />
+                      <Textarea value={home.service_bolo_desc || ''} onChange={(e) => setHome({...home, service_bolo_desc: e.target.value})} placeholder="Descrição Topos" className="rounded-xl resize-none" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase text-muted-foreground">Descrição: Camisetas</label>
-                      <Textarea value={home.service_camiseta_desc} onChange={(e) => setHome({...home, service_camiseta_desc: e.target.value})} placeholder="Descrição Camisetas" />
+                      <Textarea value={home.service_camiseta_desc || ''} onChange={(e) => setHome({...home, service_camiseta_desc: e.target.value})} placeholder="Descrição Camisetas" className="rounded-xl resize-none" />
                     </div>
                   </div>
                 </CardContent>
@@ -306,21 +331,22 @@ export default function NapauAdminPage() {
 
             <TabsContent value="portfolio">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <Card className="lg:col-span-4 rounded-[2rem] p-8 border-none shadow-lg">
+                <Card className="lg:col-span-4 rounded-[2rem] p-8 border-none shadow-lg bg-white">
+                  <h3 className="font-bold mb-4 uppercase text-[10px] tracking-widest text-primary">Novo Trabalho</h3>
                   <form onSubmit={handleProjectSubmit} className="space-y-4">
-                    <Input name="title" defaultValue={editingProject?.title} placeholder="Título do Trabalho" required />
-                    <select name="category" defaultValue={editingProject?.category} className="w-full p-2 border rounded-xl bg-white">
+                    <Input name="title" defaultValue={editingProject?.title || ''} placeholder="Título do Trabalho" required className="rounded-xl" />
+                    <select name="category" defaultValue={editingProject?.category || 'Topos de Bolo'} className="w-full p-3 border rounded-xl bg-white text-sm">
                       <option value="Topos de Bolo">Topos de Bolo</option>
                       <option value="Camisetas">Camisetas</option>
                     </select>
                     <ImageUpload valor={editingProject?.image_url || 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg'} onChange={(url) => setEditingProject(prev => prev ? {...prev, image_url: url} : null)} />
-                    <Input name="year" defaultValue={editingProject?.year} placeholder="Ano" />
-                    <Textarea name="description" defaultValue={editingProject?.description} placeholder="Descrição" />
-                    <Button type="submit" className="w-full rounded-xl">Publicar</Button>
+                    <Input name="year" defaultValue={editingProject?.year || new Date().getFullYear().toString()} placeholder="Ano" className="rounded-xl" />
+                    <Textarea name="description" defaultValue={editingProject?.description || ''} placeholder="Descrição curta..." className="rounded-xl resize-none" />
+                    <Button type="submit" className="w-full rounded-xl gold-shimmer h-12">Publicar</Button>
                     {editingProject && <Button type="button" variant="ghost" onClick={() => setEditingProject(null)} className="w-full">Cancelar Edição</Button>}
                   </form>
                 </Card>
-                <Card className="lg:col-span-8 rounded-[2rem] border-none shadow-lg overflow-hidden">
+                <Card className="lg:col-span-8 rounded-[2rem] border-none shadow-lg overflow-hidden bg-white">
                   <Table>
                     <TableHeader className="bg-secondary/5">
                       <TableRow>
@@ -332,10 +358,10 @@ export default function NapauAdminPage() {
                     <TableBody>
                       {projects.map(p => (
                         <TableRow key={p.id}>
-                          <TableCell className="font-bold">{p.title}</TableCell>
-                          <TableCell>{p.category}</TableCell>
+                          <TableCell className="font-bold text-primary">{p.title}</TableCell>
+                          <TableCell className="text-xs uppercase font-medium">{p.category}</TableCell>
                           <TableCell className="text-right">
-                            <Button variant="ghost" size="icon" onClick={() => setEditingProject(p)}><Edit3 size={16}/></Button>
+                            <Button variant="ghost" size="icon" onClick={() => setEditingProject(p)} className="text-primary"><Edit3 size={16}/></Button>
                             <Button variant="ghost" size="icon" className="text-destructive" onClick={() => deleteProject(p.id)}><Trash2 size={16}/></Button>
                           </TableCell>
                         </TableRow>
@@ -348,23 +374,23 @@ export default function NapauAdminPage() {
 
             <TabsContent value="flyers">
               <div className="space-y-4">
-                <Button onClick={addFlyer} className="gold-shimmer">Novo Flyer de Curso</Button>
+                <Button onClick={addFlyer} className="gold-shimmer rounded-xl h-12 px-8">Novo Flyer de Curso</Button>
                 {flyers.map(f => (
-                  <Card key={f.id} className="rounded-[2rem] p-6 border-none shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
+                  <Card key={f.id} className="rounded-[2rem] p-6 border-none shadow-lg flex flex-col md:flex-row justify-between items-center gap-4 bg-white">
                     <div className="flex-1 space-y-2">
                       <Input 
-                        value={f.titulo} 
-                        className="font-bold border-none text-lg" 
+                        value={f.titulo || ''} 
+                        className="font-bold border-none text-lg text-primary focus-visible:ring-0 p-0 h-auto" 
                         onChange={(e) => setFlyers(flyers.map(item => item.id === f.id ? {...item, titulo: e.target.value} : item))} 
                       />
-                      <p className="text-xs text-muted-foreground px-3">Estado: {f.ativo ? '✅ Ativo' : '❌ Inativo'}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Estado: {f.ativo ? '✅ Ativo no site' : '❌ Inativo'}</p>
                     </div>
                     <div className="flex gap-2">
-                      <Button onClick={() => saveFlyer(f)}>Gravar</Button>
-                      <Button variant="outline" onClick={() => setFlyers(flyers.map(item => item.id === f.id ? {...item, ativo: !f.ativo} : item))}>
+                      <Button onClick={() => saveFlyer(f)} className="rounded-xl">Gravar</Button>
+                      <Button variant="outline" className="rounded-xl" onClick={() => setFlyers(flyers.map(item => item.id === f.id ? {...item, ativo: !f.ativo} : item))}>
                         {f.ativo ? 'Desativar' : 'Ativar'}
                       </Button>
-                      <Button variant="outline" className="text-destructive" onClick={() => { if(confirm('Apagar curso?')) supabase.from('flyers').delete().eq('id', f.id).then(() => carregarDados()) }}>Apagar</Button>
+                      <Button variant="outline" className="rounded-xl text-destructive border-destructive" onClick={() => { if(confirm('Apagar curso definitivamente?')) supabase.from('flyers').delete().eq('id', f.id).then(() => carregarDados()) }}>Apagar</Button>
                     </div>
                   </Card>
                 ))}
@@ -372,7 +398,7 @@ export default function NapauAdminPage() {
             </TabsContent>
 
             <TabsContent value="registrations">
-              <Card className="rounded-[2rem] border-none shadow-lg overflow-hidden">
+              <Card className="rounded-[2rem] border-none shadow-lg overflow-hidden bg-white">
                 <Table>
                   <TableHeader className="bg-secondary/5">
                     <TableRow>
@@ -386,13 +412,13 @@ export default function NapauAdminPage() {
                       <TableRow key={r.id}>
                         <TableCell>
                           <span className="text-primary font-bold">{r.student_name}</span>
-                          <br/><span className="text-[10px] text-muted-foreground">{r.student_phone}</span>
+                          <br/><span className="text-[10px] text-muted-foreground font-mono">{r.student_phone}</span>
                         </TableCell>
-                        <TableCell>{r.course_title}</TableCell>
+                        <TableCell className="text-sm">{r.course_title}</TableCell>
                         <TableCell>
                           <select 
                             value={r.status} 
-                            className="bg-transparent border-none text-xs font-bold text-primary"
+                            className="bg-transparent border-none text-xs font-bold text-primary cursor-pointer hover:underline"
                             onChange={(e) => {
                               supabase.from('registrations').update({ status: e.target.value }).eq('id', r.id).then(() => carregarDados());
                             }}
