@@ -55,7 +55,7 @@ export default function NapauAdminPage() {
   async function carregarDados() {
     setCarregando(true);
     try {
-      const { data: homeData } = await supabase.from('home_content').select('*').maybeSingle();
+      const { data: homeData } = await supabase.from('home_content').select('*').single();
       if (homeData) setHome(homeData);
 
       const { data: projData } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
@@ -64,7 +64,7 @@ export default function NapauAdminPage() {
       const { data: flyData } = await supabase.from('flyers').select('*').order('created_at', { ascending: false });
       if (flyData) setFlyers(flyData as Flyer[]);
 
-      const { data: regData } = await supabase.from('registrations').select('*').order('registrationDate', { ascending: false });
+      const { data: regData } = await supabase.from('registrations').select('*').order('created_at', { ascending: false });
       if (regData) setRegistrations(regData as Registration[]);
 
     } catch (error) {
