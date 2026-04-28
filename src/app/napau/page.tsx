@@ -121,13 +121,38 @@ export default function NapauAdminPage() {
     toast({ title: "A abrir Gmail...", description: "Prepare o envio do seu e-mail de suporte." });
   };
 
-  const saveHome = async () => {
+    const saveHome = async () => {
     try {
-      const { error } = await supabase.from('home_content').upsert(home);
-      if (error) throw error;
-      toast({ title: "Conteúdo da Home atualizado!" });
+      const dadosParaSalvar = {
+        id: 1,
+        heroTitle: home.heroTitle || '',
+        heroSubtitle: home.heroSubtitle || '',
+        heroImage: home.heroImage || '',
+        serviceBoloDesc: home.serviceBoloDesc || '',
+        serviceCamisetaDesc: home.serviceCamisetaDesc || '',
+        serviceFormacaoDesc: home.serviceFormacaoDesc || '',
+        updated_at: new Date().toISOString(),
+      };
+
+      console.log('📤 A enviar para Supabase:', dadosParaSalvar);
+
+      const { error } = await supabase
+        .from('home_content')
+        .upsert(dadosParaSalvar);
+
+      if (error) {
+        console.error('❌ Erro Supabase:', error.message, error.details);
+        throw error;
+      }
+
+      toast({ title: "✅ Home atualizada com sucesso!" });
     } catch (e: any) {
-      toast({ title: "Erro ao salvar Home", description: e.message, variant: "destructive" });
+      console.error('Erro ao guardar:', e);
+      toast({
+        title: "Erro ao salvar Home",
+        description: e.message || "Verifique o console.",
+        variant: "destructive",
+      });
     }
   };
 
