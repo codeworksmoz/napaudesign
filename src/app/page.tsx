@@ -25,7 +25,7 @@ export default function Home() {
   async function carregarDados() {
     setCarregando(true);
     try {
-      const { data: homeData } = await supabase.from('home_content').select('*').maybeSingle();
+      const { data: homeData } = await supabase.from('home_content').select('*').single();
       if (homeData) setHome(homeData);
 
       const { data: projectsData } = await supabase
