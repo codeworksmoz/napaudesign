@@ -28,6 +28,13 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      // ✅ ADICIONA ESTE BLOCO
+      {
+        protocol: 'https',
+        hostname: 'xywhrhvljrqjzmlznjrv.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
+      },
     ],
   },
 };
