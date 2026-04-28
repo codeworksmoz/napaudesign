@@ -12,9 +12,7 @@ import { supabase } from '@/lib/supabase';
 const CATEGORIES: { label: string, value: Category }[] = [
   { label: 'Todos', value: 'Todos' },
   { label: 'Topos de Bolo', value: 'Topos de Bolo' },
-  { label: 'Camisetas', value: 'Camisetas' },
-  { label: 'Design Personalizado', value: 'Design Personalizado' },
-  { label: 'Kits Revenda', value: 'Kits Revenda' }
+  { label: 'Camisetas', value: 'Camisetas' }
 ];
 
 export default function PortfolioPage() {
@@ -37,7 +35,7 @@ export default function PortfolioPage() {
 
       if (data) setProjects(data as Project[]);
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao buscar projetos:', error);
     } finally {
       setLoading(false);
     }
@@ -51,24 +49,24 @@ export default function PortfolioPage() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-grow pt-24 md:pt-32 pb-16 md:pb-24 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto space-y-10 md:space-y-16">
-          <div className="space-y-4 md:space-y-6 text-center max-w-2xl mx-auto">
-            <h1 className="text-3xl md:text-6xl font-headline font-bold tracking-tight">Nosso Portfólio</h1>
-            <p className="text-sm md:text-lg text-muted-foreground font-light font-body">
-              Explore nossa galeria de topos de bolo exclusivos e camisetas personalizadas. Cada peça é um reflexo único de criatividade.
+      <main className="flex-grow pt-32 pb-24 px-6">
+        <div className="max-w-7xl mx-auto space-y-16">
+          <div className="space-y-6 text-center max-w-2xl mx-auto">
+            <h1 className="text-4xl md:text-7xl font-headline font-bold tracking-tight">Nosso Portfólio</h1>
+            <p className="text-lg text-muted-foreground font-light">
+              Explore nossa galeria especializada em topos de bolo exclusivos e camisetas personalizadas.
             </p>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-2 md:gap-3">
+          <div className="flex flex-wrap justify-center gap-3">
             {CATEGORIES.map(category => (
               <button
                 key={category.value}
                 onClick={() => setActiveCategory(category.value)}
                 className={cn(
-                  "px-4 py-2 md:px-6 md:py-2 rounded-full text-[10px] md:text-xs font-semibold uppercase tracking-widest transition-all duration-300 border",
+                  "px-8 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 border",
                   activeCategory === category.value 
-                    ? "bg-primary text-white border-primary shadow-md" 
+                    ? "bg-primary text-white border-primary shadow-lg" 
                     : "bg-white text-muted-foreground border-border hover:border-primary/50"
                 )}
               >
@@ -82,26 +80,18 @@ export default function PortfolioPage() {
               <Loader2 className="animate-spin text-primary" size={48} />
             </div>
           ) : filteredProjects.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredProjects.map(project => (
                 <PortfolioCard key={project.id} project={project} />
               ))}
             </div>
           ) : (
-            <div className="py-20 md:py-32 text-center space-y-6 bg-secondary/10 rounded-[2rem] border-2 border-dashed border-border/50 px-6">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary">
-                <Sparkles size={32} />
-              </div>
+            <div className="py-32 text-center space-y-6 bg-secondary/5 rounded-[3rem] border-2 border-dashed border-primary/10 px-6">
+              <Sparkles size={48} className="mx-auto text-primary/30" />
               <div className="space-y-2">
-                <p className="text-lg md:text-xl text-muted-foreground font-light">Estamos a preparar novidades incríveis para esta categoria.</p>
-                <p className="text-xs md:text-sm text-muted-foreground/60 uppercase tracking-widest">Em breve na Napau Design & Arte!</p>
+                <p className="text-xl text-muted-foreground font-light">Estamos a preparar novas criações para esta categoria.</p>
+                <p className="text-xs text-muted-foreground/60 uppercase tracking-widest font-bold">Em breve na Napau!</p>
               </div>
-              <button 
-                onClick={() => setActiveCategory('Todos')}
-                className="text-primary font-semibold hover:underline text-sm uppercase tracking-widest"
-              >
-                Ver Outras Criações
-              </button>
             </div>
           )}
         </div>

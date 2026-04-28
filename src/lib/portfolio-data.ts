@@ -1,4 +1,4 @@
-export type Category = 'Todos' | 'Topos de Bolo' | 'Camisetas' | 'Design Personalizado' | 'Kits Revenda';
+export type Category = 'Todos' | 'Topos de Bolo' | 'Camisetas';
 
 export interface Project {
   id: string;
@@ -30,7 +30,7 @@ export interface HomeContent {
   heroTitle: string;
   heroSubtitle: string;
   heroImage: string;
-  serviceBoloDesc: string; // Agora focado em Topos de Bolo
+  serviceBoloDesc: string; 
   serviceCamisetaDesc: string;
   serviceFormacaoDesc: string;
 }
