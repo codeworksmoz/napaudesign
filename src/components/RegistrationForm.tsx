@@ -26,9 +26,6 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ course, onSu
     studentphone: '',
     doctype: 'BI',
     docnumber: '',
-    docissuedate: '',
-    docexpirydate: '',
-    docissueplace: '',
   });
 
   useEffect(() => {
@@ -65,7 +62,11 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ course, onSu
     try {
       const generatedId = await generateId();
       const newReg: Registration = {
-        ...(formData as Registration),
+        studentname: formData.studentname!,
+        studentemail: formData.studentemail!,
+        studentphone: formData.studentphone!,
+        doctype: formData.doctype!,
+        docnumber: formData.docnumber!,
         id: generatedId,
         courseid: course.id,
         coursetitle: course.titulo,
@@ -90,13 +91,22 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ course, onSu
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-h-[70vh] overflow-y-auto px-1">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2"><Label>Nome</Label><Input required value={formData.studentname} onChange={(e) => handleChange('studentname', e.target.value)} className="rounded-xl" /></div>
-        <div className="space-y-2"><Label>Telefone</Label><Input required type="tel" value={formData.studentphone} onChange={(e) => handleChange('studentphone', e.target.value)} className="rounded-xl" /></div>
+        <div className="space-y-2">
+          <Label>Nome Completo</Label>
+          <Input required value={formData.studentname} onChange={(e) => handleChange('studentname', e.target.value)} className="rounded-xl" />
+        </div>
+        <div className="space-y-2">
+          <Label>Telefone</Label>
+          <Input required type="tel" value={formData.studentphone} onChange={(e) => handleChange('studentphone', e.target.value)} className="rounded-xl" />
+        </div>
       </div>
-      <div className="space-y-2"><Label>Email</Label><Input required type="email" value={formData.studentemail} onChange={(e) => handleChange('studentemail', e.target.value)} className="rounded-xl" /></div>
+      <div className="space-y-2">
+        <Label>Email</Label>
+        <Input required type="email" value={formData.studentemail} onChange={(e) => handleChange('studentemail', e.target.value)} className="rounded-xl" />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label>Documento</Label>
+          <Label>Tipo de Documento</Label>
           <Select value={formData.doctype} onValueChange={(v) => handleChange('doctype', v as DocumentType)}>
             <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -107,7 +117,10 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ course, onSu
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2"><Label>Número</Label><Input required value={formData.docnumber} onChange={(e) => handleChange('docnumber', e.target.value)} className="rounded-xl" /></div>
+        <div className="space-y-2">
+          <Label>Número do Documento</Label>
+          <Input required value={formData.docnumber} onChange={(e) => handleChange('docnumber', e.target.value)} className="rounded-xl" />
+        </div>
       </div>
       <Button type="submit" disabled={loading} className="w-full py-6 rounded-xl text-lg font-bold gold-shimmer shadow-lg">
         {loading ? <Loader2 className="animate-spin" /> : <><CheckCircle2 className="mr-2" /> Gerar Recibo</>}
