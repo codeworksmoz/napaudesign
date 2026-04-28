@@ -56,12 +56,12 @@ export default function NapauAdminPage() {
       const { data: homeData } = await supabase.from('home_content').select('*').eq('id', 1).maybeSingle();
       if (homeData) {
         setHome({
-          hero_title: homeData.hero_title || '',
-          hero_subtitle: homeData.hero_subtitle || '',
-          hero_image: homeData.hero_image || 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg',
-          service_bolo_desc: homeData.service_bolo_desc || '',
-          service_camiseta_desc: homeData.service_camiseta_desc || '',
-          service_formacao_desc: homeData.service_formacao_desc || '',
+          hero_title: homeData.heroTitle || '',
+          hero_subtitle: homeData.heroSubtitle || '',
+          hero_image: homeData.heroImage || 'https://xywhrhvljrqjzmlznjrv.supabase.co/storage/v1/object/public/produtos/1777400114494-o2faq6.jpg',
+          service_bolo_desc: homeData.serviceBoloDesc || '',
+          service_camiseta_desc: homeData.serviceCamisetaDesc || '',
+          service_formacao_desc: homeData.serviceFormacaoDesc || '',
         });
       }
 
@@ -127,12 +127,12 @@ export default function NapauAdminPage() {
         .from('home_content')
         .upsert({
           id: 1,
-          hero_title: home.hero_title,
-          hero_subtitle: home.hero_subtitle,
-          hero_image: home.hero_image,
-          service_bolo_desc: home.service_bolo_desc,
-          service_camiseta_desc: home.service_camiseta_desc,
-          service_formacao_desc: home.service_formacao_desc,
+          heroTitle: home.hero_title,
+          heroSubtitle: home.hero_subtitle,
+          heroImage: home.hero_image,
+          serviceBoloDesc: home.service_bolo_desc,
+          serviceCamisetaDesc: home.service_camiseta_desc,
+          serviceFormacaoDesc: home.service_formacao_desc,
         });
 
       if (error) throw error;

@@ -25,12 +25,12 @@ export default function Home() {
     try {
       const { data: homeData } = await supabase.from('home_content').select('*').eq('id', 1).maybeSingle();
       if (homeData) setHome({
-        hero_title: homeData.hero_title || DEFAULT_HOME_CONTENT.hero_title,
-        hero_subtitle: homeData.hero_subtitle || DEFAULT_HOME_CONTENT.hero_subtitle,
-        hero_image: homeData.hero_image || DEFAULT_HOME_CONTENT.hero_image,
-        service_bolo_desc: homeData.service_bolo_desc || DEFAULT_HOME_CONTENT.service_bolo_desc,
-        service_camiseta_desc: homeData.service_camiseta_desc || DEFAULT_HOME_CONTENT.service_camiseta_desc,
-        service_formacao_desc: homeData.service_formacao_desc || DEFAULT_HOME_CONTENT.service_formacao_desc,
+        hero_title: homeData.heroTitle || DEFAULT_HOME_CONTENT.hero_title,
+        hero_subtitle: homeData.heroSubtitle || DEFAULT_HOME_CONTENT.hero_subtitle,
+        hero_image: homeData.heroImage || DEFAULT_HOME_CONTENT.hero_image,
+        service_bolo_desc: homeData.serviceBoloDesc || DEFAULT_HOME_CONTENT.service_bolo_desc,
+        service_camiseta_desc: homeData.serviceCamisetaDesc || DEFAULT_HOME_CONTENT.service_camiseta_desc,
+        service_formacao_desc: homeData.serviceFormacaoDesc || DEFAULT_HOME_CONTENT.service_formacao_desc,
       });
 
       const { data: projectsData } = await supabase
