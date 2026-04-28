@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -26,11 +25,9 @@ export default function Home() {
   async function carregarDados() {
     setCarregando(true);
     try {
-      // 1. Carregar Conteúdo da Home
       const { data: homeData } = await supabase.from('home_content').select('*').single();
       if (homeData) setHome(homeData);
 
-      // 2. Carregar Projetos Ativos (limite 3 para a home)
       const { data: projectsData } = await supabase
         .from('projects')
         .select('*')
@@ -39,7 +36,6 @@ export default function Home() {
         .limit(3);
       if (projectsData) setProjects(projectsData as Project[]);
 
-      // 3. Carregar Flyers Ativos
       const { data: flyersData } = await supabase
         .from('flyers')
         .select('*')
@@ -97,7 +93,7 @@ export default function Home() {
           <div className="relative z-10 max-w-5xl mx-auto text-center space-y-4 px-6 mt-12 md:mt-0">
             <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.25em] border border-primary/20 backdrop-blur-md">
               <Sparkles size={14} className="animate-pulse" />
-              Criatividade em Moçambique
+              Design & Arte em Moçambique
             </div>
             <h1 className="text-5xl md:text-8xl font-headline font-bold leading-[0.95] tracking-tight">
               {home.heroTitle}
@@ -107,10 +103,10 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-5 justify-center pt-4">
               <Button asChild className="rounded-[1.5rem] px-12 py-8 text-lg font-bold gold-shimmer shadow-2xl">
-                <Link href="/portfolio">Explorar Portfólio</Link>
+                <Link href="/portfolio">Ver Coleção</Link>
               </Button>
               <Button asChild variant="outline" className="rounded-[1.5rem] px-12 py-8 text-lg font-bold border-primary/30 hover:bg-primary/5 bg-white/40 backdrop-blur-sm">
-                <Link href="/cursos">Cursos & Formação</Link>
+                <Link href="/cursos">Cursos Disponíveis</Link>
               </Button>
             </div>
           </div>
@@ -124,7 +120,7 @@ export default function Home() {
                 <div className="flex-1 space-y-8">
                   <div className="space-y-4">
                     <span className="text-primary font-bold uppercase tracking-[0.3em] text-[10px] flex items-center gap-2 bg-white/50 w-fit px-4 py-2 rounded-full border border-primary/10">
-                      <GraduationCap size={16} /> Próxima Formação
+                      <GraduationCap size={16} /> Workshop Criativo
                     </span>
                     <h2 className="text-4xl md:text-7xl font-headline font-bold text-foreground leading-tight">{activeFlyers[0].titulo}</h2>
                   </div>
@@ -152,7 +148,7 @@ export default function Home() {
 
                   <Button asChild className="rounded-[1.5rem] px-12 py-8 text-xl font-bold gold-shimmer shadow-lg">
                     <Link href="/cursos" className="flex items-center gap-3">
-                      Garantir Minha Vaga <ArrowRight size={24} />
+                      Quero Participar <ArrowRight size={24} />
                     </Link>
                   </Button>
                 </div>
@@ -183,13 +179,13 @@ export default function Home() {
         <section className="py-20 px-6 bg-white">
           <div className="max-w-7xl mx-auto space-y-16">
             <div className="text-center space-y-4 max-w-3xl mx-auto">
-              <h2 className="text-4xl md:text-7xl font-headline font-bold tracking-tight">O Que Fazemos</h2>
+              <h2 className="text-4xl md:text-7xl font-headline font-bold tracking-tight">O Que Criamos</h2>
               <div className="w-20 h-1 bg-primary/30 mx-auto rounded-full"></div>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
               {[
-                { icon: Cake, title: "Tipos de Bolo", desc: home.serviceBoloDesc },
+                { icon: Cake, title: "Topos de Bolo", desc: home.serviceBoloDesc },
                 { icon: Shirt, title: "Camisetas", desc: home.serviceCamisetaDesc },
                 { icon: GraduationCap, title: "Formação", desc: home.serviceFormacaoDesc }
               ].map((service, i) => (
@@ -247,7 +243,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-6 justify-center pt-6">
               <Button asChild className="bg-white text-primary hover:bg-white/95 rounded-[2rem] px-14 py-8 text-2xl font-bold shadow-2xl transition-all hover:scale-105 active:scale-95 group">
                 <a 
-                  href={`https://wa.me/258847615871?text=${encodeURIComponent('Olá! Vim pelo site da Napau Design & Arte e gostaria de solicitar um orçamento personalizado.')}`}
+                  href={`https://wa.me/258847615871?text=${encodeURIComponent('Olá! Vim pelo site da Napau e gostaria de solicitar um orçamento para topos de bolo/camisetas.')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

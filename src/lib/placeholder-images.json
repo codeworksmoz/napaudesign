@@ -3,7 +3,7 @@
     {
       "id": "cake-topper-1",
       "description": "Topo de bolo personalizado dourado para aniversário",
-      "imageUrl": "https://picsum.photos/seed/cake1/800/600",
+      "imageUrl": "https://picsum.photos/seed/topper1/800/600",
       "imageHint": "cake topper"
     },
     {
@@ -15,7 +15,7 @@
     {
       "id": "cake-topper-2",
       "description": "Topo de bolo de casamento elegante em acrílico",
-      "imageUrl": "https://picsum.photos/seed/cake2/800/600",
+      "imageUrl": "https://picsum.photos/seed/topper2/800/600",
       "imageHint": "wedding topper"
     },
     {

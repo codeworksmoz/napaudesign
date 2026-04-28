@@ -1,5 +1,4 @@
-
-export type Category = 'Todos' | 'Tipos de Bolo' | 'Camisetas' | 'Design Personalizado' | 'Kits Revenda';
+export type Category = 'Todos' | 'Topos de Bolo' | 'Camisetas' | 'Design Personalizado' | 'Kits Revenda';
 
 export interface Project {
   id: string;
@@ -53,36 +52,36 @@ export interface Registration {
 
 export const DEFAULT_HOME_CONTENT: HomeContent = {
   heroTitle: 'A Arte de Personalizar Momentos',
-  heroSubtitle: 'Especialistas em tipos de bolo artísticos e camisetas exclusivas. Criamos o que você imagina com perfeição.',
+  heroSubtitle: 'Especialistas em topos de bolo criativos e camisetas exclusivas. Criamos o detalhe que torna a sua celebração única.',
   heroImage: 'https://picsum.photos/seed/napau-hero/1200/800',
-  serviceBoloDesc: 'Bolos artísticos, temáticos e personalizados para casamentos e aniversários inesquecíveis.',
-  serviceCamisetaDesc: 'Estamparia premium para marcas, eventos e uso pessoal com acabamento superior.',
-  serviceFormacaoDesc: 'Cursos profissionais de confeitaria para quem deseja dominar as técnicas mais modernas.'
+  serviceBoloDesc: 'Topos de bolo personalizados em acrílico, madeira ou papel premium para dar o toque final perfeito à sua festa.',
+  serviceCamisetaDesc: 'Estamparia premium para marcas, eventos e uso pessoal com acabamento superior e duradouro.',
+  serviceFormacaoDesc: 'Cursos profissionais para quem deseja dominar as técnicas de design e personalização de artigos de festa.'
 };
 
 export const DEFAULT_FLYERS: Flyer[] = [
   {
     id: '1',
-    titulo: 'Curso de Confeitaria Profissional',
-    preco: '4.500 MT',
-    data: '14 DE DEZEMBRO',
+    titulo: 'Workshop de Topos de Bolo Criativos',
+    preco: '3.500 MT',
+    data: 'Em breve',
     local: 'AV. ACORDOS DE LUSAKA, PARAGEM BALTAZAR',
-    contactos: '+258 84 761 5871 | 86 791 5871',
+    contactos: '+258 84 761 5871',
     listaEsquerda: [
-      "BOLO DE ANIVERSÁRIO COM FOTO",
-      "BOLO DE CASAMENTO",
-      "BOLO GELADO",
-      "BOLO TEMÁTICO",
-      "BOLACHINHAS SORTIDAS"
+      "DESIGN DE TOPOS 3D",
+      "CORTE EM ACRÍLICO",
+      "MONTAGEM DE CAMADAS",
+      "TOPOS COM LED",
+      "TÉCNICAS DE PAPELARIA"
     ],
     listaDireita: [
-      "CUP-CAKES PERSONALIZADOS",
-      "DRIP-CAKES",
-      "FLORESTA NEGRA",
-      "ORELHUDOS DE CUSTARDE",
-      "SOBREMESAS"
+      "ACABAMENTOS DOURADOS",
+      "FONTES E TIPOGRAFIA",
+      "PRECIFICAÇÃO",
+      "FORNECEDORES",
+      "MARKETING CRIATIVO"
     ],
-    imageUrl: 'https://picsum.photos/seed/pastry-class/1000/1200',
+    imageUrl: 'https://picsum.photos/seed/topper-class/1000/1200',
     ativo: true
   }
 ];
@@ -90,10 +89,10 @@ export const DEFAULT_FLYERS: Flyer[] = [
 export const PORTFOLIO_PROJECTS: Project[] = [
   {
     id: '1',
-    title: 'Bolo de Casamento Gold',
-    category: 'Tipos de Bolo',
-    description: 'Bolo artístico com detalhes em folha de ouro e acabamento premium.',
-    imageUrl: 'https://picsum.photos/seed/cake-gold/800/600',
+    title: 'Topo de Bolo Casamento Moderno',
+    category: 'Topos de Bolo',
+    description: 'Topo de bolo personalizado em acrílico dourado espelhado com o nome dos noivos.',
+    imageUrl: 'https://picsum.photos/seed/topper-gold/800/600',
     year: '2024',
     active: true
   },
@@ -101,7 +100,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     id: '2',
     title: 'Camiseta Napau Signature',
     category: 'Camisetas',
-    description: 'Design exclusivo Napau com tecido de alta qualidade.',
+    description: 'Design exclusivo Napau com impressão de alta definição.',
     imageUrl: 'https://picsum.photos/seed/tshirt-napau/800/600',
     year: '2024',
     active: true

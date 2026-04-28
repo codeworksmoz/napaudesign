@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -32,19 +31,15 @@ export default function NapauAdminPage() {
   async function carregarDados() {
     setCarregando(true);
     try {
-      // 1. Home
       const { data: homeData } = await supabase.from('home_content').select('*').single();
       if (homeData) setHome(homeData);
 
-      // 2. Projetos
       const { data: projData } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
       if (projData) setProjects(projData as Project[]);
 
-      // 3. Flyers
       const { data: flyData } = await supabase.from('flyers').select('*').order('created_at', { ascending: false });
       if (flyData) setFlyers(flyData as Flyer[]);
 
-      // 4. Inscrições
       const { data: regData } = await supabase.from('registrations').select('*').order('registrationDate', { ascending: false });
       if (regData) setRegistrations(regData as Registration[]);
 
@@ -55,7 +50,6 @@ export default function NapauAdminPage() {
     }
   }
 
-  // --- HOME ---
   const saveHome = async () => {
     try {
       const { error } = await supabase.from('home_content').upsert(home);
@@ -66,7 +60,6 @@ export default function NapauAdminPage() {
     }
   };
 
-  // --- PORTFOLIO ---
   const handleProjectSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -109,7 +102,6 @@ export default function NapauAdminPage() {
     }
   };
 
-  // --- FLYERS ---
   const saveFlyer = async (flyer: Flyer) => {
     try {
       const { error } = await supabase.from('flyers').upsert(flyer);
@@ -123,7 +115,7 @@ export default function NapauAdminPage() {
 
   const addFlyer = async () => {
     const newFlyer = {
-      titulo: 'Novo Curso',
+      titulo: 'Novo Curso/Workshop',
       preco: '0 MT',
       data: 'DATA',
       local: 'NAPAU',
@@ -157,7 +149,6 @@ export default function NapauAdminPage() {
     }
   };
 
-  // --- REGISTRATIONS ---
   const deleteRegistration = async (id: string) => {
     if (!confirm('Remover esta inscrição?')) return;
     try {
@@ -190,7 +181,7 @@ export default function NapauAdminPage() {
               </div>
               <div>
                 <h1 className="text-3xl font-headline font-bold text-foreground">Gestão Napau</h1>
-                <p className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Base de Dados Supabase</p>
+                <p className="text-muted-foreground text-xs uppercase tracking-widest font-bold">Painel Administrativo</p>
               </div>
             </div>
           </div>
@@ -228,7 +219,7 @@ export default function NapauAdminPage() {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div className="space-y-3">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-primary px-1">Desc. Tipos de Bolo</label>
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-primary px-1">Desc. Topos de Bolo</label>
                       <Textarea value={home.serviceBoloDesc} onChange={(e) => setHome({...home, serviceBoloDesc: e.target.value})} className="rounded-xl h-28 resize-none" />
                     </div>
                     <div className="space-y-3">
@@ -250,28 +241,27 @@ export default function NapauAdminPage() {
                   <CardHeader className="bg-secondary/5 rounded-t-[2rem]"><CardTitle className="text-lg">{editingProject ? 'Editar Trabalho' : 'Novo Trabalho'}</CardTitle></CardHeader>
                   <CardContent className="p-6">
                     <form onSubmit={handleProjectSubmit} className="space-y-4">
-                      <Input name="title" defaultValue={editingProject?.title} placeholder="Título do Projeto" required className="rounded-xl" />
-                      <select name="category" defaultValue={editingProject?.category || 'Tipos de Bolo'} className="w-full p-3 border rounded-xl bg-white text-sm font-medium outline-none">
-                        <option value="Tipos de Bolo">Tipos de Bolo</option>
+                      <Input name="title" defaultValue={editingProject?.title} placeholder="Título do Trabalho" required className="rounded-xl" />
+                      <select name="category" defaultValue={editingProject?.category || 'Topos de Bolo'} className="w-full p-3 border rounded-xl bg-white text-sm font-medium outline-none">
+                        <option value="Topos de Bolo">Topos de Bolo</option>
                         <option value="Camisetas">Camisetas</option>
                         <option value="Design Personalizado">Design Personalizado</option>
                         <option value="Kits Revenda">Kits Revenda</option>
                       </select>
                       <Input name="year" defaultValue={editingProject?.year || '2024'} placeholder="Ano" required className="rounded-xl" />
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase text-primary px-1">Imagem do Projeto</label>
-                        <Input name="imageUrl" value={editingProject?.imageUrl || ''} readOnly className="hidden" />
+                        <label className="text-[10px] font-bold uppercase text-primary px-1">Imagem</label>
                         <ImageUpload 
                           valor={editingProject?.imageUrl || ''} 
                           onChange={(url) => setEditingProject(prev => prev ? {...prev, imageUrl: url} : null)} 
                         />
                       </div>
-                      <Textarea name="description" defaultValue={editingProject?.description} placeholder="Breve descrição..." required className="rounded-xl h-24 resize-none" />
+                      <Textarea name="description" defaultValue={editingProject?.description} placeholder="Descrição curta..." required className="rounded-xl h-24 resize-none" />
                       <Button type="submit" className="w-full rounded-xl py-6 font-bold shadow-md">
-                        {editingProject ? 'Atualizar Projeto' : 'Adicionar ao Portfólio'}
+                        {editingProject ? 'Atualizar' : 'Adicionar ao Portfólio'}
                       </Button>
                       {editingProject && (
-                        <Button type="button" variant="ghost" onClick={() => setEditingProject(null)} className="w-full">Cancelar Edição</Button>
+                        <Button type="button" variant="ghost" onClick={() => setEditingProject(null)} className="w-full">Cancelar</Button>
                       )}
                     </form>
                   </CardContent>
@@ -300,8 +290,8 @@ export default function NapauAdminPage() {
               <div className="space-y-8">
                 <div className="flex justify-between items-center bg-white p-6 rounded-[2rem] shadow-sm">
                   <div>
-                    <h3 className="text-xl font-bold font-headline">Catálogo de Cursos</h3>
-                    <p className="text-xs text-muted-foreground">Gestão em tempo real no Supabase.</p>
+                    <h3 className="text-xl font-bold font-headline">Cursos & Workshops</h3>
+                    <p className="text-xs text-muted-foreground">Gestão de inscrições e catálogo.</p>
                   </div>
                   <Button onClick={addFlyer} className="rounded-xl gap-2 px-6 py-6 font-bold"><Plus size={18} /> Criar Novo Flyer</Button>
                 </div>
@@ -317,12 +307,12 @@ export default function NapauAdminPage() {
                     <CardContent className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-4">
                         <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase text-primary">Flyer (Imagem)</label>
+                          <label className="text-[10px] font-bold uppercase text-primary">Imagem do Flyer</label>
                           <ImageUpload valor={flyer.imageUrl} onChange={(url) => updateFlyerLocal(flyer.id, 'imageUrl', url)} />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase text-primary">Preço</label>
+                            <label className="text-[10px] font-bold uppercase text-primary">Investimento</label>
                             <Input value={flyer.preco} onChange={(e) => updateFlyerLocal(flyer.id, 'preco', e.target.value)} className="rounded-xl" />
                           </div>
                           <div className="space-y-2">
@@ -333,15 +323,15 @@ export default function NapauAdminPage() {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase text-primary">Lista Esquerda</label>
+                          <label className="text-[10px] font-bold uppercase text-primary">O que vão aprender (L)</label>
                           <Textarea value={flyer.listaEsquerda.join('\n')} onChange={(e) => updateFlyerLocal(flyer.id, 'listaEsquerda', e.target.value.split('\n'))} className="rounded-xl h-24 text-xs font-mono" />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase text-primary">Lista Direita</label>
+                          <label className="text-[10px] font-bold uppercase text-primary">O que vão aprender (R)</label>
                           <Textarea value={flyer.listaDireita.join('\n')} onChange={(e) => updateFlyerLocal(flyer.id, 'listaDireita', e.target.value.split('\n'))} className="rounded-xl h-24 text-xs font-mono" />
                         </div>
                         <div className="col-span-2 space-y-2">
-                          <label className="text-[10px] font-bold uppercase text-primary">Local</label>
+                          <label className="text-[10px] font-bold uppercase text-primary">Localização</label>
                           <Input value={flyer.local} onChange={(e) => updateFlyerLocal(flyer.id, 'local', e.target.value)} className="rounded-xl" />
                         </div>
                       </div>
@@ -354,15 +344,15 @@ export default function NapauAdminPage() {
             <TabsContent value="registrations" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
               <Card className="border-none shadow-xl rounded-[2rem] bg-white overflow-hidden print:shadow-none">
                 <CardHeader className="flex flex-row items-center justify-between border-b bg-secondary/5 p-8 print:hidden">
-                  <CardTitle className="text-xl">Inscritos Registados</CardTitle>
-                  <Button onClick={() => window.print()} variant="outline" className="rounded-xl gap-2 font-bold"><Printer size={18} /> Imprimir Relatório PDF</Button>
+                  <CardTitle className="text-xl">Lista de Inscritos</CardTitle>
+                  <Button onClick={() => window.print()} variant="outline" className="rounded-xl gap-2 font-bold"><Printer size={18} /> Gerar PDF</Button>
                 </CardHeader>
                 <CardContent className="p-0">
                   <Table>
                     <TableHeader className="bg-secondary/5">
                       <TableRow>
-                        <TableHead>Identificação</TableHead>
-                        <TableHead>Curso</TableHead>
+                        <TableHead>Aluno / ID</TableHead>
+                        <TableHead>Workshop/Curso</TableHead>
                         <TableHead>Documentação</TableHead>
                         <TableHead className="text-right print:hidden">Ações</TableHead>
                       </TableRow>
@@ -382,7 +372,7 @@ export default function NapauAdminPage() {
                           </TableCell>
                         </TableRow>
                       )) : (
-                        <TableRow><TableCell colSpan={4} className="text-center py-20">Nenhuma inscrição encontrada.</TableCell></TableRow>
+                        <TableRow><TableCell colSpan={4} className="text-center py-20">Aguardando as primeiras inscrições...</TableCell></TableRow>
                       )}
                     </TableBody>
                   </Table>

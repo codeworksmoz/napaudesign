@@ -1,17 +1,17 @@
-
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { PortfolioCard } from '@/components/PortfolioCard';
-import { PORTFOLIO_PROJECTS, Category } from '@/lib/portfolio-data';
+import { Category, Project } from '@/lib/portfolio-data';
 import { cn } from '@/lib/utils';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Loader2 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 const CATEGORIES: { label: string, value: Category }[] = [
   { label: 'Todos', value: 'Todos' },
-  { label: 'Tipos de Bolo', value: 'Tipos de Bolo' },
+  { label: 'Topos de Bolo', value: 'Topos de Bolo' },
   { label: 'Camisetas', value: 'Camisetas' },
   { label: 'Design Personalizado', value: 'Design Personalizado' },
   { label: 'Kits Revenda', value: 'Kits Revenda' }
@@ -19,10 +19,33 @@ const CATEGORIES: { label: string, value: Category }[] = [
 
 export default function PortfolioPage() {
   const [activeCategory, setActiveCategory] = useState<Category>('Todos');
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    carregarProjetos();
+  }, []);
+
+  async function carregarProjetos() {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('active', true)
+        .order('created_at', { ascending: false });
+
+      if (data) setProjects(data as Project[]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const filteredProjects = activeCategory === 'Todos' 
-    ? PORTFOLIO_PROJECTS 
-    : PORTFOLIO_PROJECTS.filter(p => p.category === activeCategory);
+    ? projects 
+    : projects.filter(p => p.category === activeCategory);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -33,7 +56,7 @@ export default function PortfolioPage() {
           <div className="space-y-4 md:space-y-6 text-center max-w-2xl mx-auto">
             <h1 className="text-3xl md:text-6xl font-headline font-bold tracking-tight">Nosso Portfólio</h1>
             <p className="text-sm md:text-lg text-muted-foreground font-light font-body">
-              Explore nossa galeria de tipos de bolo e camisetas personalizadas. Cada peça é um reflexo único de criatividade em Moçambique.
+              Explore nossa galeria de topos de bolo exclusivos e camisetas personalizadas. Cada peça é um reflexo único de criatividade.
             </p>
           </div>
 
@@ -54,7 +77,11 @@ export default function PortfolioPage() {
             ))}
           </div>
 
-          {filteredProjects.length > 0 ? (
+          {loading ? (
+            <div className="flex justify-center py-20">
+              <Loader2 className="animate-spin text-primary" size={48} />
+            </div>
+          ) : filteredProjects.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {filteredProjects.map(project => (
                 <PortfolioCard key={project.id} project={project} />
