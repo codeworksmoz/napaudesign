@@ -64,7 +64,14 @@ export const Footer: React.FC = () => {
           <ul className="space-y-2 md:space-y-3 text-sm text-muted-foreground font-light">
             <li className="flex items-start gap-2">
               <MapPin size={18} className="text-primary shrink-0 mt-1" />
-              <span>Av. Acordos de Lusaka, Paragem Baltazar, Maputo</span>
+              <a 
+                href="https://share.google/kS0OXHSEqPLj0kDY0" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
+                Av. Acordos de Lusaka, Paragem Baltazar, Maputo
+              </a>
             </li>
             <li className="flex items-center gap-2">
               <Phone size={18} className="text-primary shrink-0" />
