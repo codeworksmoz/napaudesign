@@ -1,11 +1,11 @@
-export type Category = 'Todos' | 'Topos de Bolo' | 'Camisetas';
+export type Category = 'Todos' | string;
 
 export interface Project {
   id: string;
   title: string;
-  category: Category;
+  category: string;
   description: string;
-  imageurl: string; // Coluna lowercase conforme instruído
+  imageurl: string;
   year: string;
   active: boolean;
   created_at?: string;
@@ -20,9 +20,9 @@ export interface Flyer {
   data: string;
   local: string;
   contactos: string;
-  listaesquerda: string[]; // Coluna lowercase
-  listadireita: string[];  // Coluna lowercase
-  imageurl: string;        // Coluna lowercase
+  listaesquerda: string[];
+  listadireita: string[];
+  imageurl: string;
   ativo: boolean;
   created_at?: string;
 }

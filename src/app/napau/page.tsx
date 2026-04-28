@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Trash2, Edit3, Settings, Loader2, Plus, Image as ImageIcon, Copy, RefreshCw, X, Cake, Shirt, Upload, Filter } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Project, Flyer, HomeContent, DEFAULT_HOME_CONTENT, Category, Registration, OFFICIAL_IMAGE } from '@/lib/portfolio-data';
+import { Project, Flyer, HomeContent, DEFAULT_HOME_CONTENT, Registration, OFFICIAL_IMAGE } from '@/lib/portfolio-data';
 import { supabase } from '@/lib/supabase';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 import { Logo } from '@/components/Logo';
@@ -362,7 +362,6 @@ export default function NapauAdminPage() {
               </Card>
             </TabsContent>
 
-            {/* PORTFOLIO TAB - GERIR O QUE FICA NOS FILTROS */}
             <TabsContent value="portfolio">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <Card className="lg:col-span-4 rounded-[2.5rem] p-8 h-fit bg-white shadow-xl border-none">
@@ -375,7 +374,7 @@ export default function NapauAdminPage() {
                     const formData = new FormData(e.target as HTMLFormElement);
                     const pData = {
                       title: formData.get('title') as string,
-                      category: formData.get('category') as Category,
+                      category: formData.get('category') as string,
                       description: formData.get('description') as string,
                       imageurl: formData.get('imageurl') as string || editingProject?.imageurl || OFFICIAL_IMAGE,
                       year: formData.get('year') as string,
@@ -403,10 +402,7 @@ export default function NapauAdminPage() {
                     
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Filtro / Categoria</label>
-                      <select name="category" defaultValue={editingProject?.category || 'Topos de Bolo'} className="w-full h-12 px-4 border rounded-xl text-sm outline-none focus:ring-1 ring-primary bg-white">
-                        <option value="Topos de Bolo">Topos de Bolo</option>
-                        <option value="Camisetas">Camisetas</option>
-                      </select>
+                      <Input name="category" defaultValue={editingProject?.category || 'Topos de Bolo'} placeholder="Ex: Topos de Bolo" required className="rounded-xl h-12" />
                     </div>
 
                     <ImageUpload 
@@ -476,20 +472,12 @@ export default function NapauAdminPage() {
                           </TableCell>
                         </TableRow>
                       ))}
-                      {projects.length === 0 && (
-                        <TableRow>
-                          <TableCell colSpan={3} className="text-center py-20 text-muted-foreground italic">
-                            Nenhum trabalho no portfólio. Comece por adicionar um acima!
-                          </TableCell>
-                        </TableRow>
-                      )}
                     </TableBody>
                   </Table>
                 </Card>
               </div>
             </TabsContent>
 
-            {/* BIBLIOTECA DE MÉDIA */}
             <TabsContent value="library">
               <Card className="rounded-[2.5rem] overflow-hidden bg-white shadow-xl border-none">
                 <CardHeader className="flex flex-col md:flex-row justify-between items-start md:items-center p-8 border-b bg-[#FAF7F4] gap-4">
@@ -519,39 +507,30 @@ export default function NapauAdminPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="p-8">
-                  {library.length > 0 ? (
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                      {library.map((file, idx) => (
-                        <div key={idx} className="group relative aspect-square rounded-[2rem] overflow-hidden border-2 border-primary/5 hover:border-primary/20 transition-all bg-[#FAF7F4] shadow-sm">
-                          <Image src={file.url} alt={file.name} fill className="object-cover" />
-                          <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 gap-3">
-                            <p className="text-[8px] text-white/60 truncate w-full text-center mb-1">{file.name}</p>
-                            <Button size="sm" variant="secondary" onClick={() => {
-                              navigator.clipboard.writeText(file.url);
-                              toast({ title: "Link Copiado!", description: "Cole este link onde desejar." });
-                            }} className="rounded-xl h-10 w-full gap-2 font-bold"><Copy size={14} /> Copiar Link</Button>
-                            <Button size="sm" variant="destructive" onClick={async () => {
-                              if(confirm('Eliminar esta imagem permanentemente?')) {
-                                const { error } = await supabase.storage.from('produtos').remove([file.name]);
-                                if(!error) { carregarBiblioteca(); toast({ title: "Ficheiro eliminado." }); }
-                              }
-                            }} className="rounded-xl h-10 w-full gap-2 font-bold"><Trash2 size={14} /> Eliminar</Button>
-                          </div>
+                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                    {library.map((file, idx) => (
+                      <div key={idx} className="group relative aspect-square rounded-[2rem] overflow-hidden border-2 border-primary/5 hover:border-primary/20 transition-all bg-[#FAF7F4] shadow-sm">
+                        <Image src={file.url} alt={file.name} fill className="object-cover" />
+                        <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 gap-3">
+                          <p className="text-[8px] text-white/60 truncate w-full text-center mb-1">{file.name}</p>
+                          <Button size="sm" variant="secondary" onClick={() => {
+                            navigator.clipboard.writeText(file.url);
+                            toast({ title: "Link Copiado!", description: "Cole este link onde desejar." });
+                          }} className="rounded-xl h-10 w-full gap-2 font-bold"><Copy size={14} /> Copiar Link</Button>
+                          <Button size="sm" variant="destructive" onClick={async () => {
+                            if(confirm('Eliminar esta imagem permanentemente?')) {
+                              const { error } = await supabase.storage.from('produtos').remove([file.name]);
+                              if(!error) { carregarBiblioteca(); toast({ title: "Ficheiro eliminado." }); }
+                            }
+                          }} className="rounded-xl h-10 w-full gap-2 font-bold"><Trash2 size={14} /> Eliminar</Button>
                         </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-20 bg-[#FAF7F4] rounded-3xl border-2 border-dashed border-primary/10">
-                       <ImageIcon size={48} className="mx-auto text-primary/20 mb-4" />
-                       <p className="text-muted-foreground">Biblioteca vazia.</p>
-                       <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-2 italic">Carregue fotos para usar no seu site.</p>
-                    </div>
-                  )}
+                      </div>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            {/* FLYERS */}
             <TabsContent value="flyers">
               <div className="space-y-6">
                 <Button onClick={async () => {
@@ -620,7 +599,6 @@ export default function NapauAdminPage() {
               </div>
             </TabsContent>
 
-            {/* INSCRICOES */}
             <TabsContent value="registrations">
               <Card className="rounded-[2.5rem] overflow-hidden bg-white shadow-xl border-none">
                 <Table>

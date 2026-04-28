@@ -4,20 +4,15 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { PortfolioCard } from '@/components/PortfolioCard';
-import { Category, Project } from '@/lib/portfolio-data';
+import { Project } from '@/lib/portfolio-data';
 import { cn } from '@/lib/utils';
 import { Sparkles, Loader2, Filter } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
-const CATEGORIES: { label: string, value: Category }[] = [
-  { label: 'Todos', value: 'Todos' },
-  { label: 'Topos de Bolo', value: 'Topos de Bolo' },
-  { label: 'Camisetas', value: 'Camisetas' }
-];
-
 export default function PortfolioPage() {
-  const [activeCategory, setActiveCategory] = useState<Category>('Todos');
+  const [activeCategory, setActiveCategory] = useState<string>('Todos');
   const [projects, setProjects] = useState<Project[]>([]);
+  const [categories, setCategories] = useState<string[]>(['Todos']);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,7 +28,12 @@ export default function PortfolioPage() {
         .eq('active', true)
         .order('created_at', { ascending: false });
 
-      if (data) setProjects(data as Project[]);
+      if (data) {
+        setProjects(data as Project[]);
+        // Extrair categorias únicas do banco de dados
+        const uniqueCategories = Array.from(new Set(data.map((p: any) => p.category))).filter(Boolean);
+        setCategories(['Todos', ...uniqueCategories]);
+      }
     } catch (error) {
       console.error('Erro ao buscar projetos:', error);
     } finally {
@@ -57,23 +57,23 @@ export default function PortfolioPage() {
             </div>
             <h1 className="text-4xl md:text-7xl font-headline font-bold tracking-tight drop-shadow-sm">Nosso Portfólio</h1>
             <p className="text-lg text-muted-foreground font-light leading-relaxed italic">
-              Explore nossa galeria especializada em topos de bolo artísticos e camisetas personalizadas com acabamento premium.
+              Explore nossa galeria especializada em topos de bolo exclusivos e camisetas personalizadas com acabamento premium.
             </p>
           </div>
 
           <div className="flex flex-wrap justify-center gap-4">
-            {CATEGORIES.map(category => (
+            {categories.map(category => (
               <button
-                key={category.value}
-                onClick={() => setActiveCategory(category.value)}
+                key={category}
+                onClick={() => setActiveCategory(category)}
                 className={cn(
-                  "px-10 py-3.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-500 border",
-                  activeCategory === category.value 
+                  "px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300 border",
+                  activeCategory === category 
                     ? "bg-primary text-white border-primary shadow-xl scale-105" 
                     : "bg-white text-muted-foreground border-border hover:border-primary/50 hover:text-primary shadow-sm"
                 )}
               >
-                {category.label}
+                {category}
               </button>
             ))}
           </div>
@@ -94,7 +94,7 @@ export default function PortfolioPage() {
               <Sparkles size={48} className="mx-auto text-primary/30" />
               <div className="space-y-4">
                 <p className="text-2xl font-headline font-bold text-primary">Novas criações a caminho</p>
-                <p className="text-sm text-muted-foreground font-light italic max-w-md mx-auto">Estamos a preparar peças exclusivas para esta categoria. Volte em breve para se inspirar na Napau!</p>
+                <p className="text-sm text-muted-foreground font-light italic max-w-md mx-auto">Estamos a preparar peças exclusivas para esta categoria. Volte em breve na Napau!</p>
               </div>
             </div>
           )}
