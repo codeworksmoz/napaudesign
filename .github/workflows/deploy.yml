@@ -26,6 +26,8 @@ jobs:
         with:
           node-version: "22"
           cache: 'npm'
+      - name: install autoprefixer
+        run: npm install autoprefixer
       
       - name: Install dependencies
         run: npm ci
