@@ -11,6 +11,23 @@ import { useParams } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
 import { supabase } from '@/lib/supabase';
 
+// ✅ ADICIONA ISTO NO TOPO, depois dos imports
+import { supabase } from '@/lib/supabase';
+
+export async function generateStaticParams() {
+  const { data } = await supabase
+    .from('registrations')
+    .select('id');
+
+  if (!data || data.length === 0) {
+    return [{ id: 'placeholder' }];
+  }
+
+  return data.map((reg) => ({
+    id: reg.id,
+  }));
+}
+
 export default function ReciboPage() {
   const params = useParams();
   const [reg, setReg] = useState<Registration | null>(null);
