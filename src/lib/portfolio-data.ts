@@ -49,6 +49,7 @@ export interface HomeContent {
   instagramLink?: string;
   facebookLink?: string;
   tiktokLink?: string;
+  whatsappNumber?: string;
 }
 
 export type DocumentType = 'BI' | 'Passaporte' | 'Carta de Condução' | 'NUIT' | 'Cartão de Eleitor';
@@ -97,5 +98,6 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
   boloTypesJson: JSON.stringify(DEFAULT_BOLO_TYPES),
   instagramLink: 'https://instagram.com/napau_design',
   facebookLink: 'https://facebook.com/napaudesign',
-  tiktokLink: 'https://tiktok.com/@napau_design'
+  tiktokLink: 'https://tiktok.com/@napau_design',
+  whatsappNumber: '258847615871'
 };

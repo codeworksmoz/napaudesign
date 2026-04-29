@@ -52,6 +52,7 @@ export default function Home() {
   }
 
   const boloTypes = home.boloTypesJson ? JSON.parse(home.boloTypesJson) : DEFAULT_BOLO_TYPES;
+  const waNumber = home.whatsappNumber || '258847615871';
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -208,7 +209,7 @@ export default function Home() {
                 </div>
 
                 <Button asChild className="rounded-xl px-10 py-8 text-lg font-bold group gold-shimmer shadow-xl">
-                  <a href="https://wa.me/258847615871?text=Olá! Gostaria de criar uma camiseta personalizada.">
+                  <a href={`https://wa.me/${waNumber}?text=Olá! Gostaria de criar uma camiseta personalizada.`}>
                     Criar minha camiseta agora <Wand2 size={20} className="ml-2 group-hover:rotate-12 transition-transform" />
                   </a>
                 </Button>
@@ -273,7 +274,7 @@ export default function Home() {
                   </div>
 
                    <Button asChild className="rounded-xl px-10 py-8 text-lg font-bold group gold-shimmer shadow-xl mt-4">
-                    <a href="https://wa.me/258847615871?text=Olá! Gostaria de encomendar um topo de bolo.">
+                    <a href={`https://wa.me/${waNumber}?text=Olá! Gostaria de encomendar um topo de bolo.`}>
                       Encomendar meu topo <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
                     </a>
                   </Button>
@@ -372,7 +373,7 @@ export default function Home() {
             </p>
             <div className="flex flex-wrap justify-center gap-4 pt-4">
               <Button asChild className="bg-white text-primary hover:bg-white/90 rounded-full px-12 py-8 text-xl font-bold shadow-2xl transition-all hover:scale-105">
-                <a href="https://wa.me/258847615871" target="_blank">Contactar WhatsApp</a>
+                <a href={`https://wa.me/${waNumber}`} target="_blank">Contactar WhatsApp</a>
               </Button>
               <Button asChild variant="outline" className="border-white text-white hover:bg-white/20 bg-white/5 backdrop-blur-sm rounded-full px-10 py-8 text-lg font-bold shadow-lg">
                 <Link href="/cursos">Ver Cursos</Link>

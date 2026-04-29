@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -7,6 +6,8 @@ import { usePathname } from 'next/navigation';
 import { Logo } from './Logo';
 import { cn } from '@/lib/utils';
 import { Menu, X } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { DEFAULT_HOME_CONTENT } from '@/lib/portfolio-data';
 
 const NAV_LINKS = [
   { name: 'Início', href: '/' },
@@ -19,12 +20,20 @@ export const Navbar: React.FC = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [whatsapp, setWhatsapp] = useState(DEFAULT_HOME_CONTENT.whatsappNumber);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
+    
+    async function fetchContact() {
+      const { data } = await supabase.from('home_content').select('whatsappNumber').eq('id', 1).maybeSingle();
+      if (data?.whatsappNumber) setWhatsapp(data.whatsappNumber);
+    }
+    fetchContact();
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -86,7 +95,7 @@ export const Navbar: React.FC = () => {
               </Link>
             ))}
             <a 
-              href="https://wa.me/258847615871"
+              href={`https://wa.me/${whatsapp}`}
               target="_blank"
               className="bg-primary text-white px-10 py-3.5 rounded-full text-[9px] font-bold uppercase tracking-[0.2em] shadow-xl hover:shadow-primary/40 hover:scale-105 transition-all active:scale-95 gold-shimmer"
             >
@@ -134,7 +143,7 @@ export const Navbar: React.FC = () => {
             </Link>
           ))}
           <a 
-            href="https://wa.me/258847615871"
+            href={`https://wa.me/${whatsapp}`}
             target="_blank"
             onClick={() => setIsOpen(false)}
             className={cn(

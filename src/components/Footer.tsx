@@ -1,10 +1,27 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Logo } from './Logo';
 import { Instagram, Facebook, Mail, MapPin, Phone } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { DEFAULT_HOME_CONTENT } from '@/lib/portfolio-data';
 
 export const Footer: React.FC = () => {
+  const [whatsapp, setWhatsapp] = useState(DEFAULT_HOME_CONTENT.whatsappNumber);
+
+  useEffect(() => {
+    async function fetchContact() {
+      const { data } = await supabase.from('home_content').select('whatsappNumber').eq('id', 1).maybeSingle();
+      if (data?.whatsappNumber) setWhatsapp(data.whatsappNumber);
+    }
+    fetchContact();
+  }, []);
+
+  // Formatar número para exibição amigável: +258 84 761 5871
+  const formattedPhone = whatsapp?.startsWith('258') 
+    ? `+258 ${whatsapp.slice(3, 5)} ${whatsapp.slice(5, 8)} ${whatsapp.slice(8)}`
+    : whatsapp;
+
   return (
     <footer className="bg-white border-t border-border pt-16 pb-8 px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -53,7 +70,9 @@ export const Footer: React.FC = () => {
             </li>
             <li className="flex items-center gap-2">
               <Phone size={18} className="text-primary shrink-0" />
-              <a href="tel:+258847615871" className="hover:text-primary transition-colors font-medium">+258 84 761 5871</a>
+              <a href={`tel:+${whatsapp}`} className="hover:text-primary transition-colors font-medium">
+                {formattedPhone}
+              </a>
             </li>
             <li className="flex items-center gap-2">
               <Mail size={18} className="text-primary shrink-0" />
