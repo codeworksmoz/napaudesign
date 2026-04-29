@@ -7,7 +7,7 @@ import { PortfolioCard } from '@/components/PortfolioCard';
 import { Project, HomeContent, DEFAULT_HOME_CONTENT, OFFICIAL_IMAGE, DEFAULT_BOLO_TYPES } from '@/lib/portfolio-data';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Cake, Shirt, Loader2, Star, GraduationCap, CheckCircle, HelpCircle, Sparkles, ShoppingBag, Wand2 } from 'lucide-react';
+import { ArrowRight, Cake, Shirt, Loader2, Star, GraduationCap, CheckCircle, HelpCircle, Sparkles, ShoppingBag, Wand2, Instagram, Facebook } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
@@ -110,6 +110,52 @@ export default function Home() {
                 {home.eventDesc}
               </p>
            </div>
+        </section>
+
+        {/* SOCIAL CTAS SECTION */}
+        <section className="py-16 px-6 bg-[#FAF7F4] border-y border-primary/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <a 
+                href={home.instagramLink || 'https://instagram.com/napau_design'} 
+                target="_blank" 
+                className="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-500 border border-primary/5 flex flex-col items-center text-center space-y-4"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <Instagram size={32} />
+                </div>
+                <h4 className="font-headline font-bold text-xl">Veja em Movimento</h4>
+                <p className="text-sm text-muted-foreground italic">Siga-nos no Instagram para ver vídeos e bastidores da nossa arte.</p>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-primary group-hover:underline">Inspirar no Feed →</span>
+              </a>
+
+              <a 
+                href={home.facebookLink || 'https://facebook.com/napaudesign'} 
+                target="_blank" 
+                className="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-500 border border-primary/5 flex flex-col items-center text-center space-y-4"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-[#1877F2] text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <Facebook size={32} />
+                </div>
+                <h4 className="font-headline font-bold text-xl">Comunidade Napau</h4>
+                <p className="text-sm text-muted-foreground italic">Acompanhe as nossas novidades e promoções exclusivas no Facebook.</p>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[#1877F2] group-hover:underline">Juntar-se à Rede →</span>
+              </a>
+
+              <a 
+                href={home.tiktokLink || 'https://tiktok.com/@napau_design'} 
+                target="_blank" 
+                className="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-500 border border-primary/5 flex flex-col items-center text-center space-y-4"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-black text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .81.11V9.42a7.27 7.27 0 0 0-1.01-.07 6.36 6.36 0 0 0-6.36 6.36 6.36 6.36 0 0 0 6.36 6.36 6.36 6.36 0 0 0 6.36-6.36V7.95a12.53 12.53 0 0 0 3.95 1.07V6.69z"/></svg>
+                </div>
+                <h4 className="font-headline font-bold text-xl">Diversão & Arte</h4>
+                <p className="text-sm text-muted-foreground italic">Assista às nossas criações ganharem vida em vídeos curtos e divertidos no TikTok.</p>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-black group-hover:underline">Ver no TikTok →</span>
+              </a>
+            </div>
+          </div>
         </section>
 
         {/* DESIGNER DE CAMISETAS DETALHADO */}

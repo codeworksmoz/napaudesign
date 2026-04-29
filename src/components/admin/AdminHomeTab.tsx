@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -7,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Sparkles, Shirt, Cake, Plus, X } from 'lucide-react';
+import { Sparkles, Shirt, Cake, Plus, X, Instagram, Facebook, Share2 } from 'lucide-react';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 import { HomeContent } from '@/lib/portfolio-data';
 import Image from 'next/image';
@@ -43,6 +42,34 @@ export function AdminHomeTab({ home, setHome, onSave, onAddImage, onRemoveImage 
             </div>
           </div>
           <ImageUpload label="Imagem de Fundo (Hero)" valor={home.heroImage || ''} onChange={(url) => setHome({...home, heroImage: url})} />
+        </div>
+
+        {/* REDES SOCIAIS ADMIN */}
+        <div className="border-t pt-10 space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><Share2 size={20}/></div>
+            <h4 className="font-bold uppercase text-sm text-primary tracking-widest">Links de Redes Sociais</h4>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+             <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest flex items-center gap-2">
+                  <Instagram size={12} /> Instagram
+                </label>
+                <Input value={home.instagramLink || ''} onChange={(e) => setHome({...home, instagramLink: e.target.value})} placeholder="https://instagram.com/..." className="rounded-xl h-12" />
+             </div>
+             <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest flex items-center gap-2">
+                  <Facebook size={12} /> Facebook
+                </label>
+                <Input value={home.facebookLink || ''} onChange={(e) => setHome({...home, facebookLink: e.target.value})} placeholder="https://facebook.com/..." className="rounded-xl h-12" />
+             </div>
+             <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest flex items-center gap-2">
+                  <svg size="12" viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .81.11V9.42a7.27 7.27 0 0 0-1.01-.07 6.36 6.36 0 0 0-6.36 6.36 6.36 6.36 0 0 0 6.36 6.36 6.36 6.36 0 0 0 6.36-6.36V7.95a12.53 12.53 0 0 0 3.95 1.07V6.69z"/></svg> TikTok
+                </label>
+                <Input value={home.tiktokLink || ''} onChange={(e) => setHome({...home, tiktokLink: e.target.value})} placeholder="https://tiktok.com/@..." className="rounded-xl h-12" />
+             </div>
+          </div>
         </div>
 
         {/* PERSONALIZE SEU EVENTO ADMIN */}

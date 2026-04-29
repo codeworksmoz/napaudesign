@@ -46,6 +46,9 @@ export interface HomeContent {
   boloDesc?: string;
   boloWhatIs?: string;
   boloTypesJson?: string;
+  instagramLink?: string;
+  facebookLink?: string;
+  tiktokLink?: string;
 }
 
 export type DocumentType = 'BI' | 'Passaporte' | 'Carta de Condução' | 'NUIT' | 'Cartão de Eleitor';
@@ -91,5 +94,8 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
   boloTitle: '🎂 TOPOS DE BOLO QUE FAZEM PARAR A FESTA',
   boloDesc: 'Sabe aquele momento em que todos se aproximam da mesa do bolo? É ali que a magia acontece. O topo de bolo é a joia da coroa da sua celebração.',
   boloWhatIs: 'O que é um topo de bolo? É a peça decorativa que vai no topo do bolo — e que faz toda a diferença. Pode levar nome, idade, foto, tema ou simplesmente ser uma obra de arte comestível que arranca suspiros.',
-  boloTypesJson: JSON.stringify(DEFAULT_BOLO_TYPES)
+  boloTypesJson: JSON.stringify(DEFAULT_BOLO_TYPES),
+  instagramLink: 'https://instagram.com/napau_design',
+  facebookLink: 'https://facebook.com/napaudesign',
+  tiktokLink: 'https://tiktok.com/@napau_design'
 };
