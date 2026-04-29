@@ -1,7 +1,7 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: 'export',              // ✅ OBRIGATÓRIO - Gera site estático
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    unoptimized: true,           // ✅ OBRIGATÓRIO - Permite imagens no export
     remotePatterns: [
       {
         protocol: 'https',
@@ -28,7 +29,6 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
-      // ✅ ADICIONA ESTE BLOCO
       {
         protocol: 'https',
         hostname: 'xywhrhvljrqjzmlznjrv.supabase.co',
