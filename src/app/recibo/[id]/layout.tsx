@@ -1,4 +1,3 @@
-// ✅ ADICIONA ISTO NO TOPO, depois dos imports
 import { supabase } from '@/lib/supabase';
 
 export async function generateStaticParams() {
@@ -13,4 +12,8 @@ export async function generateStaticParams() {
   return data.map((reg) => ({
     id: reg.id,
   }));
+}
+
+export default function ReciboLayout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }
