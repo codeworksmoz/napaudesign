@@ -10,7 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Trash2, Edit3, Settings, Loader2, Plus, Image as ImageIcon, Copy, RefreshCw, X, Cake, Shirt, Upload, Filter, Sparkles } from 'lucide-react';
+import { Trash2, Edit3, Settings, Loader2, Plus, Image as ImageIcon, Copy, RefreshCw, X, Cake, Shirt, Upload, Filter, Sparkles, Wand2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Project, Flyer, HomeContent, DEFAULT_HOME_CONTENT, Registration, OFFICIAL_IMAGE } from '@/lib/portfolio-data';
 import { supabase } from '@/lib/supabase';
@@ -231,12 +231,11 @@ export default function NapauAdminPage() {
                 <CardHeader className="flex flex-col md:flex-row justify-between items-start md:items-center bg-[#FAF7F4] p-8 border-b gap-4">
                   <div>
                     <CardTitle className="text-xl font-headline">Configuração da Home</CardTitle>
-                    <p className="text-xs text-muted-foreground">Personalize cada texto e imagem do seu site.</p>
+                    <p className="text-xs text-muted-foreground">Personalize cada texto, título e passo do processo.</p>
                   </div>
                   <Button onClick={saveHome} className="gold-shimmer px-10 h-14 rounded-2xl w-full md:w-auto font-bold text-lg">Guardar Website</Button>
                 </CardHeader>
                 <CardContent className="p-8 space-y-12">
-                  {/* HERO SECTION ADMIN */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="space-y-6">
                       <div className="space-y-2">
@@ -263,76 +262,13 @@ export default function NapauAdminPage() {
                           <Input value={home.eventTitle || ''} onChange={(e) => setHome({...home, eventTitle: e.target.value})} className="rounded-xl h-12" />
                        </div>
                        <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Subtítulo</label>
+                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Subtítulo (Curto)</label>
                           <Input value={home.eventSubtitle || ''} onChange={(e) => setHome({...home, eventSubtitle: e.target.value})} className="rounded-xl h-12" />
                        </div>
                     </div>
                     <div className="space-y-2">
-                       <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Descrição Completa</label>
+                       <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Descrição Emocional</label>
                        <Textarea value={home.eventDesc || ''} onChange={(e) => setHome({...home, eventDesc: e.target.value})} className="rounded-xl h-32 resize-none" />
-                    </div>
-                  </div>
-
-                  {/* CARROSSEL BOLOS ADMIN */}
-                  <div className="border-t pt-10 space-y-8">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><Cake size={20}/></div>
-                      <h4 className="font-bold uppercase text-sm text-primary tracking-widest">Secção: Topos de Bolo</h4>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                      <div className="space-y-6">
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Título Principal</label>
-                          <Input value={home.boloTitle || ''} onChange={(e) => setHome({...home, boloTitle: e.target.value})} className="rounded-xl h-12" />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Descrição Breve</label>
-                          <Textarea value={home.boloDesc || ''} onChange={(e) => setHome({...home, boloDesc: e.target.value})} className="rounded-xl h-24 resize-none" />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">O que é Topo de Bolo?</label>
-                          <Textarea value={home.boloWhatIs || ''} onChange={(e) => setHome({...home, boloWhatIs: e.target.value})} className="rounded-xl h-32 resize-none" />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Tipos & Preços (JSON)</label>
-                          <Textarea value={home.boloTypesJson || ''} onChange={(e) => setHome({...home, boloTypesJson: e.target.value})} className="rounded-xl h-48 font-mono text-xs" />
-                          <p className="text-[9px] text-muted-foreground">Formato: [ {"{"} "title": "...", "price": "...", "desc": "..." {"}"} ]</p>
-                        </div>
-                      </div>
-                      <div className="space-y-3">
-                        <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Galeria de Fotos (Carousel)</label>
-                        <div className="grid grid-cols-4 gap-3">
-                          {home.serviceBoloImages?.map((img, idx) => (
-                            <div key={idx} className="group relative aspect-square rounded-xl overflow-hidden border-2 border-primary/10">
-                              <Image src={img} alt="Bolo" fill className="object-cover" />
-                              <button onClick={() => removeImageFromCarousel('bolo', idx)} className="absolute top-1 right-1 bg-destructive text-white p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"><X size={12} /></button>
-                            </div>
-                          ))}
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <button className="aspect-square rounded-xl border-2 border-dashed border-primary/20 flex flex-col items-center justify-center text-primary/40 hover:text-primary transition-all">
-                                <Plus size={24} />
-                                <span className="text-[8px] font-bold uppercase mt-1">Add Foto</span>
-                              </button>
-                            </DialogTrigger>
-                            <DialogContent className="rounded-[2rem]">
-                              <DialogHeader><DialogTitle>Adicionar Galeria Bolos</DialogTitle></DialogHeader>
-                              <div className="p-4 space-y-4">
-                                <p className="text-xs text-muted-foreground italic">Copie o link de uma imagem da aba <strong>Biblioteca</strong> e cole abaixo.</p>
-                                <Input id="new-img-bolo" placeholder="https://..." className="rounded-xl h-12" />
-                                <Button className="w-full rounded-xl h-12 gold-shimmer font-bold" onClick={() => {
-                                  const el = document.getElementById('new-img-bolo') as HTMLInputElement;
-                                  if (el.value) {
-                                    addImageToCarousel('bolo', el.value);
-                                    el.value = '';
-                                    toast({ title: "Imagem adicionada!" });
-                                  }
-                                }}>Confirmar</Button>
-                              </div>
-                            </DialogContent>
-                          </Dialog>
-                        </div>
-                      </div>
                     </div>
                   </div>
 
@@ -340,7 +276,7 @@ export default function NapauAdminPage() {
                   <div className="border-t pt-10 space-y-8">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><Shirt size={20}/></div>
-                      <h4 className="font-bold uppercase text-sm text-primary tracking-widest">Secção: Designer de Camisetas</h4>
+                      <h4 className="font-bold uppercase text-sm text-primary tracking-widest">Designer de Camisetas</h4>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                       <div className="space-y-6">
@@ -354,7 +290,7 @@ export default function NapauAdminPage() {
                         </div>
                       </div>
                       <div className="space-y-3">
-                        <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Galeria de Fotos (Carousel)</label>
+                        <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Galeria Camisetas</label>
                         <div className="grid grid-cols-4 gap-3">
                           {home.serviceCamisetaImages?.map((img, idx) => (
                             <div key={idx} className="group relative aspect-square rounded-xl overflow-hidden border-2 border-primary/10">
@@ -366,21 +302,73 @@ export default function NapauAdminPage() {
                             <DialogTrigger asChild>
                               <button className="aspect-square rounded-xl border-2 border-dashed border-primary/20 flex flex-col items-center justify-center text-primary/40 hover:text-primary transition-all">
                                 <Plus size={24} />
-                                <span className="text-[8px] font-bold uppercase mt-1">Add Foto</span>
+                                <span className="text-[8px] font-bold uppercase mt-1">Add</span>
                               </button>
                             </DialogTrigger>
                             <DialogContent className="rounded-[2rem]">
-                              <DialogHeader><DialogTitle>Adicionar Galeria Camisetas</DialogTitle></DialogHeader>
+                              <DialogHeader><DialogTitle>Adicionar Foto</DialogTitle></DialogHeader>
                               <div className="p-4 space-y-4">
-                                <p className="text-xs text-muted-foreground italic">Copie o link de uma imagem da aba <strong>Biblioteca</strong> e cole abaixo.</p>
-                                <Input id="new-img-camiseta" placeholder="https://..." className="rounded-xl h-12" />
+                                <Input id="new-img-camiseta" placeholder="Cole o link da biblioteca..." className="rounded-xl h-12" />
                                 <Button className="w-full rounded-xl h-12 gold-shimmer font-bold" onClick={() => {
                                   const el = document.getElementById('new-img-camiseta') as HTMLInputElement;
-                                  if (el.value) {
-                                    addImageToCarousel('camiseta', el.value);
-                                    el.value = '';
-                                    toast({ title: "Imagem adicionada!" });
-                                  }
+                                  if (el.value) { addImageToCarousel('camiseta', el.value); el.value = ''; toast({ title: "Adicionada!" }); }
+                                }}>Confirmar</Button>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* BOLOS ADMIN */}
+                  <div className="border-t pt-10 space-y-8">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><Cake size={20}/></div>
+                      <h4 className="font-bold uppercase text-sm text-primary tracking-widest">Topos de Bolo</h4>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                      <div className="space-y-6">
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Título Principal</label>
+                          <Input value={home.boloTitle || ''} onChange={(e) => setHome({...home, boloTitle: e.target.value})} className="rounded-xl h-12" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Introdução Emocional</label>
+                          <Textarea value={home.boloDesc || ''} onChange={(e) => setHome({...home, boloDesc: e.target.value})} className="rounded-xl h-24 resize-none" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">O que é Topo de Bolo?</label>
+                          <Textarea value={home.boloWhatIs || ''} onChange={(e) => setHome({...home, boloWhatIs: e.target.value})} className="rounded-xl h-32 resize-none" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Tipos & Preços (JSON)</label>
+                          <Textarea value={home.boloTypesJson || ''} onChange={(e) => setHome({...home, boloTypesJson: e.target.value})} className="rounded-xl h-48 font-mono text-xs" />
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Galeria Bolos</label>
+                        <div className="grid grid-cols-4 gap-3">
+                          {home.serviceBoloImages?.map((img, idx) => (
+                            <div key={idx} className="group relative aspect-square rounded-xl overflow-hidden border-2 border-primary/10">
+                              <Image src={img} alt="Bolo" fill className="object-cover" />
+                              <button onClick={() => removeImageFromCarousel('bolo', idx)} className="absolute top-1 right-1 bg-destructive text-white p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"><X size={12} /></button>
+                            </div>
+                          ))}
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <button className="aspect-square rounded-xl border-2 border-dashed border-primary/20 flex flex-col items-center justify-center text-primary/40 hover:text-primary transition-all">
+                                <Plus size={24} />
+                                <span className="text-[8px] font-bold uppercase mt-1">Add</span>
+                              </button>
+                            </DialogTrigger>
+                            <DialogContent className="rounded-[2rem]">
+                              <DialogHeader><DialogTitle>Adicionar Foto</DialogTitle></DialogHeader>
+                              <div className="p-4 space-y-4">
+                                <Input id="new-img-bolo" placeholder="Cole o link da biblioteca..." className="rounded-xl h-12" />
+                                <Button className="w-full rounded-xl h-12 gold-shimmer font-bold" onClick={() => {
+                                  const el = document.getElementById('new-img-bolo') as HTMLInputElement;
+                                  if (el.value) { addImageToCarousel('bolo', el.value); el.value = ''; toast({ title: "Adicionada!" }); }
                                 }}>Confirmar</Button>
                               </div>
                             </DialogContent>
@@ -418,7 +406,7 @@ export default function NapauAdminPage() {
                         toast({ title: "Alterações guardadas!" });
                       } else {
                         await supabase.from('projects').insert([{ ...pData, id: crypto.randomUUID() }]);
-                        toast({ title: "Trabalho adicionado ao Portfólio!" });
+                        toast({ title: "Trabalho adicionado!" });
                       }
                       setEditingProject(null);
                       carregarDados();
@@ -436,48 +424,35 @@ export default function NapauAdminPage() {
                       <Input name="category" defaultValue={editingProject?.category || 'Topos de Bolo'} placeholder="Ex: Topos de Bolo" required className="rounded-xl h-12" />
                     </div>
 
-                    <ImageUpload 
-                      label="Foto do Trabalho" 
-                      valor={editingProject?.imageurl || ''} 
-                      onChange={(url) => setEditingProject(prev => prev ? {...prev, imageurl: url} : ({} as any))} 
-                    />
+                    <ImageUpload label="Foto do Trabalho" valor={editingProject?.imageurl || ''} onChange={(url) => setEditingProject(prev => prev ? {...prev, imageurl: url} : ({} as any))} />
                     <input type="hidden" name="imageurl" value={editingProject?.imageurl || ''} />
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Ano</label>
-                        <Input name="year" defaultValue={editingProject?.year || new Date().getFullYear().toString()} className="rounded-xl h-12" />
-                      </div>
-                      <div className="space-y-2">
-                         <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Estado</label>
-                         <div className="h-12 flex items-center px-4 bg-secondary/5 rounded-xl text-[10px] font-bold text-primary uppercase">Ativo no Site</div>
-                      </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Ano</label>
+                      <Input name="year" defaultValue={editingProject?.year || new Date().getFullYear().toString()} className="rounded-xl h-12" />
                     </div>
 
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Descrição Breve</label>
-                      <Textarea name="description" defaultValue={editingProject?.description || ''} placeholder="Detalhes técnicos ou materiais..." className="rounded-xl h-24 resize-none" />
+                      <Textarea name="description" defaultValue={editingProject?.description || ''} placeholder="Detalhes técnicos..." className="rounded-xl h-24 resize-none" />
                     </div>
 
                     <Button type="submit" className="w-full h-14 rounded-xl gold-shimmer font-bold text-lg">
                       {editingProject ? 'Guardar Alterações' : 'Publicar no Portfólio'}
                     </Button>
-                    {editingProject && <Button type="button" variant="ghost" onClick={() => setEditingProject(null)} className="w-full h-12 rounded-xl">Cancelar Edição</Button>}
+                    {editingProject && <Button type="button" variant="ghost" onClick={() => setEditingProject(null)} className="w-full h-12 rounded-xl">Cancelar</Button>}
                   </form>
                 </Card>
 
                 <Card className="lg:col-span-8 rounded-[2.5rem] overflow-hidden bg-white shadow-xl border-none">
-                  <div className="p-8 border-b bg-[#FAF7F4] flex justify-between items-center">
-                    <div>
-                      <h3 className="font-headline font-bold text-xl">Gestão de Filtros</h3>
-                      <p className="text-xs text-muted-foreground italic">Controle o que aparece nas categorias do site.</p>
-                    </div>
+                  <div className="p-8 border-b bg-[#FAF7F4]">
+                    <h3 className="font-headline font-bold text-xl">Filtros Atuais</h3>
                   </div>
                   <Table>
                     <TableHeader className="bg-secondary/5">
                       <TableRow>
                         <TableHead>Trabalho</TableHead>
-                        <TableHead>Filtro Aplicado</TableHead>
+                        <TableHead>Filtro</TableHead>
                         <TableHead className="text-right">Ações</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -498,8 +473,8 @@ export default function NapauAdminPage() {
                             </span>
                           </TableCell>
                           <TableCell className="text-right">
-                            <Button variant="ghost" size="icon" onClick={() => setEditingProject(p)} className="rounded-xl hover:bg-primary/10 hover:text-primary"><Edit3 size={18}/></Button>
-                            <Button variant="ghost" size="icon" className="text-destructive rounded-xl hover:bg-destructive/10" onClick={() => deleteProject(p.id)}><Trash2 size={18}/></Button>
+                            <Button variant="ghost" size="icon" onClick={() => setEditingProject(p)} className="rounded-xl"><Edit3 size={18}/></Button>
+                            <Button variant="ghost" size="icon" className="text-destructive rounded-xl" onClick={() => deleteProject(p.id)}><Trash2 size={18}/></Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -514,12 +489,11 @@ export default function NapauAdminPage() {
                 <CardHeader className="flex flex-col md:flex-row justify-between items-start md:items-center p-8 border-b bg-[#FAF7F4] gap-4">
                   <div>
                     <CardTitle className="text-xl font-headline">Biblioteca Napau</CardTitle>
-                    <p className="text-xs text-muted-foreground italic">Gerencie todas as fotos carregadas no Storage.</p>
+                    <p className="text-xs text-muted-foreground italic">Use estes links nos carrosséis da Home.</p>
                   </div>
                   <div className="flex gap-3 w-full md:w-auto">
                     <Button onClick={carregarBiblioteca} disabled={loadingLibrary} variant="outline" className="rounded-xl h-12 gap-2 bg-white flex-1 md:flex-none">
-                      <RefreshCw className={loadingLibrary ? "animate-spin" : ""} size={16} /> 
-                      Atualizar
+                      <RefreshCw className={loadingLibrary ? "animate-spin" : ""} size={16} /> Atualizar
                     </Button>
                     <Dialog>
                       <DialogTrigger asChild>
@@ -528,10 +502,9 @@ export default function NapauAdminPage() {
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="rounded-[2rem]">
-                        <DialogHeader><DialogTitle>Enviar Foto para o Servidor</DialogTitle></DialogHeader>
+                        <DialogHeader><DialogTitle>Enviar Foto</DialogTitle></DialogHeader>
                         <div className="p-4">
-                           <ImageUpload valor="" onChange={(url) => { if(url) { carregarBiblioteca(); toast({ title: "Foto salva na biblioteca!" }); } }} />
-                           <p className="text-[10px] text-muted-foreground mt-4 text-center italic">Após o upload, copie o link para usar no Site ou Portfólio.</p>
+                           <ImageUpload valor="" onChange={(url) => { if(url) { carregarBiblioteca(); toast({ title: "Foto salva!" }); } }} />
                         </div>
                       </DialogContent>
                     </Dialog>
@@ -543,15 +516,14 @@ export default function NapauAdminPage() {
                       <div key={idx} className="group relative aspect-square rounded-[2rem] overflow-hidden border-2 border-primary/5 hover:border-primary/20 transition-all bg-[#FAF7F4] shadow-sm">
                         <Image src={file.url} alt={file.name} fill className="object-cover" />
                         <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 gap-3">
-                          <p className="text-[8px] text-white/60 truncate w-full text-center mb-1">{file.name}</p>
                           <Button size="sm" variant="secondary" onClick={() => {
                             navigator.clipboard.writeText(file.url);
-                            toast({ title: "Link Copiado!", description: "Cole este link onde desejar." });
+                            toast({ title: "Link Copiado!" });
                           }} className="rounded-xl h-10 w-full gap-2 font-bold"><Copy size={14} /> Copiar Link</Button>
                           <Button size="sm" variant="destructive" onClick={async () => {
-                            if(confirm('Eliminar esta imagem permanentemente?')) {
+                            if(confirm('Eliminar imagem?')) {
                               const { error } = await supabase.storage.from('produtos').remove([file.name]);
-                              if(!error) { carregarBiblioteca(); toast({ title: "Ficheiro eliminado." }); }
+                              if(!error) { carregarBiblioteca(); toast({ title: "Eliminado." }); }
                             }
                           }} className="rounded-xl h-10 w-full gap-2 font-bold"><Trash2 size={14} /> Eliminar</Button>
                         </div>
@@ -568,7 +540,7 @@ export default function NapauAdminPage() {
                   try {
                     const { error } = await supabase.from('flyers').insert({
                       id: crypto.randomUUID(),
-                      titulo: 'Novo Curso / Workshop',
+                      titulo: 'Novo Curso',
                       preco: '0 MT',
                       data: 'A anunciar',
                       local: 'Maputo',
@@ -622,7 +594,7 @@ export default function NapauAdminPage() {
                         <Button variant="outline" className={`rounded-xl h-12 font-bold ${f.ativo ? 'text-primary' : 'text-muted-foreground'}`} onClick={() => setFlyers(flyers.map(item => item.id === f.id ? {...item, ativo: !f.ativo} : item))}>
                           {f.ativo ? '✅ Ativo' : '❌ Inativo'}
                         </Button>
-                        <Button variant="ghost" className="text-destructive h-12 rounded-xl" onClick={async () => { if(confirm('Apagar permanentemente?')) { await supabase.from('flyers').delete().eq('id', f.id); carregarDados(); } }}>Apagar</Button>
+                        <Button variant="ghost" className="text-destructive h-12 rounded-xl" onClick={async () => { if(confirm('Apagar?')) { await supabase.from('flyers').delete().eq('id', f.id); carregarDados(); } }}>Apagar</Button>
                       </div>
                     </Card>
                   ))}
@@ -671,4 +643,3 @@ export default function NapauAdminPage() {
     </div>
   );
 }
-

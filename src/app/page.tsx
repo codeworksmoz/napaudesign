@@ -51,7 +51,6 @@ export default function Home() {
     }
   }
 
-  // Parse bolo types from JSON or use defaults
   const boloTypes = home.boloTypesJson ? JSON.parse(home.boloTypesJson) : DEFAULT_BOLO_TYPES;
 
   return (
@@ -87,54 +86,17 @@ export default function Home() {
               <Button asChild className="rounded-full px-10 py-6 text-sm font-bold gold-shimmer shadow-2xl hover:scale-105 transition-all">
                 <Link href="/portfolio">Explorar Portfólio</Link>
               </Button>
-              <Button asChild variant="outline" className="rounded-full px-10 py-6 text-sm text-white border-white/40 bg-white/5 hover:bg-white/20 backdrop-blur-md transition-all shadow-lg">
+              <Button asChild variant="outline" className="rounded-full px-10 py-6 text-sm text-white border-white/40 bg-white/5 backdrop-blur-md hover:bg-white/10 transition-all shadow-lg">
                 <Link href="/cursos">Ver Cursos</Link>
               </Button>
             </div>
           </div>
         </section>
 
-        {/* PROVA SOCIAL STRIP */}
         <SocialProofStrip />
 
-        {/* TRÊS PILARES - CARDS RÁPIDOS */}
-        <section className="py-20 px-6 bg-white">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="group bg-[#FAF7F4] p-10 rounded-[2.5rem] border border-primary/5 hover:border-primary/20 transition-all text-center space-y-4 shadow-sm">
-              <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto group-hover:scale-110 transition-transform">
-                <Cake size={32} />
-              </div>
-              <h3 className="text-xl font-headline font-bold">Topos de Bolo</h3>
-              <p className="text-sm text-muted-foreground">Peças em acrílico e madeira para eventos inesquecíveis.</p>
-              <Link href="/portfolio?category=Topos de Bolo" className="inline-flex items-center text-primary font-bold text-xs uppercase tracking-widest gap-2 pt-2 group-hover:gap-4 transition-all">
-                Ver Galeria <ArrowRight size={14} />
-              </Link>
-            </div>
-            <div className="group bg-[#FAF7F4] p-10 rounded-[2.5rem] border border-primary/5 hover:border-primary/20 transition-all text-center space-y-4 shadow-sm">
-              <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto group-hover:scale-110 transition-transform">
-                <Shirt size={32} />
-              </div>
-              <h3 className="text-xl font-headline font-bold">Camisetas</h3>
-              <p className="text-sm text-muted-foreground">Estamparia premium com design exclusivo para si.</p>
-              <Link href="/portfolio?category=Camisetas" className="inline-flex items-center text-primary font-bold text-xs uppercase tracking-widest gap-2 pt-2 group-hover:gap-4 transition-all">
-                Ver Coleção <ArrowRight size={14} />
-              </Link>
-            </div>
-            <div className="group bg-[#FAF7F4] p-10 rounded-[2.5rem] border border-primary/5 hover:border-primary/20 transition-all text-center space-y-4 shadow-sm">
-              <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto group-hover:scale-110 transition-transform">
-                <GraduationCap size={32} />
-              </div>
-              <h3 className="text-xl font-headline font-bold">Cursos</h3>
-              <p className="text-sm text-muted-foreground">Aprenda as técnicas do atelier com quem faz.</p>
-              <Link href="/cursos" className="inline-flex items-center text-primary font-bold text-xs uppercase tracking-widest gap-2 pt-2 group-hover:gap-4 transition-all">
-                Saber Mais <ArrowRight size={14} />
-              </Link>
-            </div>
-          </div>
-        </section>
-
         {/* PERSONALIZE SEU EVENTO INTRO */}
-        <section className="py-24 px-6 bg-[#FAF7F4] relative overflow-hidden">
+        <section className="py-24 px-6 bg-white relative overflow-hidden">
            <div className="absolute top-0 right-0 p-20 opacity-5 pointer-events-none">
              <Logo size={400} />
            </div>
@@ -144,14 +106,14 @@ export default function Home() {
               </div>
               <h2 className="text-3xl md:text-5xl font-headline font-bold text-[#1A1A1A]">{home.eventSubtitle}</h2>
               <div className="w-20 h-1.5 bg-primary mx-auto rounded-full" />
-              <p className="text-lg text-muted-foreground leading-relaxed italic max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground leading-relaxed italic max-w-3xl mx-auto whitespace-pre-line">
                 {home.eventDesc}
               </p>
            </div>
         </section>
 
         {/* DESIGNER DE CAMISETAS DETALHADO */}
-        <section className="py-24 px-6 bg-white">
+        <section className="py-24 px-6 bg-[#FAF7F4]">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div className="relative order-2 lg:order-1">
@@ -159,14 +121,13 @@ export default function Home() {
                   <CarouselContent>
                     {(home.serviceCamisetaImages?.length ? home.serviceCamisetaImages : [OFFICIAL_IMAGE]).map((img, index) => (
                       <CarouselItem key={index}>
-                        <div className="aspect-[4/3] relative rounded-[2rem] overflow-hidden shadow-2xl border-[10px] border-[#FAF7F4]">
+                        <div className="aspect-[4/3] relative rounded-[2rem] overflow-hidden shadow-2xl border-[10px] border-white">
                           <Image src={img} alt={`Camisetas Napau ${index}`} fill className="object-cover" />
                         </div>
                       </CarouselItem>
                     ))}
                   </CarouselContent>
                 </Carousel>
-                <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
               </div>
               
               <div className="space-y-8 order-1 lg:order-2">
@@ -174,29 +135,29 @@ export default function Home() {
                   <h2 className="text-3xl md:text-5xl font-headline font-bold tracking-tight text-[#1A1A1A]">
                     {home.camisetaTitle}
                   </h2>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
+                  <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
                     {home.camisetaDesc}
                   </p>
                 </div>
 
-                <div className="bg-[#FAF7F4] p-8 rounded-[2rem] space-y-6 shadow-sm border border-primary/5">
-                  <h4 className="font-bold uppercase text-[10px] tracking-[0.3em] text-primary">Como funciona:</h4>
+                <div className="bg-white p-8 rounded-[2rem] space-y-6 shadow-sm border border-primary/5">
+                  <h4 className="font-bold uppercase text-[10px] tracking-[0.3em] text-primary">📋 É simples de pedir:</h4>
                   <div className="space-y-4">
                     <div className="flex gap-4 items-start">
                       <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">1</div>
-                      <p className="text-sm font-medium">Escolha o modelo: Algodão ou Dry-Fit premium</p>
+                      <p className="text-sm font-medium">Escolhe o modelo — Algodão premium ou Dry-Fit</p>
                     </div>
                     <div className="flex gap-4 items-start">
                       <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">2</div>
-                      <p className="text-sm font-medium">Faça upload da sua arte ou crie connosco na hora</p>
+                      <p className="text-sm font-medium">Partilha a sua ideia pelo WhatsApp (nome, foto ou frase)</p>
                     </div>
                     <div className="flex gap-4 items-start">
                       <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">3</div>
-                      <p className="text-sm font-medium">Receba em casa ou levante no nosso atelier</p>
+                      <p className="text-sm font-medium">Recebe em casa ou levanta no nosso atelier</p>
                     </div>
                   </div>
                   <div className="pt-2">
-                    <p className="text-[10px] text-muted-foreground font-bold uppercase">Pedidos a partir de 1 unidade • DTG & Sublimação</p>
+                    <p className="text-[10px] text-muted-foreground font-bold uppercase">🎯 Pedidos a partir de 1 unidade • DTG & Sublimação</p>
                   </div>
                 </div>
 
@@ -211,7 +172,7 @@ export default function Home() {
         </section>
 
         {/* TOPOS DE BOLO DETALHADO */}
-        <section className="py-24 px-6 bg-[#FAF7F4]">
+        <section className="py-24 px-6 bg-white">
           <div className="max-w-7xl mx-auto space-y-20">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
               <div className="space-y-8">
@@ -219,10 +180,10 @@ export default function Home() {
                   <h2 className="text-3xl md:text-5xl font-headline font-bold tracking-tight text-[#1A1A1A]">
                     {home.boloTitle}
                   </h2>
-                  <p className="text-lg text-primary font-bold italic">
+                  <p className="text-lg text-primary font-bold italic leading-relaxed">
                     {home.boloDesc}
                   </p>
-                  <div className="p-6 bg-white rounded-3xl border border-primary/10 shadow-sm">
+                  <div className="p-6 bg-[#FAF7F4] rounded-3xl border border-primary/10 shadow-sm">
                     <p className="text-sm text-muted-foreground leading-relaxed italic">
                       <HelpCircle size={16} className="inline mr-2 text-primary" />
                       {home.boloWhatIs}
@@ -230,33 +191,49 @@ export default function Home() {
                   </div>
                 </div>
 
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest">
+                  <Star size={14} /> Os Favoritos de Moçambique
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {boloTypes.map((type: any, idx: number) => (
-                    <div key={idx} className="bg-white p-6 rounded-3xl border border-primary/5 hover:border-primary/20 transition-all group shadow-sm">
+                    <div key={idx} className="bg-[#FAF7F4] p-6 rounded-3xl border border-primary/5 hover:border-primary/20 transition-all group shadow-sm">
                       <div className="flex justify-between items-start mb-2">
-                        <h5 className="font-headline font-bold text-primary group-hover:scale-105 transition-transform">{type.title}</h5>
-                        <span className="text-[10px] font-bold bg-primary/10 text-primary px-2 py-0.5 rounded-full">{type.price}</span>
+                        <h5 className="font-headline font-bold text-primary group-hover:scale-105 transition-transform">{idx + 1}. {type.title}</h5>
+                        <span className="text-[10px] font-bold bg-primary text-white px-2 py-0.5 rounded-full">{type.price}</span>
                       </div>
-                      <p className="text-[11px] text-muted-foreground leading-snug">{type.desc}</p>
+                      <p className="text-[11px] text-muted-foreground leading-snug italic">{type.desc}</p>
                     </div>
                   ))}
                 </div>
                 
                 <div className="pt-4 flex flex-col gap-4">
-                   <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-2xl border border-primary/10">
-                      <ShoppingBag size={20} className="text-primary" />
-                      <p className="text-xs font-bold uppercase tracking-widest text-primary">Como encomendar:</p>
-                   </div>
-                   <ol className="text-sm text-muted-foreground space-y-2 pl-4 list-decimal italic">
-                     <li>Escolha o tipo de topo desejado</li>
-                     <li>Envie foto, nome ou tema pelo WhatsApp</li>
-                     <li>Levante na loja ou solicite entrega em domicílio</li>
-                   </ol>
+                   <div className="bg-primary/5 p-8 rounded-[2rem] space-y-6 shadow-sm border border-primary/5">
+                    <h4 className="font-bold uppercase text-[10px] tracking-[0.3em] text-primary">📲 Como Encomendar:</h4>
+                    <div className="space-y-4">
+                      <div className="flex gap-4 items-start">
+                        <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">1</div>
+                        <p className="text-sm font-medium">Escolha o tipo que mais combina com a festa</p>
+                      </div>
+                      <div className="flex gap-4 items-start">
+                        <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">2</div>
+                        <p className="text-sm font-medium">Envie foto, nome ou tema pelo WhatsApp</p>
+                      </div>
+                      <div className="flex gap-4 items-start">
+                        <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">3</div>
+                        <p className="text-sm font-medium">Levante na loja ou peça entrega ao domicílio</p>
+                      </div>
+                    </div>
+                  </div>
+
                    <Button asChild className="rounded-xl px-10 py-8 text-lg font-bold group gold-shimmer shadow-xl mt-4">
                     <a href="https://wa.me/258847615871?text=Olá! Gostaria de encomendar um topo de bolo.">
                       Encomendar meu topo <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
                     </a>
                   </Button>
+                  <p className="text-center text-xs font-bold text-primary italic">
+                    💡 Dica Napau: Combine a sua camiseta com o topo de bolo no mesmo tema!
+                  </p>
                 </div>
               </div>
 
@@ -265,7 +242,7 @@ export default function Home() {
                   <CarouselContent>
                     {(home.serviceBoloImages?.length ? home.serviceBoloImages : [OFFICIAL_IMAGE]).map((img, index) => (
                       <CarouselItem key={index}>
-                        <div className="aspect-[4/5] relative rounded-[2rem] overflow-hidden shadow-2xl border-[10px] border-white">
+                        <div className="aspect-[4/5] relative rounded-[2rem] overflow-hidden shadow-2xl border-[10px] border-[#FAF7F4]">
                           <Image src={img} alt={`Topos de Bolo Napau ${index}`} fill className="object-cover" />
                         </div>
                       </CarouselItem>
@@ -276,22 +253,18 @@ export default function Home() {
                     <CarouselNext className="relative right-0 top-0 translate-y-0 h-12 w-12 bg-white shadow-xl border-none hover:bg-primary hover:text-white transition-all" />
                   </div>
                 </Carousel>
-                <div className="mt-12 bg-white/60 backdrop-blur-sm p-6 rounded-[2rem] border border-white text-center">
-                  <p className="text-sm font-bold text-primary italic">"Sua festa 100% combinada: faça sua camiseta e seu topo com o mesmo tema!"</p>
-                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* COMO TRABALHAMOS */}
         <ProcessSection />
 
         {/* DESTAQUES DO PORTFÓLIO */}
-        <section className="py-24 px-6 bg-white">
+        <section className="py-24 px-6 bg-[#FAF7F4]">
           <div className="max-w-6xl mx-auto space-y-16">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl md:text-5xl font-headline font-bold">Arte Recente</h2>
+              <h2 className="text-3xl md:text-5xl font-headline font-bold text-[#1A1A1A]">Arte Recente</h2>
               <p className="text-muted-foreground text-base italic max-w-lg mx-auto">Confira as últimas criações que saíram do nosso atelier direto para o coração dos nossos clientes.</p>
             </div>
             {carregando ? (
@@ -309,14 +282,13 @@ export default function Home() {
           </div>
         </section>
 
-        {/* FAQ SECTION */}
-        <section className="py-24 px-6 bg-[#FAF7F4]">
+        <section className="py-24 px-6 bg-white">
           <div className="max-w-3xl mx-auto space-y-12">
             <div className="text-center space-y-4">
               <div className="inline-flex p-3 bg-primary/10 rounded-2xl text-primary mb-2">
                 <HelpCircle size={32} />
               </div>
-              <h2 className="text-3xl md:text-5xl font-headline font-bold">Dúvidas Frequentes</h2>
+              <h2 className="text-3xl md:text-5xl font-headline font-bold text-[#1A1A1A]">Dúvidas Frequentes</h2>
               <p className="text-muted-foreground italic">Tudo o que precisa de saber para encomendar a sua arte.</p>
             </div>
             
@@ -324,7 +296,7 @@ export default function Home() {
               <AccordionItem value="item-1" className="border-b-primary/10">
                 <AccordionTrigger className="font-headline font-bold text-lg text-left hover:text-primary transition-colors">Qual é o prazo médio de entrega?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed">
-                  Para topos de bolo personalizados, o prazo médio é de 1 a 5 dias úteis, dependendo do tipo escolhido. Camisetas exclusivas podem levar de 3 a 7 dias. Projetos urgentes (24h) são possíveis para Foto Comestível.
+                  Para topos de bolo personalizados, o prazo varia entre 24h (Foto Comestível) e 7 dias (Flores de Açúcar). Camisetas exclusivas levam de 3 a 7 dias úteis.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2" className="border-b-primary/10">
@@ -336,20 +308,13 @@ export default function Home() {
               <AccordionItem value="item-3" className="border-b-primary/10">
                 <AccordionTrigger className="font-headline font-bold text-lg text-left hover:text-primary transition-colors">Quais as formas de pagamento aceites?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed">
-                  Aceitamos pagamentos via M-Pesa, E-Mola, transferência bancária (BCI, Standard Bank) e pagamentos em numerário no nosso atelier em Maputo.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-4" className="border-b-primary/10">
-                <AccordionTrigger className="font-headline font-bold text-lg text-left hover:text-primary transition-colors">Posso levar o meu próprio design para a camiseta?</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground leading-relaxed">
-                  Com certeza! Pode enviar-nos a sua ideia ou ficheiro e nós adaptamos para garantir que o resultado final na estamparia seja perfeito e duradouro. Trabalhamos com DTG e Sublimação.
+                  Aceitamos pagamentos via M-Pesa, E-Mola, transferência bancária (BCI, Standard Bank) e numerário no atelier.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
           </div>
         </section>
 
-        {/* CTA FINAL */}
         <section className="py-32 px-6 bg-primary text-white text-center relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
             <Image src={home.heroImage || OFFICIAL_IMAGE} alt="Pattern Napau" fill className="object-cover scale-110" />
