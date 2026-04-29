@@ -15,6 +15,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import Autoplay from 'embla-carousel-autoplay';
 import { ProcessSection } from '@/components/ProcessSection';
 import { SocialProofStrip } from '@/components/SocialProofStrip';
+import { Logo } from '@/components/Logo';
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
